@@ -1,0 +1,38 @@
+{
+  "name": "wc-header",
+  "version": "1.0.0",
+  "description": "Header Web Component",
+  "main": "wc-header.js",
+  "dependencies": {
+    "@polymer/lit-element": "^0.6.3",
+    "@webcomponents/custom-elements": "^1.2.1",
+    "@webcomponents/webcomponents-platform": "^1.0.0",
+    "@webcomponents/webcomponentsjs": "^1.1.0",
+    "reset-css": "^4.0.1"
+  },
+  "devDependencies": {
+    "rollup": "^0.67.3",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-babel-minify": "^6.1.1",
+    "rollup-plugin-browsersync": "^0.2.6",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.0.2",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-sass": "^0.9.2"
+  },
+  "scripts": {
+    "start": "rollup -c rollup.dev.config.js --watch",
+    "build": "rollup -c rollup.prod.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ComcastSamples/wc-header.git"
+  },
+  "author": "Chris Lorenzo",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/ComcastSamples/wc-header/issues"
+  },
+  "homepage": "https://github.com/ComcastSamples/wc-header#readme"
+}
