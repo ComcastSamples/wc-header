@@ -22,6 +22,7 @@ class WCPagination extends LitElement {
 
       <div class="pagination">
         Replace this with the pagination markup.
+        Hint, need to use ternary operator for if logic (bool ? 'true' : 'false')
       </div>
     `;
   }
