@@ -1,9 +1,5 @@
 import { LitElement, html } from '@polymer/lit-element';
 
-/*
-  Figure out how to add these styles to the global document
-  with a parent of wc-header (hint - don't modify the anchors function)
-*/
 const anchors = parent => {
   return `
     ${parent} a {
@@ -28,6 +24,10 @@ const anchors = parent => {
     }
   `;
 }
+
+const styles = document.createElement('style');
+styles.innerHTML = anchors('wc-header');
+document.head.appendChild(styles);
 
 class WCHeader extends LitElement {
   render() {
