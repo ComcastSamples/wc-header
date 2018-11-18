@@ -1,0 +1,7 @@
+{
+  "eslint.enable": false,
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  },
+}
+

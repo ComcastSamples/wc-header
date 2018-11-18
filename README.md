@@ -1,4 +1,4 @@
-# Introduction to Web Components via a Shared Header
+# Introduction to Web Components via Shared Components
 
 ### Hello! :wave:
 
@@ -6,12 +6,19 @@ Thanks for coming to our hands-on introduction to Web Components & Polymer! If y
 
 This is all the materials that are required to get started:
 
-1. [Install Git](https://git-scm.com/download/)
-2. [Install Node and npm](https://nodejs.org/en/download/) (If you'd like to manage multiple version of Node, we recommend [nvm](https://nodejs.org/en/download/))
-3. Install the Polymer CLI globally: `$ npm install -g polymer-cli@latest`
-4. Clone this repo (`$ git clone https://github.com/ComcastSamples/wc-header.git`)
-5. Install the dependencies by `$ npm install` from the directory you cloned `wc-header` into
-6. `$ git checkout step1` to get started.
+[Install Git](https://git-scm.com/download/)  
+[Install Node and npm](https://nodejs.org/en/download/) (Use [nvm](https://nodejs.org/en/download/) if you'd like multiple versions)  
+
+Run the following:
+```
+git clone https://github.com/ComcastSamples/wc-components.git  
+git clone https://github.com/ComcastSamples/reacthnpwa  
+cd wc-components/ && npm install  
+cd ../reacthnpwa && npm install  
+```
+
+In a separate terminal window run `cd reacthnpwa && npm start` - to start up the react hacker news application. We'll be working on getting our
+web components to run in that application.
 
 Optionally install [lit-html extension](https://marketplace.visualstudio.com/items?itemName=bierner.lit-html) for vscode to make it easier to edit markup in template literals.
 
