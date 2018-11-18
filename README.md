@@ -1,15 +1,12 @@
-# Step 1
+# Step 2
 
-`npm start` this project, your browser should open to http://localhost:3001
+## A Wild wc-header Appears!
 
-Make sure you have the [React HN app](https://github.com/ComcastSamples/reacthnpwa) also up and running on http://localhost:3000
+1. Add wc-header to the components file
+2. Open Navigation.js in Reacthnpwa and replace the navigation wrappers with wc-header. (Keep the <li> tags as children of wc-header)
+3. Open wc-header.js and add global styles for `wc-header a`
 
-1. Get the wc-footer added to the React app
-2. Optimize for production
-  * Open package.json add build script `NODE_ENV=production rollup -c rollup.config.js`
-  * Add uglify and only have it run if NODE_ENV is production
-
-When you're done, `git checkout -f step2`
+When you're done, `git checkout -f step3`
 
 ### Questions?
 
