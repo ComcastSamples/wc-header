@@ -1,12 +1,12 @@
-# Step 2
+# Step 3
 
-## A Wild wc-header Appears!
+## Replace the pagination component with a Web Component
 
-1. Add wc-header to the components file
-2. Open Navigation.js in Reacthnpwa and replace the navigation wrappers with wc-header. (Keep the <li> tags as children of wc-header)
-3. Open wc-header.js and add global styles for `wc-header a`
+1. Open Pagination.js from reacthnpwa to figure out the logic
+2. Convert the logic to lit format in wc-pagination
+3. Update StoryContainer.js to use the wc-pagination component
 
-When you're done, `git checkout -f step3`
+That's All Folks! 🐷 Great Job!
 
 ### Questions?
 
