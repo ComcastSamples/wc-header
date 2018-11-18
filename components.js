@@ -1,3 +1,3 @@
-export * from './wc-header.js';
-export * from './wc-footer.js';
-export * from './wc-pagination.js';
+import './wc-header';
+import './wc-footer';
+import './wc-pagination';

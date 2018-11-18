@@ -1,5 +1,5 @@
-import { LitElement, html} from '@polymer/lit-element';
-import { anchors } from './styles.js';
+import { LitElement, html } from '@polymer/lit-element';
+import { anchors } from './styles';
 
 class WCFooter extends LitElement {
   render() {

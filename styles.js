@@ -1,6 +1,6 @@
 import { html } from '@polymer/lit-element';
 
-export const anchors = (parent) => html`
+export const anchors = parent => html`
       ${parent} a {
         display: flex;
         font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -22,3 +22,5 @@ export const anchors = (parent) => html`
         }
       }
   `;
+
+export const moreStyles = options => html`${options}`;

@@ -1,8 +1,8 @@
 import { LitElement, html } from '@polymer/lit-element';
 import { render } from 'lit-html';
-import {anchors} from './styles.js';
+import { anchors } from './styles';
 
-let styles = document.createElement('style');
+const styles = document.createElement('style');
 render(anchors('wc-header'), styles);
 document.head.appendChild(styles);
 class WCHeader extends LitElement {
@@ -12,9 +12,9 @@ class WCHeader extends LitElement {
       name: String,
       isOpen: {
         type: Boolean,
-        reflect: true
+        reflect: true,
       },
-     }
+    };
   }
 
   render() {

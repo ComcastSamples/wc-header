@@ -4,27 +4,27 @@ const uglify = require('rollup-plugin-babel-minify');
 const babel = require('rollup-plugin-babel');
 const replace = require('rollup-plugin-replace');
 
-function components({input, transpile = false, minify = true}) {
-  let outputName = input.replace('.js', '');
+function components({ input, transpile = false, minify = true }) {
+  const outputName = input.replace('.js', '');
 
-  let config = {
+  const config = {
     input: `${input}`,
     output: {
       name: 'CX',
       format: 'iife',
-      file: `dist/${outputName}.js`
+      file: `dist/${outputName}.js`,
     },
     plugins: [
       resolve(),
       commonjs({
         include: 'node_modules/**',
-        sourceMap: false
+        sourceMap: false,
       }),
       replace({
         exclude: 'node_modules/**',
         SAMPLE: '',
-      })
-    ]
+      }),
+    ],
   };
 
   if (transpile) {
@@ -32,10 +32,10 @@ function components({input, transpile = false, minify = true}) {
   }
 
   if (minify) {
-    config.plugins.push(uglify({comments: false}));
+    config.plugins.push(uglify({ comments: false }));
   }
 
   return config;
 }
 
-module.exports = {components};
+module.exports = { components };

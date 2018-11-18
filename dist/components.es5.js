@@ -2981,7 +2981,7 @@
       }
   `;
 
-  let styles = document.createElement('style');
+  const styles = document.createElement('style');
   render(anchors('wc-header'), styles);
   document.head.appendChild(styles);
 
@@ -3114,7 +3114,7 @@
     }
 
     render() {
-      let {
+      const {
         currentPage,
         pages,
         nextPage,

@@ -1810,7 +1810,7 @@
     LitElement.render = render$1;
     //# sourceMappingURL=lit-element.js.map
 
-    const anchors = (parent) => html`
+    const anchors = parent => html`
       ${parent} a {
         display: flex;
         font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -1833,7 +1833,7 @@
       }
   `;
 
-    let styles = document.createElement('style');
+    const styles = document.createElement('style');
     render(anchors('wc-header'), styles);
     document.head.appendChild(styles);
     class WCHeader extends LitElement {
@@ -1843,9 +1843,9 @@
           name: String,
           isOpen: {
             type: Boolean,
-            reflect: true
+            reflect: true,
           },
-         }
+        };
       }
 
       render() {
@@ -1957,11 +1957,13 @@
           nextPage: Number,
           prevPage: Number,
           story: String,
-         }
+        };
       }
 
       render() {
-        let {currentPage, pages, nextPage, prevPage, story} = this;
+        const {
+          currentPage, pages, nextPage, prevPage, story,
+        } = this;
 
         return html`
       <style>

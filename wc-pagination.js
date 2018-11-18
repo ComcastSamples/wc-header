@@ -1,5 +1,4 @@
-import { LitElement, html} from '@polymer/lit-element';
-import {anchors} from './styles.js';
+import { LitElement, html } from '@polymer/lit-element';
 
 class WCPagination extends LitElement {
   static get properties() {
@@ -9,11 +8,13 @@ class WCPagination extends LitElement {
       nextPage: Number,
       prevPage: Number,
       story: String,
-     }
+    };
   }
 
   render() {
-    let {currentPage, pages, nextPage, prevPage, story} = this;
+    const {
+      currentPage, pages, nextPage, prevPage, story,
+    } = this;
 
     return html`
       <style>

@@ -1,3 +1,3 @@
-export * from '@webcomponents/webcomponents-platform';
-export * from '@webcomponents/custom-elements';
-export * from './components.js';
+import '@webcomponents/webcomponents-platform';
+import '@webcomponents/custom-elements';
+import './components';
