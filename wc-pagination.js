@@ -3,14 +3,18 @@ import { LitElement, html } from '@polymer/lit-element';
 class WCPagination extends LitElement {
   static get properties() {
     return {
-      // You're going to need to add some properties
-      // { story, page, pages }
+      page: Number,
+      pages: Number,
+      story: String,
     };
   }
 
   render() {
     const { story, page, pages } = this;
-    // Add some logic here
+
+    let currentPage = parseInt(page, 10);
+    let nextPage = currentPage !== 1 ? currentPage - 1 : currentPage;
+    let prevPage = currentPage !== pages ? currentPage + 1 : currentPage;
 
     return html`
       <style>
@@ -21,7 +25,9 @@ class WCPagination extends LitElement {
       </style>
 
       <div class="pagination">
-        Replace this with the pagination markup.
+        ${currentPage !== 1 ? html`<a href="/${story}/${nextPage}">&lt; prev</a>` : ''}
+        <span>${currentPage}/${pages}</span>
+        ${currentPage !== pages ? html`<a href="/${story}/${prevPage}">next &gt;</a>` : ''}
       </div>
     `;
   }
