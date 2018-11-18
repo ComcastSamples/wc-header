@@ -4,18 +4,37 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>A Simple Header Element</title>
+  <title>Shared Components.</title>
 
   <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-  <script src="./components.js" type="module"></script>
+  <script src="./components.js"></script>
   <link rel="stylesheet" href="../node_modules/reset-css/reset.css" />
   <style>
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 50px 0px;
+    }
   </style>
 </head>
 
 <body role="main">
-  <wc-header></wc-header>
-
+  <wc-header>
+    <li><a aria-current="false" href="/news/1">News</a></li>
+    <li><a aria-current="false" href="/newest/1">Newest</a></li>
+    <li><a aria-current="true" href="/show/1" class="active">Show</a></li>
+    <li><a aria-current="false" href="/ask/1">Ask</a></li>
+    <li><a aria-current="false" href="/jobs/1">Jobs</a></li>
+  </wc-header>
+  <div class="container">
+    <wc-pagination
+      currentPage="2"
+        pages="3"
+        nextPage="3"
+        prevPage="1"
+        story="news"
+    ></wc-pagination>
+  </div>
   <wc-footer></wc-footer>
 </body>
 </html>

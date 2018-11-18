@@ -1,5 +1,10 @@
-import { LitElement, html} from '@polymer/lit-element';
+import { LitElement, html } from '@polymer/lit-element';
+import { render } from 'lit-html';
+import {anchors} from './styles.js';
 
+let styles = document.createElement('style');
+render(anchors('wc-header'), styles);
+document.head.appendChild(styles);
 class WCHeader extends LitElement {
   static get properties() {
     return {
@@ -15,12 +20,41 @@ class WCHeader extends LitElement {
   render() {
     return html`
       <style>
+        :host {
+          background: black;
+          position: fixed;
+          width: 100%;
+        }
 
+        ul {
+          display: flex;
+          list-style: none;
+          justify-content: space-around;
+          align-content: center;
+          justify-items: inherit;
+          align-items: center;
+          flex-direction: row;
+          margin: 0;
+          max-width: 980px;
+          margin: 0 auto;
+          padding: 0;
+        }
+
+        @media screen and (min-width: 768px) {
+          ul {
+            justify-content: flex-start;
+          }
+          .navigation a {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #828282;
+          }
+        }
       </style>
 
       <header>
         <ul>
-          <li>Hello there</li>
+          <slot></slot>
         </ul>
       </header>
     `;

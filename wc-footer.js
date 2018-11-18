@@ -1,4 +1,5 @@
 import { LitElement, html} from '@polymer/lit-element';
+import {anchors} from './styles.js';
 
 class WCFooter extends LitElement {
   render() {
@@ -7,7 +8,6 @@ class WCFooter extends LitElement {
         footer {
           background: #000;
           bottom: 0;
-          font-family: Arial;
           height: 40px;
           left: 0;
           position: fixed;
@@ -17,7 +17,6 @@ class WCFooter extends LitElement {
 
         ul {
           display: inline-block;
-          line-height: 40px;
           list-style: none;
           margin: 0;
           padding: 0;
@@ -25,7 +24,6 @@ class WCFooter extends LitElement {
 
         li {
           display: inline-block;
-          padding-right: .5rem;
           vertical-align: middle;
         }
 
@@ -34,15 +32,7 @@ class WCFooter extends LitElement {
           margin: auto;
         }
 
-        a {
-          color: #fff;
-          display: inline-block;
-          text-decoration: none;
-        }
-
-        a:hover {
-          text-decoration: underline;
-        }
+        ${anchors()}
       </style>
       <footer>
         <ul>
@@ -55,10 +45,10 @@ class WCFooter extends LitElement {
             </svg>
           </li>
           <li>
-            <a href="#">Terms</a>
+            <a href="/terms">Terms</a>
           </li>
           <li>
-            <a href="#">Privacy Policy</a>
+            <a href="/privacy">Privacy Policy</a>
           </li>
         </ul>
       </footer>

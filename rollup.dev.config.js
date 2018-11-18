@@ -11,7 +11,11 @@ let browsersyncOptions = {
   server: 'dist',
   notify: false,
   host: '0.0.0.0',
-  port: '3001'
+  port: '3001',
+  serveStatic: [{
+    route: '/node_modules',
+    dir: 'node_modules'
+  }]
 };
 
 configs[0].plugins.push(browsersync(browsersyncOptions));

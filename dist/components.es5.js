@@ -1,19 +1,3056 @@
-(function(){"use strict";function e(e){let t=M.get(e.type);void 0===t&&(t=new Map,M.set(e.type,t));let n=t.get(e.strings);return void 0===n&&(n=new g(e,e.getTemplateElement()),t.set(e.strings,n)),n}function t(e,t){const{element:{content:o},parts:n}=e,a=document.createTreeWalker(o,D,null,!1);let r=R(n),l=n[r],i=-1,p=0;const d=[];for(let o=null;a.nextNode();){i++;const e=a.currentNode;for(e.previousSibling===o&&(o=null),t.has(e)&&(d.push(e),null===o&&(o=e)),null!==o&&p++;l!==void 0&&l.index===i;)l.index=null===o?l.index-p:-1,r=R(n,r),l=n[r]}d.forEach(e=>e.parentNode.removeChild(e))}function n(e,t,n=null){const{element:{content:a},parts:o}=e;if(null===n||void 0===n)return void a.appendChild(t);const r=document.createTreeWalker(a,D,null,!1);let l=R(o),i=0,p=-1;for(;r.nextNode();){p++;const e=r.currentNode;for(e===n&&(i=H(t),n.parentNode.insertBefore(t,n));-1!==l&&o[l].index===p;){if(0<i){for(;-1!==l;)o[l].index+=i,l=R(o,l);return}l=R(o,l)}}}(function(){var e=function(){var t=document.createEvent("Event");return t.initEvent("foo",!0,!0),t.preventDefault(),t.defaultPrevented}();if(!e){var t=Event.prototype.preventDefault;Event.prototype.preventDefault=function(){this.cancelable&&(t.call(this),Object.defineProperty(this,"defaultPrevented",{get:function(){return!0},configurable:!0}))}}var n=/Trident/.test(navigator.userAgent);if((!window.CustomEvent||n&&"function"!=typeof window.CustomEvent)&&(window.CustomEvent=function(t,n){n=n||{};var o=document.createEvent("CustomEvent");return o.initCustomEvent(t,!!n.bubbles,!!n.cancelable,n.detail),o},window.CustomEvent.prototype=window.Event.prototype),!window.Event||n&&"function"!=typeof window.Event){var o=window.Event;if(window.Event=function(t,n){n=n||{};var o=document.createEvent("Event");return o.initEvent(t,!!n.bubbles,!!n.cancelable),o},o)for(var a in o)window.Event[a]=o[a];window.Event.prototype=o.prototype}if(!window.MouseEvent||n&&"function"!=typeof window.MouseEvent){var r=window.MouseEvent;if(window.MouseEvent=function(t,n){n=n||{};var o=document.createEvent("MouseEvent");return o.initMouseEvent(t,!!n.bubbles,!!n.cancelable,n.view||window,n.detail,n.screenX,n.screenY,n.clientX,n.clientY,n.ctrlKey,n.altKey,n.shiftKey,n.metaKey,n.button,n.relatedTarget),o},r)for(var a in r)window.MouseEvent[a]=r[a];window.MouseEvent.prototype=r.prototype}if(Array.from||(Array.from=function(e){return[].slice.call(e)}),!Object.assign){var l=function(e,t){for(var n,o=Object.getOwnPropertyNames(t),a=0;a<o.length;a++)n=o[a],e[n]=t[n]};Object.assign=function(e){for(var t,n=[].slice.call(arguments,1),o=0;o<n.length;o++)t=n[o],t&&l(e,t);return e}}})(window.WebComponents),function(){function o(e){var t=w.has(e);return e=/^[a-z][.0-9_a-z]*-[\-.0-9_a-z]*$/.test(e),!t&&e}function i(e){var t=e.isConnected;if(void 0!==t)return t;for(;e&&!(e.__CE_isImportDocument||e instanceof Document);)e=e.parentNode||(window.ShadowRoot&&e instanceof ShadowRoot?e.host:void 0);return e&&(e.__CE_isImportDocument||e instanceof Document)}function n(e,t){for(;t&&t!==e&&!t.nextSibling;)t=t.parentNode;return t&&t!==e?t.nextSibling:null}function r(t,o,a){a=void 0===a?new Set:a;for(var l=t;l;){if(l.nodeType===Node.ELEMENT_NODE){var i=l;o(i);var p=i.localName;if("link"===p&&"import"===i.getAttribute("rel")){if(l=i.import,l instanceof Node&&!a.has(l))for(a.add(l),l=l.firstChild;l;l=l.nextSibling)r(l,o,a);l=n(t,i);continue}else if("template"===p){l=n(t,i);continue}if(i=i.__CE_shadowRoot)for(i=i.firstChild;i;i=i.nextSibling)r(i,o,a)}l=l.firstChild?l.firstChild:n(t,l)}}function e(e,t,n){e[t]=n}function t(){this.a=new Map,this.f=new Map,this.c=[],this.b=!1}function l(e,t,n){e.a.set(t,n),e.f.set(n.constructorFunction,n)}function p(e,t){e.b=!0,e.c.push(t)}function s(e,t){e.b&&r(t,function(t){return u(e,t)})}function u(e,t){if(e.b&&!t.__CE_patched){t.__CE_patched=!0;for(var n=0;n<e.c.length;n++)e.c[n](t)}}function g(e,t){var n=[];for(r(t,function(e){return n.push(e)}),t=0;t<n.length;t++){var o=n[t];1===o.__CE_state?e.connectedCallback(o):y(e,o)}}function h(e,t){var n=[];for(r(t,function(e){return n.push(e)}),t=0;t<n.length;t++){var o=n[t];1===o.__CE_state&&e.disconnectedCallback(o)}}function _(t,n,o){o=void 0===o?{}:o;var l=o.u||new Set,i=o.h||function(e){return y(t,e)},e=[];if(r(n,function(n){if("link"===n.localName&&"import"===n.getAttribute("rel")){var o=n.import;o instanceof Node&&(o.__CE_isImportDocument=!0,o.__CE_hasRegistry=!0),o&&"complete"===o.readyState?o.__CE_documentLoadHandled=!0:n.addEventListener("load",function(){var e=n.import;if(!e.__CE_documentLoadHandled){e.__CE_documentLoadHandled=!0;var o=new Set(l);o.delete(e),_(t,e,{u:o,h:i})}})}else e.push(n)},l),t.b)for(n=0;n<e.length;n++)u(t,e[n]);for(n=0;n<e.length;n++)i(e[n])}function y(t,n){if(void 0===n.__CE_state){var o=n.ownerDocument;if((o.defaultView||o.__CE_isImportDocument&&o.__CE_hasRegistry)&&(o=t.a.get(n.localName))){o.constructionStack.push(n);var a=o.constructorFunction;try{try{if(new a!==n)throw Error("The custom element constructor did not produce the element being upgraded.")}finally{o.constructionStack.pop()}}catch(e){throw n.__CE_state=2,e}if(n.__CE_state=1,n.__CE_definition=o,o.attributeChangedCallback)for(o=o.observedAttributes,a=0;a<o.length;a++){var r=o[a],e=n.getAttribute(r);null!==e&&t.attributeChangedCallback(n,r,null,e,null)}i(n)&&t.connectedCallback(n)}}}function a(e){var t=document;this.c=e,this.a=t,this.b=void 0,_(this.c,this.a),"loading"===this.a.readyState&&(this.b=new MutationObserver(this.f.bind(this)),this.b.observe(this.a,{childList:!0,subtree:!0}))}function m(e){e.b&&e.b.disconnect()}function d(){var e=this;this.b=this.a=void 0,this.c=new Promise(function(t){e.b=t,e.a&&t(e.a)})}function C(e){if(e.a)throw Error("Already resolved.");e.a=void 0,e.b&&e.b(void 0)}function c(e){this.c=!1,this.a=e,this.j=new Map,this.f=function(e){return e()},this.b=!1,this.i=[],this.o=new a(e)}function f(t){if(!1!==t.b){t.b=!1;for(var n=t.i,o=[],r=new Map,a=0;a<n.length;a++)r.set(n[a].localName,[]);for(_(t.a,document,{h:function(n){if(void 0===n.__CE_state){var a=n.localName,e=r.get(a);e?e.push(n):t.a.a.get(a)&&o.push(n)}}}),a=0;a<o.length;a++)y(t.a,o[a]);for(;0<n.length;){var l=n.shift();a=l.localName,l=r.get(l.localName);for(var i=0;i<l.length;i++)y(t.a,l[i]);(a=t.j.get(a))&&C(a)}}}function b(){var t=Z;window.HTMLElement=function(){function e(){var n=this.constructor,o=t.f.get(n);if(!o)throw Error("The custom element being constructed was not registered with `customElements`.");var a=o.constructionStack;if(0===a.length)return a=D.call(document,o.localName),Object.setPrototypeOf(a,n.prototype),a.__CE_state=1,a.__CE_definition=o,u(t,a),a;o=a.length-1;var r=a[o];if(r===pe)throw Error("The HTMLElement constructor was either called reentrantly for this constructor or called multiple times.");return a[o]=pe,Object.setPrototypeOf(r,n.prototype),u(t,r),r}return e.prototype=re.prototype,Object.defineProperty(e.prototype,"constructor",{writable:!0,configurable:!0,enumerable:!1,value:e}),e}()}function E(t,e,n){function o(n){return function(){for(var o=[],a=0;a<arguments.length;++a)o[a]=arguments[a];a=[];for(var l,p=[],d=0;d<o.length;d++)if(l=o[d],l instanceof Element&&i(l)&&p.push(l),l instanceof DocumentFragment)for(l=l.firstChild;l;l=l.nextSibling)a.push(l);else a.push(l);for(n.apply(this,o),o=0;o<p.length;o++)h(t,p[o]);if(i(this))for(o=0;o<a.length;o++)p=a[o],p instanceof Element&&g(t,p)}}void 0!==n.g&&(e.prepend=o(n.g)),void 0!==n.append&&(e.append=o(n.append))}function v(){var t=Z;e(Document.prototype,"createElement",function(e){if(this.__CE_hasRegistry){var n=t.a.get(e);if(n)return new n.constructorFunction}return e=D.call(this,e),u(t,e),e}),e(Document.prototype,"importNode",function(e,n){return e=H.call(this,e,!!n),this.__CE_hasRegistry?_(t,e):s(t,e),e}),e(Document.prototype,"createElementNS",function(e,n){if(this.__CE_hasRegistry&&(null===e||"http://www.w3.org/1999/xhtml"===e)){var o=t.a.get(n);if(o)return new o.constructorFunction}return e=j.call(this,e,n),u(t,e),e}),E(t,Document.prototype,{g:F,append:B})}function x(){function t(e,t){Object.defineProperty(e,"textContent",{enumerable:t.enumerable,configurable:!0,get:t.get,set:function(o){if(this.nodeType===Node.TEXT_NODE)t.set.call(this,o);else{var a;if(this.firstChild){var r=this.childNodes,e=r.length;if(0<e&&i(this)){a=Array(e);for(var l=0;l<e;l++)a[l]=r[l]}}if(t.set.call(this,o),a)for(o=0;o<a.length;o++)h(n,a[o])}}})}var n=Z;e(Node.prototype,"insertBefore",function(t,o){if(t instanceof DocumentFragment){var a=Array.prototype.slice.apply(t.childNodes);if(t=G.call(this,t,o),i(this))for(o=0;o<a.length;o++)g(n,a[o]);return t}return a=i(t),o=G.call(this,t,o),a&&h(n,t),i(this)&&g(n,t),o}),e(Node.prototype,"appendChild",function(t){if(t instanceof DocumentFragment){var o=Array.prototype.slice.apply(t.childNodes);if(t=I.call(this,t),i(this))for(var a=0;a<o.length;a++)g(n,o[a]);return t}return o=i(t),a=I.call(this,t),o&&h(n,t),i(this)&&g(n,t),a}),e(Node.prototype,"cloneNode",function(e){return e=Y.call(this,!!e),this.ownerDocument.__CE_hasRegistry?_(n,e):s(n,e),e}),e(Node.prototype,"removeChild",function(t){var o=i(t),a=K.call(this,t);return o&&h(n,t),a}),e(Node.prototype,"replaceChild",function(t,o){if(t instanceof DocumentFragment){var a=Array.prototype.slice.apply(t.childNodes);if(t=L.call(this,t,o),i(this))for(h(n,o),o=0;o<a.length;o++)g(n,a[o]);return t}a=i(t);var r=L.call(this,t,o),l=i(this);return l&&h(n,o),a&&h(n,t),l&&g(n,t),r}),M&&M.get?t(Node.prototype,M):p(n,function(e){t(e,{enumerable:!0,configurable:!0,get:function(){for(var e=[],t=0;t<this.childNodes.length;t++)e.push(this.childNodes[t].textContent);return e.join("")},set:function(e){for(;this.firstChild;)K.call(this,this.firstChild);I.call(this,document.createTextNode(e))}})})}function A(t){function n(e){return function(){for(var o=[],a=0;a<arguments.length;++a)o[a]=arguments[a];a=[];for(var r,l=[],p=0;p<o.length;p++)if(r=o[p],r instanceof Element&&i(r)&&l.push(r),r instanceof DocumentFragment)for(r=r.firstChild;r;r=r.nextSibling)a.push(r);else a.push(r);for(e.apply(this,o),o=0;o<l.length;o++)h(t,l[o]);if(i(this))for(o=0;o<a.length;o++)l=a[o],l instanceof Element&&g(t,l)}}var o=Element.prototype;void 0!==ne&&(o.before=n(ne)),void 0!==ne&&(o.after=n(V)),void 0!==oe&&e(o,"replaceWith",function(){for(var e=[],n=0;n<arguments.length;++n)e[n]=arguments[n];n=[];for(var o,a=[],r=0;r<e.length;r++)if(o=e[r],o instanceof Element&&i(o)&&a.push(o),o instanceof DocumentFragment)for(o=o.firstChild;o;o=o.nextSibling)n.push(o);else n.push(o);for(r=i(this),oe.apply(this,e),e=0;e<a.length;e++)h(t,a[e]);if(r)for(h(t,this),e=0;e<n.length;e++)a=n[e],a instanceof Element&&g(t,a)}),void 0!==ae&&e(o,"remove",function(){var e=i(this);ae.call(this),e&&h(t,this)})}function k(){function t(e,t){Object.defineProperty(e,"innerHTML",{enumerable:t.enumerable,configurable:!0,get:t.get,set:function(n){var o,p=this;if(i(this)&&(o=[],r(this,function(e){e!==p&&o.push(e)})),t.set.call(this,n),o)for(var a,d=0;d<o.length;d++)a=o[d],1===a.__CE_state&&l.disconnectedCallback(a);return this.ownerDocument.__CE_hasRegistry?_(l,this):s(l,this),n}})}function n(t,n){e(t,"insertAdjacentElement",function(t,o){var r=i(o);return t=n.call(this,t,o),r&&h(l,o),i(t)&&g(l,o),t})}function o(t,n){function o(e,t){for(var n=[];e!==t;e=e.nextSibling)n.push(e);for(t=0;t<n.length;t++)_(l,n[t])}e(t,"insertAdjacentHTML",function(t,r){if(t=t.toLowerCase(),"beforebegin"===t){var l=this.previousSibling;n.call(this,t,r),o(l||this.parentNode.firstChild,this)}else if("afterbegin"===t)l=this.firstChild,n.call(this,t,r),o(this.firstChild,l);else if("beforeend"===t)l=this.lastChild,n.call(this,t,r),o(l||this.firstChild,null);else if("afterend"===t)l=this.nextSibling,n.call(this,t,r),o(this.nextSibling,l);else throw new SyntaxError("The value provided ("+(t+") is not one of 'beforebegin', 'afterbegin', 'beforeend', or 'afterend'."))})}var l=Z;N&&e(Element.prototype,"attachShadow",function(e){return this.__CE_shadowRoot=e=N.call(this,e)}),O&&O.get?t(Element.prototype,O):le&&le.get?t(HTMLElement.prototype,le):p(l,function(e){t(e,{enumerable:!0,configurable:!0,get:function(){return Y.call(this,!0).innerHTML},set:function(e){var t="template"===this.localName,n=t?this.content:this,o=j.call(document,this.namespaceURI,this.localName);for(o.innerHTML=e;0<n.childNodes.length;)K.call(n,n.childNodes[0]);for(e=t?o.content:o;0<e.childNodes.length;)I.call(n,e.childNodes[0])}})}),e(Element.prototype,"setAttribute",function(e,t){if(1!==this.__CE_state)return $.call(this,e,t);var n=P.call(this,e);$.call(this,e,t),t=P.call(this,e),l.attributeChangedCallback(this,e,n,t,null)}),e(Element.prototype,"setAttributeNS",function(t,n,o){if(1!==this.__CE_state)return T.call(this,t,n,o);var a=S.call(this,t,n);T.call(this,t,n,o),o=S.call(this,t,n),l.attributeChangedCallback(this,n,a,o,t)}),e(Element.prototype,"removeAttribute",function(e){if(1!==this.__CE_state)return R.call(this,e);var t=P.call(this,e);R.call(this,e),null!==t&&l.attributeChangedCallback(this,e,t,null,null)}),e(Element.prototype,"removeAttributeNS",function(t,n){if(1!==this.__CE_state)return U.call(this,t,n);var o=S.call(this,t,n);U.call(this,t,n);var a=S.call(this,t,n);o!==a&&l.attributeChangedCallback(this,n,o,a,t)}),W?n(HTMLElement.prototype,W):Q?n(Element.prototype,Q):console.warn("Custom Elements: `Element#insertAdjacentElement` was not patched."),ie?o(HTMLElement.prototype,ie):J?o(Element.prototype,J):console.warn("Custom Elements: `Element#insertAdjacentHTML` was not patched."),E(l,Element.prototype,{g:ee,append:te}),A(l)}var w=new Set(["annotation-xml","color-profile","font-face","font-face-src","font-face-uri","font-face-format","font-face-name","missing-glyph"]);t.prototype.connectedCallback=function(e){var t=e.__CE_definition;t.connectedCallback&&t.connectedCallback.call(e)},t.prototype.disconnectedCallback=function(e){var t=e.__CE_definition;t.disconnectedCallback&&t.disconnectedCallback.call(e)},t.prototype.attributeChangedCallback=function(t,n,o,a,r){var e=t.__CE_definition;e.attributeChangedCallback&&-1<e.observedAttributes.indexOf(n)&&e.attributeChangedCallback.call(t,n,o,a,r)},a.prototype.f=function(e){var t=this.a.readyState;for("interactive"!==t&&"complete"!==t||m(this),t=0;t<e.length;t++)for(var n=e[t].addedNodes,o=0;o<n.length;o++)_(this.c,n[o])},c.prototype.l=function(t,r){var i=this;if(!(r instanceof Function))throw new TypeError("Custom element constructors must be functions.");if(!o(t))throw new SyntaxError("The element name '"+t+"' is not valid.");if(this.a.a.get(t))throw Error("A custom element with name '"+t+"' has already been defined.");if(this.c)throw Error("A custom element is already being defined.");this.c=!0;try{var p=function(e){var t=d[e];if(void 0!==t&&!(t instanceof Function))throw Error("The '"+e+"' callback must be a function.");return t},d=r.prototype;if(!(d instanceof Object))throw new TypeError("The custom element constructor's prototype is not an object.");var e=p("connectedCallback"),s=p("disconnectedCallback"),c=p("adoptedCallback"),u=p("attributeChangedCallback"),m=r.observedAttributes||[]}catch(e){return}finally{this.c=!1}r={localName:t,constructorFunction:r,connectedCallback:e,disconnectedCallback:s,adoptedCallback:c,attributeChangedCallback:u,observedAttributes:m,constructionStack:[]},l(this.a,t,r),this.i.push(r),this.b||(this.b=!0,this.f(function(){return f(i)}))},c.prototype.h=function(e){_(this.a,e)},c.prototype.get=function(e){if(e=this.a.a.get(e))return e.constructorFunction},c.prototype.m=function(e){if(!o(e))return Promise.reject(new SyntaxError("'"+e+"' is not a valid custom element name."));var t=this.j.get(e);return t?t.c:(t=new d,this.j.set(e,t),this.a.a.get(e)&&!this.i.some(function(t){return t.localName===e})&&C(t),t.c)},c.prototype.s=function(e){m(this.o);var t=this.f;this.f=function(n){return e(function(){return t(n)})}},window.CustomElementRegistry=c,c.prototype.define=c.prototype.l,c.prototype.upgrade=c.prototype.h,c.prototype.get=c.prototype.get,c.prototype.whenDefined=c.prototype.m,c.prototype.polyfillWrapFlushCallback=c.prototype.s;var D=window.Document.prototype.createElement,j=window.Document.prototype.createElementNS,H=window.Document.prototype.importNode,F=window.Document.prototype.prepend,B=window.Document.prototype.append,z=window.DocumentFragment.prototype.prepend,q=window.DocumentFragment.prototype.append,Y=window.Node.prototype.cloneNode,I=window.Node.prototype.appendChild,G=window.Node.prototype.insertBefore,K=window.Node.prototype.removeChild,L=window.Node.prototype.replaceChild,M=Object.getOwnPropertyDescriptor(window.Node.prototype,"textContent"),N=window.Element.prototype.attachShadow,O=Object.getOwnPropertyDescriptor(window.Element.prototype,"innerHTML"),P=window.Element.prototype.getAttribute,$=window.Element.prototype.setAttribute,R=window.Element.prototype.removeAttribute,S=window.Element.prototype.getAttributeNS,T=window.Element.prototype.setAttributeNS,U=window.Element.prototype.removeAttributeNS,Q=window.Element.prototype.insertAdjacentElement,J=window.Element.prototype.insertAdjacentHTML,ee=window.Element.prototype.prepend,te=window.Element.prototype.append,ne=window.Element.prototype.before,V=window.Element.prototype.after,oe=window.Element.prototype.replaceWith,ae=window.Element.prototype.remove,re=window.HTMLElement,le=Object.getOwnPropertyDescriptor(window.HTMLElement.prototype,"innerHTML"),W=window.HTMLElement.prototype.insertAdjacentElement,ie=window.HTMLElement.prototype.insertAdjacentHTML,pe=new function(){},de=window.customElements;if(!de||de.forcePolyfill||"function"!=typeof de.define||"function"!=typeof de.get){var Z=new t;b(),v(),E(Z,DocumentFragment.prototype,{g:z,append:q}),x(),k(),document.__CE_hasRegistry=!0;var X=new c(Z);Object.defineProperty(window,"customElements",{configurable:!0,enumerable:!0,value:X})}}.call(self);const a=new WeakMap,r=e=>"function"==typeof e&&a.has(e),l=window.customElements!==void 0&&window.customElements.polyfillWrapFlushCallback!==void 0,i=(e,t,n=null)=>{for(let o=t;o!==n;){const t=o.nextSibling;e.removeChild(o),o=t}},p={},d=`{{lit-${(Math.random()+"").slice(2)}}}`,c=`<!--${d}-->`,u=new RegExp(`${d}|${c}`),m=(()=>{const e=document.createElement("div");return e.setAttribute("style","{{bad value}}"),"{{bad value}}"!==e.getAttribute("style")})();class g{constructor(e,t){this.parts=[],this.element=t;let n=-1,o=0;const a=[],r=t=>{const l=t.content,i=document.createTreeWalker(l,133,null,!1);let p,s;for(;i.nextNode();){n++,p=s;const t=s=i.currentNode;if(1===t.nodeType){if(t.hasAttributes()){const a=t.attributes;let r=0;for(let e=0;e<a.length;e++)0<=a[e].value.indexOf(d)&&r++;for(;0<r--;){const a=e.strings[o],r=y.exec(a)[2],l=m&&"style"===r?"style$":/^[a-zA-Z-]*$/.test(r)?r:r.toLowerCase(),i=t.getAttribute(l),p=i.split(u);this.parts.push({type:"attribute",index:n,name:r,strings:p}),t.removeAttribute(l),o+=p.length-1}}"TEMPLATE"===t.tagName&&r(t)}else if(3===t.nodeType){const e=t.nodeValue;if(0>e.indexOf(d))continue;const r=t.parentNode,l=e.split(u),p=l.length-1;o+=p;for(let e=0;e<p;e++)r.insertBefore(""===l[e]?_():document.createTextNode(l[e]),t),this.parts.push({type:"node",index:n++});r.insertBefore(""===l[p]?_():document.createTextNode(l[p]),t),a.push(t)}else if(8===t.nodeType)if(t.nodeValue===d){const e=t.parentNode,r=t.previousSibling;null===r||r!==p||r.nodeType!==Node.TEXT_NODE?e.insertBefore(_(),t):n--,this.parts.push({type:"node",index:n++}),a.push(t),null===t.nextSibling?e.insertBefore(_(),t):n--,s=p,o++}else for(let e=-1;-1!==(e=t.nodeValue.indexOf(d,e+1));)this.parts.push({type:"node",index:-1})}};r(t);for(const o of a)o.parentNode.removeChild(o)}}const h=e=>-1!==e.index,_=()=>document.createComment(""),y=/([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F \x09\x0a\x0c\x0d"'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;class f{constructor(e,t,n){this._parts=[],this.template=e,this.processor=t,this.options=n}update(e){let t=0;for(const n of this._parts)void 0!==n&&n.setValue(e[t]),t++;for(const t of this._parts)void 0!==t&&t.commit()}_clone(){const e=l?this.template.element.content.cloneNode(!0):document.importNode(this.template.element.content,!0),t=this.template.parts;let n=0,o=0;const a=e=>{const r=document.createTreeWalker(e,133,null,!1);for(let l=r.nextNode();n<t.length&&null!==l;){const e=t[n];if(!h(e))this._parts.push(void 0),n++;else if(o===e.index){if("node"===e.type){const e=this.processor.handleTextExpression(this.options);e.insertAfterNode(l),this._parts.push(e)}else this._parts.push(...this.processor.handleAttributeExpressions(l,e.name,e.strings,this.options));n++}else o++,"TEMPLATE"===l.nodeName&&a(l.content),l=r.nextNode()}};return a(e),l&&(document.adoptNode(e),customElements.upgrade(e)),e}}class b{constructor(e,t,n,o){this.strings=e,this.values=t,this.type=n,this.processor=o}getHTML(){const e=this.strings.length-1;let t="",n=!0;for(let o=0;o<e;o++){const e=this.strings[o];t+=e;const a=e.lastIndexOf(">");n=(-1<a||n)&&-1===e.indexOf("<",a+1),!n&&m&&(t=t.replace(y,(e,t,n,o)=>"style"===n?`${t}style$${o}`:e)),t+=n?c:d}return t+=this.strings[e],t}getTemplateElement(){const e=document.createElement("template");return e.innerHTML=this.getHTML(),e}}const E=e=>null===e||"object"!=typeof e&&"function"!=typeof e;class C{constructor(e,t,n){this.dirty=!0,this.element=e,this.name=t,this.strings=n,this.parts=[];for(let o=0;o<n.length-1;o++)this.parts[o]=this._createPart()}_createPart(){return new v(this)}_getValue(){const e=this.strings,t=e.length-1;let n="";for(let o=0;o<t;o++){n+=e[o];const t=this.parts[o];if(void 0!==t){const e=t.value;if(null!=e&&(Array.isArray(e)||"string"!=typeof e&&e[Symbol.iterator]))for(const o of e)n+="string"==typeof o?o:o+"";else n+="string"==typeof e?e:e+""}}return n+=e[t],n}commit(){this.dirty&&(this.dirty=!1,this.element.setAttribute(this.name,this._getValue()))}}class v{constructor(e){this.value=void 0,this.committer=e}setValue(e){e===p||E(e)&&e===this.value||(this.value=e,!r(e)&&(this.committer.dirty=!0))}commit(){for(;r(this.value);){const e=this.value;this.value=p,e(this)}this.value===p||this.committer.commit()}}class N{constructor(e){this.value=void 0,this._pendingValue=void 0,this.options=e}appendInto(e){this.startNode=e.appendChild(_()),this.endNode=e.appendChild(_())}insertAfterNode(e){this.startNode=e,this.endNode=e.nextSibling}appendIntoPart(e){e._insert(this.startNode=_()),e._insert(this.endNode=_())}insertAfterPart(e){e._insert(this.startNode=_()),this.endNode=e.endNode,e.endNode=this.startNode}setValue(e){this._pendingValue=e}commit(){for(;r(this._pendingValue);){const e=this._pendingValue;this._pendingValue=p,e(this)}const e=this._pendingValue;e===p||(E(e)?e!==this.value&&this._commitText(e):e instanceof b?this._commitTemplateResult(e):e instanceof Node?this._commitNode(e):Array.isArray(e)||e[Symbol.iterator]?this._commitIterable(e):e.then===void 0?this._commitText(e):this._commitPromise(e))}_insert(e){this.endNode.parentNode.insertBefore(e,this.endNode)}_commitNode(e){this.value===e||(this.clear(),this._insert(e),this.value=e)}_commitText(e){const t=this.startNode.nextSibling;e=null==e?"":e,t===this.endNode.previousSibling&&t.nodeType===Node.TEXT_NODE?t.textContent=e:this._commitNode(document.createTextNode("string"==typeof e?e:e+"")),this.value=e}_commitTemplateResult(e){const t=this.options.templateFactory(e);if(this.value&&this.value.template===t)this.value.update(e.values);else{const n=new f(t,e.processor,this.options),o=n._clone();n.update(e.values),this._commitNode(o),this.value=n}}_commitIterable(e){Array.isArray(this.value)||(this.value=[],this.clear());const t=this.value;let n,o=0;for(const a of e)n=t[o],void 0===n&&(n=new N(this.options),t.push(n),0==o?n.appendIntoPart(this):n.insertAfterPart(t[o-1])),n.setValue(a),n.commit(),o++;o<t.length&&(t.length=o,this.clear(n&&n.endNode))}_commitPromise(e){this.value=e,e.then(t=>{this.value===e&&(this.setValue(t),this.commit())})}clear(e=this.startNode){i(this.startNode.parentNode,e.nextSibling,this.endNode)}}class S{constructor(e,t,n){if(this.value=void 0,this._pendingValue=void 0,2!==n.length||""!==n[0]||""!==n[1])throw new Error("Boolean attributes can only contain a single expression");this.element=e,this.name=t,this.strings=n}setValue(e){this._pendingValue=e}commit(){for(;r(this._pendingValue);){const e=this._pendingValue;this._pendingValue=p,e(this)}if(this._pendingValue!==p){const e=!!this._pendingValue;this.value!==e&&(e?this.element.setAttribute(this.name,""):this.element.removeAttribute(this.name)),this.value=e,this._pendingValue=p}}}class P extends C{constructor(e,t,n){super(e,t,n),this.single=2===n.length&&""===n[0]&&""===n[1]}_createPart(){return new T(this)}_getValue(){return this.single?this.parts[0].value:super._getValue()}commit(){this.dirty&&(this.dirty=!1,this.element[this.name]=this._getValue())}}class T extends v{}let x=!1;try{const e={get capture(){return x=!0,!1}};window.addEventListener("test",e,e),window.removeEventListener("test",e,e)}catch(e){}class A{constructor(e,t,n){this.value=void 0,this._pendingValue=void 0,this.element=e,this.eventName=t,this.eventContext=n,this._boundHandleEvent=t=>this.handleEvent(t)}setValue(e){this._pendingValue=e}commit(){for(;r(this._pendingValue);){const e=this._pendingValue;this._pendingValue=p,e(this)}if(this._pendingValue===p)return;const e=this._pendingValue,t=this.value,n=null==e||null!=t&&(e.capture!==t.capture||e.once!==t.once||e.passive!==t.passive);n&&this.element.removeEventListener(this.eventName,this._boundHandleEvent,this._options),this._options=k(e),null!=e&&(null==t||n)&&this.element.addEventListener(this.eventName,this._boundHandleEvent,this._options),this.value=e,this._pendingValue=p}handleEvent(e){"function"==typeof this.value?this.value.call(this.eventContext||this.element,e):this.value.handleEvent(e)}}const k=e=>e&&(x?{capture:e.capture,passive:e.passive,once:e.once}:e.capture);const w=new class{handleAttributeExpressions(e,t,n,o){const a=t[0];if("."===a){const o=new P(e,t.slice(1),n);return o.parts}if("@"===a)return[new A(e,t.slice(1),o.eventContext)];if("?"===a)return[new S(e,t.slice(1),n)];const r=new C(e,t,n);return r.parts}handleTextExpression(e){return new N(e)}},M=new Map,V=new WeakMap,L=(t,n,o)=>{let a=V.get(n);a===void 0&&(i(n,n.firstChild),V.set(n,a=new N(Object.assign({templateFactory:e},o))),a.appendInto(n)),a.setValue(t),a.commit()},O=(e,...t)=>new b(e,t,"html",w),D=NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_COMMENT|NodeFilter.SHOW_TEXT,H=e=>{let t=e.nodeType===Node.DOCUMENT_FRAGMENT_NODE?0:1;for(const n=document.createTreeWalker(e,D,null,!1);n.nextNode();)t++;return t},R=(e,t=-1)=>{for(let n=t+1;n<e.length;n++){const t=e[n];if(h(t))return n}return-1},I=(e,t)=>`${e}--${t}`;let j=!0;"undefined"==typeof window.ShadyCSS?j=!1:"undefined"==typeof window.ShadyCSS.prepareTemplateDom&&(console.warn("Incompatible ShadyCSS version detected.Please update to at least @webcomponents/webcomponentsjs@2.0.2 and@webcomponents/shadycss@1.3.1."),j=!1);const F=e=>t=>{const n=I(t.type,e);let o=M.get(n);o===void 0&&(o=new Map,M.set(n,o));let a=o.get(t.strings);if(a===void 0){const n=t.getTemplateElement();j&&window.ShadyCSS.prepareTemplateDom(n,e),a=new g(t,n),o.set(t.strings,a)}return a},W=["html","svg"],U=e=>{W.forEach(n=>{const o=M.get(I(n,e));o!==void 0&&o.forEach(e=>{const{element:{content:n}}=e,o=new Set;Array.from(n.querySelectorAll("style")).forEach(e=>{o.add(e)}),t(e,o)})})},B=new Set,z=(e,o,a)=>{B.add(a);const r=e.querySelectorAll("style");if(0!==r.length){const l=document.createElement("style");for(let e=0;e<r.length;e++){const t=r[e];t.parentNode.removeChild(t),l.textContent+=t.textContent}if(U(a),n(o,l,o.element.content.firstChild),window.ShadyCSS.prepareTemplateStyles(o.element,a),window.ShadyCSS.nativeShadow){const t=o.element.content.querySelector("style");e.insertBefore(t.cloneNode(!0),e.firstChild)}else{o.element.content.insertBefore(l,o.element.content.firstChild);const e=new Set;e.add(l),t(o,e)}}},q=(e,t,n)=>{const o=n.scopeName,a=V.has(t);if(L(e,t,Object.assign({templateFactory:F(o)},n)),t instanceof ShadowRoot&&j&&e instanceof b){if(!B.has(o)){const e=V.get(t),n=e.value;z(t,n.template,o)}a||window.ShadyCSS.styleElement(t.host)}},X=e=>null!==e,K=e=>e?"":null,Y=(e,t)=>t!==e&&(t===t||e===e),G={attribute:!0,type:String,reflect:!1,hasChanged:Y},$=new Promise(e=>e(!0)),Q=1,Z=4,J=8;class ee extends HTMLElement{constructor(){super(),this._updateState=0,this._instanceProperties=void 0,this._updatePromise=$,this._changedProperties=new Map,this._reflectingProperties=void 0,this.initialize()}static get observedAttributes(){this._finalize();const e=[];for(const[t,n]of this._classProperties){const o=this._attributeNameForProperty(t,n);o!==void 0&&(this._attributeToPropertyMap.set(o,t),e.push(o))}return e}static createProperty(e,t=G){if(!this.hasOwnProperty("_classProperties")){this._classProperties=new Map;const e=Object.getPrototypeOf(this)._classProperties;void 0!==e&&e.forEach((e,t)=>this._classProperties.set(t,e))}if(this._classProperties.set(e,t),this.prototype.hasOwnProperty(e))return;const n="symbol"==typeof e?Symbol():`__${e}`;Object.defineProperty(this.prototype,e,{get(){return this[n]},set(o){const a=this[e];this[n]=o,this._requestPropertyUpdate(e,a,t)},configurable:!0,enumerable:!0})}static _finalize(){if(this.hasOwnProperty("_finalized")&&this._finalized)return;const e=Object.getPrototypeOf(this);"function"==typeof e._finalize&&e._finalize(),this._finalized=!0,this._attributeToPropertyMap=new Map;const t=this.properties,n=[...Object.getOwnPropertyNames(t),...("function"==typeof Object.getOwnPropertySymbols?Object.getOwnPropertySymbols(t):[])];for(const e of n)this.createProperty(e,t[e])}static _attributeNameForProperty(e,t){const n=t!==void 0&&t.attribute;return!1===n?void 0:"string"==typeof n?n:"string"==typeof e?e.toLowerCase():void 0}static _valueHasChanged(e,t,n=Y){return n(e,t)}static _propertyValueFromAttribute(e,t){const n=t&&t.type;if(n===void 0)return e;const o=n===Boolean?X:"function"==typeof n?n:n.fromAttribute;return o?o(e):e}static _propertyValueToAttribute(e,t){if(void 0!==t&&void 0!==t.reflect){const n=t.type===Boolean?K:t.type&&t.type.toAttribute||String;return n(e)}}initialize(){this.renderRoot=this.createRenderRoot(),this._saveInstanceProperties()}_saveInstanceProperties(){for(const[e]of this.constructor._classProperties)if(this.hasOwnProperty(e)){const t=this[e];delete this[e],this._instanceProperties||(this._instanceProperties=new Map),this._instanceProperties.set(e,t)}}_applyInstanceProperties(){for(const[e,t]of this._instanceProperties)this[e]=t;this._instanceProperties=void 0}createRenderRoot(){return this.attachShadow({mode:"open"})}connectedCallback(){this._updateState&Q?window.ShadyCSS!==void 0&&window.ShadyCSS.styleElement(this):this.requestUpdate()}disconnectedCallback(){}attributeChangedCallback(e,t,n){t!==n&&this._attributeToProperty(e,n)}_propertyToAttribute(e,t,n=G){const o=this.constructor,a=o._propertyValueToAttribute(t,n);if(a!==void 0){const t=o._attributeNameForProperty(e,n);t!==void 0&&(this._updateState|=J,null===a?this.removeAttribute(t):this.setAttribute(t,a),this._updateState&=~J)}}_attributeToProperty(e,t){if(!(this._updateState&J)){const n=this.constructor,o=n._attributeToPropertyMap.get(e);if(o!==void 0){const e=n._classProperties.get(o);this[o]=n._propertyValueFromAttribute(t,e)}}}requestUpdate(e,t){if(e!==void 0){const n=this.constructor._classProperties.get(e)||G;return this._requestPropertyUpdate(e,t,n)}return this._invalidate()}_requestPropertyUpdate(e,t,n){return this.constructor._valueHasChanged(this[e],t,n.hasChanged)?(this._changedProperties.has(e)||this._changedProperties.set(e,t),!0===n.reflect&&(void 0===this._reflectingProperties&&(this._reflectingProperties=new Map),this._reflectingProperties.set(e,n)),this._invalidate()):this.updateComplete}async _invalidate(){if(!this._hasRequestedUpdate){this._updateState|=Z;let e;const t=this._updatePromise;this._updatePromise=new Promise(t=>e=t),await t,this._validate(),e(!this._hasRequestedUpdate)}return this.updateComplete}get _hasRequestedUpdate(){return this._updateState&Z}_validate(){if(this._instanceProperties&&this._applyInstanceProperties(),this.shouldUpdate(this._changedProperties)){const e=this._changedProperties;this.update(e),this._markUpdated(),this._updateState&Q||(this._updateState|=Q,this.firstUpdated(e)),this.updated(e)}else this._markUpdated()}_markUpdated(){this._changedProperties=new Map,this._updateState&=~Z}get updateComplete(){return this._updatePromise}shouldUpdate(){return!0}update(){if(this._reflectingProperties!==void 0&&0<this._reflectingProperties.size){for(const[e,t]of this._reflectingProperties)this._propertyToAttribute(e,this[e],t);this._reflectingProperties=void 0}}updated(){}firstUpdated(){}}ee._attributeToPropertyMap=new Map,ee._finalized=!0,ee._classProperties=new Map,ee.properties={};class te extends ee{update(e){super.update(e);const t=this.render();t instanceof b&&this.constructor.render(t,this.renderRoot,{scopeName:this.localName,eventContext:this})}render(){}}te.render=q;class ne extends te{static get properties(){return{duration:Number,name:String,isOpen:{type:Boolean,reflect:!0}}}render(){return O`
-      <style>
+(function () {
+  'use strict';
 
+  /**
+   * @license
+   * Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+   */
+  (function (scope) {
+    // https://connect.microsoft.com/IE/feedback/details/790389/event-defaultprevented-returns-false-after-preventdefault-was-called
+
+    var workingDefaultPrevented = function () {
+      var e = document.createEvent('Event');
+      e.initEvent('foo', true, true);
+      e.preventDefault();
+      return e.defaultPrevented;
+    }();
+
+    if (!workingDefaultPrevented) {
+      var origPreventDefault = Event.prototype.preventDefault;
+
+      Event.prototype.preventDefault = function () {
+        if (!this.cancelable) {
+          return;
+        }
+
+        origPreventDefault.call(this);
+        Object.defineProperty(this, 'defaultPrevented', {
+          get: function () {
+            return true;
+          },
+          configurable: true
+        });
+      };
+    }
+
+    var isIE = /Trident/.test(navigator.userAgent); // CustomEvent constructor shim
+
+    if (!window.CustomEvent || isIE && typeof window.CustomEvent !== 'function') {
+      window.CustomEvent = function (inType, params) {
+        params = params || {};
+        var e = document.createEvent('CustomEvent');
+        e.initCustomEvent(inType, Boolean(params.bubbles), Boolean(params.cancelable), params.detail);
+        return e;
+      };
+
+      window.CustomEvent.prototype = window.Event.prototype;
+    } // Event constructor shim
+
+
+    if (!window.Event || isIE && typeof window.Event !== 'function') {
+      var origEvent = window.Event;
+
+      window.Event = function (inType, params) {
+        params = params || {};
+        var e = document.createEvent('Event');
+        e.initEvent(inType, Boolean(params.bubbles), Boolean(params.cancelable));
+        return e;
+      };
+
+      if (origEvent) {
+        for (var i in origEvent) {
+          window.Event[i] = origEvent[i];
+        }
+      }
+
+      window.Event.prototype = origEvent.prototype;
+    }
+
+    if (!window.MouseEvent || isIE && typeof window.MouseEvent !== 'function') {
+      var origMouseEvent = window.MouseEvent;
+
+      window.MouseEvent = function (inType, params) {
+        params = params || {};
+        var e = document.createEvent('MouseEvent');
+        e.initMouseEvent(inType, Boolean(params.bubbles), Boolean(params.cancelable), params.view || window, params.detail, params.screenX, params.screenY, params.clientX, params.clientY, params.ctrlKey, params.altKey, params.shiftKey, params.metaKey, params.button, params.relatedTarget);
+        return e;
+      };
+
+      if (origMouseEvent) {
+        for (var i in origMouseEvent) {
+          window.MouseEvent[i] = origMouseEvent[i];
+        }
+      }
+
+      window.MouseEvent.prototype = origMouseEvent.prototype;
+    } // ES6 stuff
+
+
+    if (!Array.from) {
+      Array.from = function (object) {
+        return [].slice.call(object);
+      };
+    }
+
+    if (!Object.assign) {
+      var assign = function (target, source) {
+        var n$ = Object.getOwnPropertyNames(source);
+
+        for (var i = 0, p; i < n$.length; i++) {
+          p = n$[i];
+          target[p] = source[p];
+        }
+      };
+
+      Object.assign = function (target, sources) {
+        var args = [].slice.call(arguments, 1);
+
+        for (var i = 0, s; i < args.length; i++) {
+          s = args[i];
+
+          if (s) {
+            assign(target, s);
+          }
+        }
+
+        return target;
+      };
+    }
+  })(window.WebComponents);
+
+  (function () {
+
+    var aa = new Set("annotation-xml color-profile font-face font-face-src font-face-uri font-face-format font-face-name missing-glyph".split(" "));
+
+    function g(b) {
+      var a = aa.has(b);
+      b = /^[a-z][.0-9_a-z]*-[\-.0-9_a-z]*$/.test(b);
+      return !a && b;
+    }
+
+    function l(b) {
+      var a = b.isConnected;
+      if (void 0 !== a) return a;
+
+      for (; b && !(b.__CE_isImportDocument || b instanceof Document);) b = b.parentNode || (window.ShadowRoot && b instanceof ShadowRoot ? b.host : void 0);
+
+      return !(!b || !(b.__CE_isImportDocument || b instanceof Document));
+    }
+
+    function p(b, a) {
+      for (; a && a !== b && !a.nextSibling;) a = a.parentNode;
+
+      return a && a !== b ? a.nextSibling : null;
+    }
+
+    function q(b, a, d) {
+      d = void 0 === d ? new Set() : d;
+
+      for (var c = b; c;) {
+        if (c.nodeType === Node.ELEMENT_NODE) {
+          var e = c;
+          a(e);
+          var f = e.localName;
+
+          if ("link" === f && "import" === e.getAttribute("rel")) {
+            c = e.import;
+            if (c instanceof Node && !d.has(c)) for (d.add(c), c = c.firstChild; c; c = c.nextSibling) q(c, a, d);
+            c = p(b, e);
+            continue;
+          } else if ("template" === f) {
+            c = p(b, e);
+            continue;
+          }
+
+          if (e = e.__CE_shadowRoot) for (e = e.firstChild; e; e = e.nextSibling) q(e, a, d);
+        }
+
+        c = c.firstChild ? c.firstChild : p(b, c);
+      }
+    }
+
+    function t(b, a, d) {
+      b[a] = d;
+    }
+
+    function u() {
+      this.a = new Map();
+      this.f = new Map();
+      this.c = [];
+      this.b = !1;
+    }
+
+    function ba(b, a, d) {
+      b.a.set(a, d);
+      b.f.set(d.constructorFunction, d);
+    }
+
+    function v(b, a) {
+      b.b = !0;
+      b.c.push(a);
+    }
+
+    function w(b, a) {
+      b.b && q(a, function (a) {
+        return x(b, a);
+      });
+    }
+
+    function x(b, a) {
+      if (b.b && !a.__CE_patched) {
+        a.__CE_patched = !0;
+
+        for (var d = 0; d < b.c.length; d++) b.c[d](a);
+      }
+    }
+
+    function y(b, a) {
+      var d = [];
+      q(a, function (a) {
+        return d.push(a);
+      });
+
+      for (a = 0; a < d.length; a++) {
+        var c = d[a];
+        1 === c.__CE_state ? b.connectedCallback(c) : z(b, c);
+      }
+    }
+
+    function A(b, a) {
+      var d = [];
+      q(a, function (a) {
+        return d.push(a);
+      });
+
+      for (a = 0; a < d.length; a++) {
+        var c = d[a];
+        1 === c.__CE_state && b.disconnectedCallback(c);
+      }
+    }
+
+    function B(b, a, d) {
+      d = void 0 === d ? {} : d;
+
+      var c = d.u || new Set(),
+          e = d.h || function (a) {
+        return z(b, a);
+      },
+          f = [];
+
+      q(a, function (a) {
+        if ("link" === a.localName && "import" === a.getAttribute("rel")) {
+          var d = a.import;
+          d instanceof Node && (d.__CE_isImportDocument = !0, d.__CE_hasRegistry = !0);
+          d && "complete" === d.readyState ? d.__CE_documentLoadHandled = !0 : a.addEventListener("load", function () {
+            var d = a.import;
+
+            if (!d.__CE_documentLoadHandled) {
+              d.__CE_documentLoadHandled = !0;
+              var f = new Set(c);
+              f.delete(d);
+              B(b, d, {
+                u: f,
+                h: e
+              });
+            }
+          });
+        } else f.push(a);
+      }, c);
+      if (b.b) for (a = 0; a < f.length; a++) x(b, f[a]);
+
+      for (a = 0; a < f.length; a++) e(f[a]);
+    }
+
+    function z(b, a) {
+      if (void 0 === a.__CE_state) {
+        var d = a.ownerDocument;
+        if (d.defaultView || d.__CE_isImportDocument && d.__CE_hasRegistry) if (d = b.a.get(a.localName)) {
+          d.constructionStack.push(a);
+          var c = d.constructorFunction;
+
+          try {
+            try {
+              if (new c() !== a) throw Error("The custom element constructor did not produce the element being upgraded.");
+            } finally {
+              d.constructionStack.pop();
+            }
+          } catch (m) {
+            throw a.__CE_state = 2, m;
+          }
+
+          a.__CE_state = 1;
+          a.__CE_definition = d;
+          if (d.attributeChangedCallback) for (d = d.observedAttributes, c = 0; c < d.length; c++) {
+            var e = d[c],
+                f = a.getAttribute(e);
+            null !== f && b.attributeChangedCallback(a, e, null, f, null);
+          }
+          l(a) && b.connectedCallback(a);
+        }
+      }
+    }
+
+    u.prototype.connectedCallback = function (b) {
+      var a = b.__CE_definition;
+      a.connectedCallback && a.connectedCallback.call(b);
+    };
+
+    u.prototype.disconnectedCallback = function (b) {
+      var a = b.__CE_definition;
+      a.disconnectedCallback && a.disconnectedCallback.call(b);
+    };
+
+    u.prototype.attributeChangedCallback = function (b, a, d, c, e) {
+      var f = b.__CE_definition;
+      f.attributeChangedCallback && -1 < f.observedAttributes.indexOf(a) && f.attributeChangedCallback.call(b, a, d, c, e);
+    };
+
+    function C(b) {
+      var a = document;
+      this.c = b;
+      this.a = a;
+      this.b = void 0;
+      B(this.c, this.a);
+      "loading" === this.a.readyState && (this.b = new MutationObserver(this.f.bind(this)), this.b.observe(this.a, {
+        childList: !0,
+        subtree: !0
+      }));
+    }
+
+    function D(b) {
+      b.b && b.b.disconnect();
+    }
+
+    C.prototype.f = function (b) {
+      var a = this.a.readyState;
+      "interactive" !== a && "complete" !== a || D(this);
+
+      for (a = 0; a < b.length; a++) for (var d = b[a].addedNodes, c = 0; c < d.length; c++) B(this.c, d[c]);
+    };
+
+    function ca() {
+      var b = this;
+      this.b = this.a = void 0;
+      this.c = new Promise(function (a) {
+        b.b = a;
+        b.a && a(b.a);
+      });
+    }
+
+    function E(b) {
+      if (b.a) throw Error("Already resolved.");
+      b.a = void 0;
+      b.b && b.b(void 0);
+    }
+
+    function F(b) {
+      this.c = !1;
+      this.a = b;
+      this.j = new Map();
+
+      this.f = function (a) {
+        return a();
+      };
+
+      this.b = !1;
+      this.i = [];
+      this.o = new C(b);
+    }
+
+    F.prototype.l = function (b, a) {
+      var d = this;
+      if (!(a instanceof Function)) throw new TypeError("Custom element constructors must be functions.");
+      if (!g(b)) throw new SyntaxError("The element name '" + b + "' is not valid.");
+      if (this.a.a.get(b)) throw Error("A custom element with name '" + b + "' has already been defined.");
+      if (this.c) throw Error("A custom element is already being defined.");
+      this.c = !0;
+
+      try {
+        var c = function (a) {
+          var b = e[a];
+          if (void 0 !== b && !(b instanceof Function)) throw Error("The '" + a + "' callback must be a function.");
+          return b;
+        },
+            e = a.prototype;
+
+        if (!(e instanceof Object)) throw new TypeError("The custom element constructor's prototype is not an object.");
+        var f = c("connectedCallback");
+        var m = c("disconnectedCallback");
+        var k = c("adoptedCallback");
+        var h = c("attributeChangedCallback");
+        var n = a.observedAttributes || [];
+      } catch (r) {
+        return;
+      } finally {
+        this.c = !1;
+      }
+
+      a = {
+        localName: b,
+        constructorFunction: a,
+        connectedCallback: f,
+        disconnectedCallback: m,
+        adoptedCallback: k,
+        attributeChangedCallback: h,
+        observedAttributes: n,
+        constructionStack: []
+      };
+      ba(this.a, b, a);
+      this.i.push(a);
+      this.b || (this.b = !0, this.f(function () {
+        return da(d);
+      }));
+    };
+
+    F.prototype.h = function (b) {
+      B(this.a, b);
+    };
+
+    function da(b) {
+      if (!1 !== b.b) {
+        b.b = !1;
+
+        for (var a = b.i, d = [], c = new Map(), e = 0; e < a.length; e++) c.set(a[e].localName, []);
+
+        B(b.a, document, {
+          h: function (a) {
+            if (void 0 === a.__CE_state) {
+              var e = a.localName,
+                  f = c.get(e);
+              f ? f.push(a) : b.a.a.get(e) && d.push(a);
+            }
+          }
+        });
+
+        for (e = 0; e < d.length; e++) z(b.a, d[e]);
+
+        for (; 0 < a.length;) {
+          var f = a.shift();
+          e = f.localName;
+          f = c.get(f.localName);
+
+          for (var m = 0; m < f.length; m++) z(b.a, f[m]);
+
+          (e = b.j.get(e)) && E(e);
+        }
+      }
+    }
+
+    F.prototype.get = function (b) {
+      if (b = this.a.a.get(b)) return b.constructorFunction;
+    };
+
+    F.prototype.m = function (b) {
+      if (!g(b)) return Promise.reject(new SyntaxError("'" + b + "' is not a valid custom element name."));
+      var a = this.j.get(b);
+      if (a) return a.c;
+      a = new ca();
+      this.j.set(b, a);
+      this.a.a.get(b) && !this.i.some(function (a) {
+        return a.localName === b;
+      }) && E(a);
+      return a.c;
+    };
+
+    F.prototype.s = function (b) {
+      D(this.o);
+      var a = this.f;
+
+      this.f = function (d) {
+        return b(function () {
+          return a(d);
+        });
+      };
+    };
+
+    window.CustomElementRegistry = F;
+    F.prototype.define = F.prototype.l;
+    F.prototype.upgrade = F.prototype.h;
+    F.prototype.get = F.prototype.get;
+    F.prototype.whenDefined = F.prototype.m;
+    F.prototype.polyfillWrapFlushCallback = F.prototype.s;
+    var G = window.Document.prototype.createElement,
+        H = window.Document.prototype.createElementNS,
+        ea = window.Document.prototype.importNode,
+        fa = window.Document.prototype.prepend,
+        ha = window.Document.prototype.append,
+        ia = window.DocumentFragment.prototype.prepend,
+        ja = window.DocumentFragment.prototype.append,
+        I = window.Node.prototype.cloneNode,
+        J = window.Node.prototype.appendChild,
+        K = window.Node.prototype.insertBefore,
+        L = window.Node.prototype.removeChild,
+        M = window.Node.prototype.replaceChild,
+        N = Object.getOwnPropertyDescriptor(window.Node.prototype, "textContent"),
+        O = window.Element.prototype.attachShadow,
+        P = Object.getOwnPropertyDescriptor(window.Element.prototype, "innerHTML"),
+        Q = window.Element.prototype.getAttribute,
+        R = window.Element.prototype.setAttribute,
+        S = window.Element.prototype.removeAttribute,
+        T = window.Element.prototype.getAttributeNS,
+        U = window.Element.prototype.setAttributeNS,
+        ka = window.Element.prototype.removeAttributeNS,
+        la = window.Element.prototype.insertAdjacentElement,
+        ma = window.Element.prototype.insertAdjacentHTML,
+        na = window.Element.prototype.prepend,
+        oa = window.Element.prototype.append,
+        V = window.Element.prototype.before,
+        pa = window.Element.prototype.after,
+        qa = window.Element.prototype.replaceWith,
+        ra = window.Element.prototype.remove,
+        sa = window.HTMLElement,
+        W = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, "innerHTML"),
+        ta = window.HTMLElement.prototype.insertAdjacentElement,
+        ua = window.HTMLElement.prototype.insertAdjacentHTML;
+    var va = new function () {}();
+
+    function wa() {
+      var b = X;
+
+      window.HTMLElement = function () {
+        function a() {
+          var a = this.constructor,
+              c = b.f.get(a);
+          if (!c) throw Error("The custom element being constructed was not registered with `customElements`.");
+          var e = c.constructionStack;
+          if (0 === e.length) return e = G.call(document, c.localName), Object.setPrototypeOf(e, a.prototype), e.__CE_state = 1, e.__CE_definition = c, x(b, e), e;
+          c = e.length - 1;
+          var f = e[c];
+          if (f === va) throw Error("The HTMLElement constructor was either called reentrantly for this constructor or called multiple times.");
+          e[c] = va;
+          Object.setPrototypeOf(f, a.prototype);
+          x(b, f);
+          return f;
+        }
+
+        a.prototype = sa.prototype;
+        Object.defineProperty(a.prototype, "constructor", {
+          writable: !0,
+          configurable: !0,
+          enumerable: !1,
+          value: a
+        });
+        return a;
+      }();
+    }
+
+    function Y(b, a, d) {
+      function c(a) {
+        return function (d) {
+          for (var e = [], c = 0; c < arguments.length; ++c) e[c] = arguments[c];
+
+          c = [];
+
+          for (var f = [], n = 0; n < e.length; n++) {
+            var r = e[n];
+            r instanceof Element && l(r) && f.push(r);
+            if (r instanceof DocumentFragment) for (r = r.firstChild; r; r = r.nextSibling) c.push(r);else c.push(r);
+          }
+
+          a.apply(this, e);
+
+          for (e = 0; e < f.length; e++) A(b, f[e]);
+
+          if (l(this)) for (e = 0; e < c.length; e++) f = c[e], f instanceof Element && y(b, f);
+        };
+      }
+
+      void 0 !== d.g && (a.prepend = c(d.g));
+      void 0 !== d.append && (a.append = c(d.append));
+    }
+
+    function xa() {
+      var b = X;
+      t(Document.prototype, "createElement", function (a) {
+        if (this.__CE_hasRegistry) {
+          var d = b.a.get(a);
+          if (d) return new d.constructorFunction();
+        }
+
+        a = G.call(this, a);
+        x(b, a);
+        return a;
+      });
+      t(Document.prototype, "importNode", function (a, d) {
+        a = ea.call(this, a, !!d);
+        this.__CE_hasRegistry ? B(b, a) : w(b, a);
+        return a;
+      });
+      t(Document.prototype, "createElementNS", function (a, d) {
+        if (this.__CE_hasRegistry && (null === a || "http://www.w3.org/1999/xhtml" === a)) {
+          var c = b.a.get(d);
+          if (c) return new c.constructorFunction();
+        }
+
+        a = H.call(this, a, d);
+        x(b, a);
+        return a;
+      });
+      Y(b, Document.prototype, {
+        g: fa,
+        append: ha
+      });
+    }
+
+    function ya() {
+      function b(b, c) {
+        Object.defineProperty(b, "textContent", {
+          enumerable: c.enumerable,
+          configurable: !0,
+          get: c.get,
+          set: function (b) {
+            if (this.nodeType === Node.TEXT_NODE) c.set.call(this, b);else {
+              var d = void 0;
+
+              if (this.firstChild) {
+                var e = this.childNodes,
+                    k = e.length;
+
+                if (0 < k && l(this)) {
+                  d = Array(k);
+
+                  for (var h = 0; h < k; h++) d[h] = e[h];
+                }
+              }
+
+              c.set.call(this, b);
+              if (d) for (b = 0; b < d.length; b++) A(a, d[b]);
+            }
+          }
+        });
+      }
+
+      var a = X;
+      t(Node.prototype, "insertBefore", function (b, c) {
+        if (b instanceof DocumentFragment) {
+          var e = Array.prototype.slice.apply(b.childNodes);
+          b = K.call(this, b, c);
+          if (l(this)) for (c = 0; c < e.length; c++) y(a, e[c]);
+          return b;
+        }
+
+        e = l(b);
+        c = K.call(this, b, c);
+        e && A(a, b);
+        l(this) && y(a, b);
+        return c;
+      });
+      t(Node.prototype, "appendChild", function (b) {
+        if (b instanceof DocumentFragment) {
+          var c = Array.prototype.slice.apply(b.childNodes);
+          b = J.call(this, b);
+          if (l(this)) for (var e = 0; e < c.length; e++) y(a, c[e]);
+          return b;
+        }
+
+        c = l(b);
+        e = J.call(this, b);
+        c && A(a, b);
+        l(this) && y(a, b);
+        return e;
+      });
+      t(Node.prototype, "cloneNode", function (b) {
+        b = I.call(this, !!b);
+        this.ownerDocument.__CE_hasRegistry ? B(a, b) : w(a, b);
+        return b;
+      });
+      t(Node.prototype, "removeChild", function (b) {
+        var c = l(b),
+            e = L.call(this, b);
+        c && A(a, b);
+        return e;
+      });
+      t(Node.prototype, "replaceChild", function (b, c) {
+        if (b instanceof DocumentFragment) {
+          var e = Array.prototype.slice.apply(b.childNodes);
+          b = M.call(this, b, c);
+          if (l(this)) for (A(a, c), c = 0; c < e.length; c++) y(a, e[c]);
+          return b;
+        }
+
+        e = l(b);
+        var f = M.call(this, b, c),
+            d = l(this);
+        d && A(a, c);
+        e && A(a, b);
+        d && y(a, b);
+        return f;
+      });
+      N && N.get ? b(Node.prototype, N) : v(a, function (a) {
+        b(a, {
+          enumerable: !0,
+          configurable: !0,
+          get: function () {
+            for (var b = [], a = 0; a < this.childNodes.length; a++) b.push(this.childNodes[a].textContent);
+
+            return b.join("");
+          },
+          set: function (b) {
+            for (; this.firstChild;) L.call(this, this.firstChild);
+
+            J.call(this, document.createTextNode(b));
+          }
+        });
+      });
+    }
+
+    function za(b) {
+      function a(a) {
+        return function (e) {
+          for (var c = [], d = 0; d < arguments.length; ++d) c[d] = arguments[d];
+
+          d = [];
+
+          for (var k = [], h = 0; h < c.length; h++) {
+            var n = c[h];
+            n instanceof Element && l(n) && k.push(n);
+            if (n instanceof DocumentFragment) for (n = n.firstChild; n; n = n.nextSibling) d.push(n);else d.push(n);
+          }
+
+          a.apply(this, c);
+
+          for (c = 0; c < k.length; c++) A(b, k[c]);
+
+          if (l(this)) for (c = 0; c < d.length; c++) k = d[c], k instanceof Element && y(b, k);
+        };
+      }
+
+      var d = Element.prototype;
+      void 0 !== V && (d.before = a(V));
+      void 0 !== V && (d.after = a(pa));
+      void 0 !== qa && t(d, "replaceWith", function (a) {
+        for (var c = [], d = 0; d < arguments.length; ++d) c[d] = arguments[d];
+
+        d = [];
+
+        for (var m = [], k = 0; k < c.length; k++) {
+          var h = c[k];
+          h instanceof Element && l(h) && m.push(h);
+          if (h instanceof DocumentFragment) for (h = h.firstChild; h; h = h.nextSibling) d.push(h);else d.push(h);
+        }
+
+        k = l(this);
+        qa.apply(this, c);
+
+        for (c = 0; c < m.length; c++) A(b, m[c]);
+
+        if (k) for (A(b, this), c = 0; c < d.length; c++) m = d[c], m instanceof Element && y(b, m);
+      });
+      void 0 !== ra && t(d, "remove", function () {
+        var a = l(this);
+        ra.call(this);
+        a && A(b, this);
+      });
+    }
+
+    function Aa() {
+      function b(a, b) {
+        Object.defineProperty(a, "innerHTML", {
+          enumerable: b.enumerable,
+          configurable: !0,
+          get: b.get,
+          set: function (a) {
+            var d = this,
+                e = void 0;
+            l(this) && (e = [], q(this, function (a) {
+              a !== d && e.push(a);
+            }));
+            b.set.call(this, a);
+            if (e) for (var f = 0; f < e.length; f++) {
+              var m = e[f];
+              1 === m.__CE_state && c.disconnectedCallback(m);
+            }
+            this.ownerDocument.__CE_hasRegistry ? B(c, this) : w(c, this);
+            return a;
+          }
+        });
+      }
+
+      function a(a, b) {
+        t(a, "insertAdjacentElement", function (a, d) {
+          var e = l(d);
+          a = b.call(this, a, d);
+          e && A(c, d);
+          l(a) && y(c, d);
+          return a;
+        });
+      }
+
+      function d(a, b) {
+        function d(a, b) {
+          for (var d = []; a !== b; a = a.nextSibling) d.push(a);
+
+          for (b = 0; b < d.length; b++) B(c, d[b]);
+        }
+
+        t(a, "insertAdjacentHTML", function (a, c) {
+          a = a.toLowerCase();
+
+          if ("beforebegin" === a) {
+            var e = this.previousSibling;
+            b.call(this, a, c);
+            d(e || this.parentNode.firstChild, this);
+          } else if ("afterbegin" === a) e = this.firstChild, b.call(this, a, c), d(this.firstChild, e);else if ("beforeend" === a) e = this.lastChild, b.call(this, a, c), d(e || this.firstChild, null);else if ("afterend" === a) e = this.nextSibling, b.call(this, a, c), d(this.nextSibling, e);else throw new SyntaxError("The value provided (" + String(a) + ") is not one of 'beforebegin', 'afterbegin', 'beforeend', or 'afterend'.");
+        });
+      }
+
+      var c = X;
+      O && t(Element.prototype, "attachShadow", function (a) {
+        return this.__CE_shadowRoot = a = O.call(this, a);
+      });
+      P && P.get ? b(Element.prototype, P) : W && W.get ? b(HTMLElement.prototype, W) : v(c, function (a) {
+        b(a, {
+          enumerable: !0,
+          configurable: !0,
+          get: function () {
+            return I.call(this, !0).innerHTML;
+          },
+          set: function (a) {
+            var b = "template" === this.localName,
+                c = b ? this.content : this,
+                d = H.call(document, this.namespaceURI, this.localName);
+
+            for (d.innerHTML = a; 0 < c.childNodes.length;) L.call(c, c.childNodes[0]);
+
+            for (a = b ? d.content : d; 0 < a.childNodes.length;) J.call(c, a.childNodes[0]);
+          }
+        });
+      });
+      t(Element.prototype, "setAttribute", function (a, b) {
+        if (1 !== this.__CE_state) return R.call(this, a, b);
+        var d = Q.call(this, a);
+        R.call(this, a, b);
+        b = Q.call(this, a);
+        c.attributeChangedCallback(this, a, d, b, null);
+      });
+      t(Element.prototype, "setAttributeNS", function (a, b, d) {
+        if (1 !== this.__CE_state) return U.call(this, a, b, d);
+        var e = T.call(this, a, b);
+        U.call(this, a, b, d);
+        d = T.call(this, a, b);
+        c.attributeChangedCallback(this, b, e, d, a);
+      });
+      t(Element.prototype, "removeAttribute", function (a) {
+        if (1 !== this.__CE_state) return S.call(this, a);
+        var b = Q.call(this, a);
+        S.call(this, a);
+        null !== b && c.attributeChangedCallback(this, a, b, null, null);
+      });
+      t(Element.prototype, "removeAttributeNS", function (a, b) {
+        if (1 !== this.__CE_state) return ka.call(this, a, b);
+        var d = T.call(this, a, b);
+        ka.call(this, a, b);
+        var e = T.call(this, a, b);
+        d !== e && c.attributeChangedCallback(this, b, d, e, a);
+      });
+      ta ? a(HTMLElement.prototype, ta) : la ? a(Element.prototype, la) : console.warn("Custom Elements: `Element#insertAdjacentElement` was not patched.");
+      ua ? d(HTMLElement.prototype, ua) : ma ? d(Element.prototype, ma) : console.warn("Custom Elements: `Element#insertAdjacentHTML` was not patched.");
+      Y(c, Element.prototype, {
+        g: na,
+        append: oa
+      });
+      za(c);
+    }
+    /*
+    Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+    */
+
+    var Z = window.customElements;
+
+    if (!Z || Z.forcePolyfill || "function" != typeof Z.define || "function" != typeof Z.get) {
+      var X = new u();
+      wa();
+      xa();
+      Y(X, DocumentFragment.prototype, {
+        g: ia,
+        append: ja
+      });
+      ya();
+      Aa();
+      document.__CE_hasRegistry = !0;
+      var customElements = new F(X);
+      Object.defineProperty(window, "customElements", {
+        configurable: !0,
+        enumerable: !0,
+        value: customElements
+      });
+    }
+  }).call(self);
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  const directives = new WeakMap();
+  const isDirective = o => typeof o === 'function' && directives.has(o);
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  const isCEPolyfill = window.customElements !== undefined && window.customElements.polyfillWrapFlushCallback !== undefined;
+  /**
+   * Removes nodes, starting from `startNode` (inclusive) to `endNode`
+   * (exclusive), from `container`.
+   */
+
+  const removeNodes = (container, startNode, endNode = null) => {
+    let node = startNode;
+
+    while (node !== endNode) {
+      const n = node.nextSibling;
+      container.removeChild(node);
+      node = n;
+    }
+  };
+
+  /**
+   * A sentinel value that signals that a value was handled by a directive and
+   * should not be written to the DOM.
+   */
+  const noChange = {};
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+
+  /**
+   * An expression marker with embedded unique key to avoid collision with
+   * possible text in templates.
+   */
+  const marker = `{{lit-${String(Math.random()).slice(2)}}}`;
+  /**
+   * An expression marker used text-positions, not attribute positions,
+   * in template.
+   */
+
+  const nodeMarker = `<!--${marker}-->`;
+  const markerRegex = new RegExp(`${marker}|${nodeMarker}`);
+  const rewritesStyleAttribute = (() => {
+    const el = document.createElement('div');
+    el.setAttribute('style', '{{bad value}}');
+    return el.getAttribute('style') !== '{{bad value}}';
+  })();
+  /**
+   * An updateable Template that tracks the location of dynamic parts.
+   */
+
+  class Template {
+    constructor(result, element) {
+      this.parts = [];
+      this.element = element;
+      let index = -1;
+      let partIndex = 0;
+      const nodesToRemove = [];
+
+      const _prepareTemplate = template => {
+        const content = template.content; // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be
+        // null
+
+        const walker = document.createTreeWalker(content, 133
+        /* NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT |
+        NodeFilter.SHOW_TEXT */
+        , null, false); // The actual previous node, accounting for removals: if a node is removed
+        // it will never be the previousNode.
+
+        let previousNode; // Used to set previousNode at the top of the loop.
+
+        let currentNode;
+
+        while (walker.nextNode()) {
+          index++;
+          previousNode = currentNode;
+          const node = currentNode = walker.currentNode;
+
+          if (node.nodeType === 1
+          /* Node.ELEMENT_NODE */
+          ) {
+              if (node.hasAttributes()) {
+                const attributes = node.attributes; // Per
+                // https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap,
+                // attributes are not guaranteed to be returned in document order.
+                // In particular, Edge/IE can return them out of order, so we cannot
+                // assume a correspondance between part index and attribute index.
+
+                let count = 0;
+
+                for (let i = 0; i < attributes.length; i++) {
+                  if (attributes[i].value.indexOf(marker) >= 0) {
+                    count++;
+                  }
+                }
+
+                while (count-- > 0) {
+                  // Get the template literal section leading up to the first
+                  // expression in this attribute
+                  const stringForPart = result.strings[partIndex]; // Find the attribute name
+
+                  const name = lastAttributeNameRegex.exec(stringForPart)[2]; // Find the corresponding attribute
+                  // If the attribute name contains special characters, lower-case
+                  // it so that on XML nodes with case-sensitive getAttribute() we
+                  // can still find the attribute, which will have been lower-cased
+                  // by the parser.
+                  //
+                  // If the attribute name doesn't contain special character, it's
+                  // important to _not_ lower-case it, in case the name is
+                  // case-sensitive, like with XML attributes like "viewBox".
+
+                  const attributeLookupName = rewritesStyleAttribute && name === 'style' ? 'style$' : /^[a-zA-Z-]*$/.test(name) ? name : name.toLowerCase();
+                  const attributeValue = node.getAttribute(attributeLookupName);
+                  const strings = attributeValue.split(markerRegex);
+                  this.parts.push({
+                    type: 'attribute',
+                    index,
+                    name,
+                    strings
+                  });
+                  node.removeAttribute(attributeLookupName);
+                  partIndex += strings.length - 1;
+                }
+              }
+
+              if (node.tagName === 'TEMPLATE') {
+                _prepareTemplate(node);
+              }
+            } else if (node.nodeType === 3
+          /* Node.TEXT_NODE */
+          ) {
+              const nodeValue = node.nodeValue;
+
+              if (nodeValue.indexOf(marker) < 0) {
+                continue;
+              }
+
+              const parent = node.parentNode;
+              const strings = nodeValue.split(markerRegex);
+              const lastIndex = strings.length - 1; // We have a part for each match found
+
+              partIndex += lastIndex; // Generate a new text node for each literal section
+              // These nodes are also used as the markers for node parts
+
+              for (let i = 0; i < lastIndex; i++) {
+                parent.insertBefore(strings[i] === '' ? createMarker() : document.createTextNode(strings[i]), node);
+                this.parts.push({
+                  type: 'node',
+                  index: index++
+                });
+              }
+
+              parent.insertBefore(strings[lastIndex] === '' ? createMarker() : document.createTextNode(strings[lastIndex]), node);
+              nodesToRemove.push(node);
+            } else if (node.nodeType === 8
+          /* Node.COMMENT_NODE */
+          ) {
+              if (node.nodeValue === marker) {
+                const parent = node.parentNode; // Add a new marker node to be the startNode of the Part if any of
+                // the following are true:
+                //  * We don't have a previousSibling
+                //  * previousSibling is being removed (thus it's not the
+                //    `previousNode`)
+                //  * previousSibling is not a Text node
+                //
+                // TODO(justinfagnani): We should be able to use the previousNode
+                // here as the marker node and reduce the number of extra nodes we
+                // add to a template. See
+                // https://github.com/PolymerLabs/lit-html/issues/147
+
+                const previousSibling = node.previousSibling;
+
+                if (previousSibling === null || previousSibling !== previousNode || previousSibling.nodeType !== Node.TEXT_NODE) {
+                  parent.insertBefore(createMarker(), node);
+                } else {
+                  index--;
+                }
+
+                this.parts.push({
+                  type: 'node',
+                  index: index++
+                });
+                nodesToRemove.push(node); // If we don't have a nextSibling add a marker node.
+                // We don't have to check if the next node is going to be removed,
+                // because that node will induce a new marker if so.
+
+                if (node.nextSibling === null) {
+                  parent.insertBefore(createMarker(), node);
+                } else {
+                  index--;
+                }
+
+                currentNode = previousNode;
+                partIndex++;
+              } else {
+                let i = -1;
+
+                while ((i = node.nodeValue.indexOf(marker, i + 1)) !== -1) {
+                  // Comment node has a binding marker inside, make an inactive part
+                  // The binding won't work, but subsequent bindings will
+                  // TODO (justinfagnani): consider whether it's even worth it to
+                  // make bindings in comments work
+                  this.parts.push({
+                    type: 'node',
+                    index: -1
+                  });
+                }
+              }
+            }
+        }
+      };
+
+      _prepareTemplate(element); // Remove text binding nodes after the walk to not disturb the TreeWalker
+
+
+      for (const n of nodesToRemove) {
+        n.parentNode.removeChild(n);
+      }
+    }
+
+  }
+  const isTemplatePartActive = part => part.index !== -1; // Allows `document.createComment('')` to be renamed for a
+  // small manual size-savings.
+
+  const createMarker = () => document.createComment('');
+  /**
+   * This regex extracts the attribute name preceding an attribute-position
+   * expression. It does this by matching the syntax allowed for attributes
+   * against the string literal directly preceding the expression, assuming that
+   * the expression is in an attribute-value position.
+   *
+   * See attributes in the HTML spec:
+   * https://www.w3.org/TR/html5/syntax.html#attributes-0
+   *
+   * "\0-\x1F\x7F-\x9F" are Unicode control characters
+   *
+   * " \x09\x0a\x0c\x0d" are HTML space characters:
+   * https://www.w3.org/TR/html5/infrastructure.html#space-character
+   *
+   * So an attribute is:
+   *  * The name: any character except a control character, space character, ('),
+   *    ("), ">", "=", or "/"
+   *  * Followed by zero or more space characters
+   *  * Followed by "="
+   *  * Followed by zero or more space characters
+   *  * Followed by:
+   *    * Any character except space, ('), ("), "<", ">", "=", (`), or
+   *    * (") then any non-("), or
+   *    * (') then any non-(')
+   */
+
+  const lastAttributeNameRegex = /([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F \x09\x0a\x0c\x0d"'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  /**
+   * An instance of a `Template` that can be attached to the DOM and updated
+   * with new values.
+   */
+
+  class TemplateInstance {
+    constructor(template, processor, options) {
+      this._parts = [];
+      this.template = template;
+      this.processor = processor;
+      this.options = options;
+    }
+
+    update(values) {
+      let i = 0;
+
+      for (const part of this._parts) {
+        if (part !== undefined) {
+          part.setValue(values[i]);
+        }
+
+        i++;
+      }
+
+      for (const part of this._parts) {
+        if (part !== undefined) {
+          part.commit();
+        }
+      }
+    }
+
+    _clone() {
+      // When using the Custom Elements polyfill, clone the node, rather than
+      // importing it, to keep the fragment in the template's document. This
+      // leaves the fragment inert so custom elements won't upgrade and
+      // potentially modify their contents by creating a polyfilled ShadowRoot
+      // while we traverse the tree.
+      const fragment = isCEPolyfill ? this.template.element.content.cloneNode(true) : document.importNode(this.template.element.content, true);
+      const parts = this.template.parts;
+      let partIndex = 0;
+      let nodeIndex = 0;
+
+      const _prepareInstance = fragment => {
+        // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be
+        // null
+        const walker = document.createTreeWalker(fragment, 133
+        /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */
+        , null, false);
+        let node = walker.nextNode(); // Loop through all the nodes and parts of a template
+
+        while (partIndex < parts.length && node !== null) {
+          const part = parts[partIndex]; // Consecutive Parts may have the same node index, in the case of
+          // multiple bound attributes on an element. So each iteration we either
+          // increment the nodeIndex, if we aren't on a node with a part, or the
+          // partIndex if we are. By not incrementing the nodeIndex when we find a
+          // part, we allow for the next part to be associated with the current
+          // node if neccessasry.
+
+          if (!isTemplatePartActive(part)) {
+            this._parts.push(undefined);
+
+            partIndex++;
+          } else if (nodeIndex === part.index) {
+            if (part.type === 'node') {
+              const part = this.processor.handleTextExpression(this.options);
+              part.insertAfterNode(node);
+
+              this._parts.push(part);
+            } else {
+              this._parts.push(...this.processor.handleAttributeExpressions(node, part.name, part.strings, this.options));
+            }
+
+            partIndex++;
+          } else {
+            nodeIndex++;
+
+            if (node.nodeName === 'TEMPLATE') {
+              _prepareInstance(node.content);
+            }
+
+            node = walker.nextNode();
+          }
+        }
+      };
+
+      _prepareInstance(fragment);
+
+      if (isCEPolyfill) {
+        document.adoptNode(fragment);
+        customElements.upgrade(fragment);
+      }
+
+      return fragment;
+    }
+
+  }
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  /**
+   * The return type of `html`, which holds a Template and the values from
+   * interpolated expressions.
+   */
+
+  class TemplateResult {
+    constructor(strings, values, type, processor) {
+      this.strings = strings;
+      this.values = values;
+      this.type = type;
+      this.processor = processor;
+    }
+    /**
+     * Returns a string of HTML used to create a `<template>` element.
+     */
+
+
+    getHTML() {
+      const l = this.strings.length - 1;
+      let html = '';
+      let isTextBinding = true;
+
+      for (let i = 0; i < l; i++) {
+        const s = this.strings[i];
+        html += s;
+        const close = s.lastIndexOf('>'); // We're in a text position if the previous string closed its last tag, an
+        // attribute position if the string opened an unclosed tag, and unchanged
+        // if the string had no brackets at all:
+        //
+        // "...>...": text position. open === -1, close > -1
+        // "...<...": attribute position. open > -1
+        // "...": no change. open === -1, close === -1
+
+        isTextBinding = (close > -1 || isTextBinding) && s.indexOf('<', close + 1) === -1;
+
+        if (!isTextBinding && rewritesStyleAttribute) {
+          html = html.replace(lastAttributeNameRegex, (match, p1, p2, p3) => {
+            return p2 === 'style' ? `${p1}style$${p3}` : match;
+          });
+        }
+
+        html += isTextBinding ? nodeMarker : marker;
+      }
+
+      html += this.strings[l];
+      return html;
+    }
+
+    getTemplateElement() {
+      const template = document.createElement('template');
+      template.innerHTML = this.getHTML();
+      return template;
+    }
+
+  }
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  const isPrimitive = value => value === null || !(typeof value === 'object' || typeof value === 'function');
+  /**
+   * Sets attribute values for AttributeParts, so that the value is only set once
+   * even if there are multiple parts for an attribute.
+   */
+
+  class AttributeCommitter {
+    constructor(element, name, strings) {
+      this.dirty = true;
+      this.element = element;
+      this.name = name;
+      this.strings = strings;
+      this.parts = [];
+
+      for (let i = 0; i < strings.length - 1; i++) {
+        this.parts[i] = this._createPart();
+      }
+    }
+    /**
+     * Creates a single part. Override this to create a differnt type of part.
+     */
+
+
+    _createPart() {
+      return new AttributePart(this);
+    }
+
+    _getValue() {
+      const strings = this.strings;
+      const l = strings.length - 1;
+      let text = '';
+
+      for (let i = 0; i < l; i++) {
+        text += strings[i];
+        const part = this.parts[i];
+
+        if (part !== undefined) {
+          const v = part.value;
+
+          if (v != null && (Array.isArray(v) || typeof v !== 'string' && v[Symbol.iterator])) {
+            for (const t of v) {
+              text += typeof t === 'string' ? t : String(t);
+            }
+          } else {
+            text += typeof v === 'string' ? v : String(v);
+          }
+        }
+      }
+
+      text += strings[l];
+      return text;
+    }
+
+    commit() {
+      if (this.dirty) {
+        this.dirty = false;
+        this.element.setAttribute(this.name, this._getValue());
+      }
+    }
+
+  }
+  class AttributePart {
+    constructor(comitter) {
+      this.value = undefined;
+      this.committer = comitter;
+    }
+
+    setValue(value) {
+      if (value !== noChange && (!isPrimitive(value) || value !== this.value)) {
+        this.value = value; // If the value is a not a directive, dirty the committer so that it'll
+        // call setAttribute. If the value is a directive, it'll dirty the
+        // committer if it calls setValue().
+
+        if (!isDirective(value)) {
+          this.committer.dirty = true;
+        }
+      }
+    }
+
+    commit() {
+      while (isDirective(this.value)) {
+        const directive$$1 = this.value;
+        this.value = noChange;
+        directive$$1(this);
+      }
+
+      if (this.value === noChange) {
+        return;
+      }
+
+      this.committer.commit();
+    }
+
+  }
+  class NodePart {
+    constructor(options) {
+      this.value = undefined;
+      this._pendingValue = undefined;
+      this.options = options;
+    }
+    /**
+     * Inserts this part into a container.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */
+
+
+    appendInto(container) {
+      this.startNode = container.appendChild(createMarker());
+      this.endNode = container.appendChild(createMarker());
+    }
+    /**
+     * Inserts this part between `ref` and `ref`'s next sibling. Both `ref` and
+     * its next sibling must be static, unchanging nodes such as those that appear
+     * in a literal section of a template.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */
+
+
+    insertAfterNode(ref) {
+      this.startNode = ref;
+      this.endNode = ref.nextSibling;
+    }
+    /**
+     * Appends this part into a parent part.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */
+
+
+    appendIntoPart(part) {
+      part._insert(this.startNode = createMarker());
+
+      part._insert(this.endNode = createMarker());
+    }
+    /**
+     * Appends this part after `ref`
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */
+
+
+    insertAfterPart(ref) {
+      ref._insert(this.startNode = createMarker());
+
+      this.endNode = ref.endNode;
+      ref.endNode = this.startNode;
+    }
+
+    setValue(value) {
+      this._pendingValue = value;
+    }
+
+    commit() {
+      while (isDirective(this._pendingValue)) {
+        const directive$$1 = this._pendingValue;
+        this._pendingValue = noChange;
+        directive$$1(this);
+      }
+
+      const value = this._pendingValue;
+
+      if (value === noChange) {
+        return;
+      }
+
+      if (isPrimitive(value)) {
+        if (value !== this.value) {
+          this._commitText(value);
+        }
+      } else if (value instanceof TemplateResult) {
+        this._commitTemplateResult(value);
+      } else if (value instanceof Node) {
+        this._commitNode(value);
+      } else if (Array.isArray(value) || value[Symbol.iterator]) {
+        this._commitIterable(value);
+      } else if (value.then !== undefined) {
+        this._commitPromise(value);
+      } else {
+        // Fallback, will render the string representation
+        this._commitText(value);
+      }
+    }
+
+    _insert(node) {
+      this.endNode.parentNode.insertBefore(node, this.endNode);
+    }
+
+    _commitNode(value) {
+      if (this.value === value) {
+        return;
+      }
+
+      this.clear();
+
+      this._insert(value);
+
+      this.value = value;
+    }
+
+    _commitText(value) {
+      const node = this.startNode.nextSibling;
+      value = value == null ? '' : value;
+
+      if (node === this.endNode.previousSibling && node.nodeType === Node.TEXT_NODE) {
+        // If we only have a single text node between the markers, we can just
+        // set its value, rather than replacing it.
+        // TODO(justinfagnani): Can we just check if this.value is primitive?
+        node.textContent = value;
+      } else {
+        this._commitNode(document.createTextNode(typeof value === 'string' ? value : String(value)));
+      }
+
+      this.value = value;
+    }
+
+    _commitTemplateResult(value) {
+      const template = this.options.templateFactory(value);
+
+      if (this.value && this.value.template === template) {
+        this.value.update(value.values);
+      } else {
+        // Make sure we propagate the template processor from the TemplateResult
+        // so that we use its syntax extension, etc. The template factory comes
+        // from the render function options so that it can control template
+        // caching and preprocessing.
+        const instance = new TemplateInstance(template, value.processor, this.options);
+
+        const fragment = instance._clone();
+
+        instance.update(value.values);
+
+        this._commitNode(fragment);
+
+        this.value = instance;
+      }
+    }
+
+    _commitIterable(value) {
+      // For an Iterable, we create a new InstancePart per item, then set its
+      // value to the item. This is a little bit of overhead for every item in
+      // an Iterable, but it lets us recurse easily and efficiently update Arrays
+      // of TemplateResults that will be commonly returned from expressions like:
+      // array.map((i) => html`${i}`), by reusing existing TemplateInstances.
+      // If _value is an array, then the previous render was of an
+      // iterable and _value will contain the NodeParts from the previous
+      // render. If _value is not an array, clear this part and make a new
+      // array for NodeParts.
+      if (!Array.isArray(this.value)) {
+        this.value = [];
+        this.clear();
+      } // Lets us keep track of how many items we stamped so we can clear leftover
+      // items from a previous render
+
+
+      const itemParts = this.value;
+      let partIndex = 0;
+      let itemPart;
+
+      for (const item of value) {
+        // Try to reuse an existing part
+        itemPart = itemParts[partIndex]; // If no existing part, create a new one
+
+        if (itemPart === undefined) {
+          itemPart = new NodePart(this.options);
+          itemParts.push(itemPart);
+
+          if (partIndex === 0) {
+            itemPart.appendIntoPart(this);
+          } else {
+            itemPart.insertAfterPart(itemParts[partIndex - 1]);
+          }
+        }
+
+        itemPart.setValue(item);
+        itemPart.commit();
+        partIndex++;
+      }
+
+      if (partIndex < itemParts.length) {
+        // Truncate the parts array so _value reflects the current state
+        itemParts.length = partIndex;
+        this.clear(itemPart && itemPart.endNode);
+      }
+    }
+
+    _commitPromise(value) {
+      this.value = value;
+      value.then(v => {
+        if (this.value === value) {
+          this.setValue(v);
+          this.commit();
+        }
+      });
+    }
+
+    clear(startNode = this.startNode) {
+      removeNodes(this.startNode.parentNode, startNode.nextSibling, this.endNode);
+    }
+
+  }
+  /**
+   * Implements a boolean attribute, roughly as defined in the HTML
+   * specification.
+   *
+   * If the value is truthy, then the attribute is present with a value of
+   * ''. If the value is falsey, the attribute is removed.
+   */
+
+  class BooleanAttributePart {
+    constructor(element, name, strings) {
+      this.value = undefined;
+      this._pendingValue = undefined;
+
+      if (strings.length !== 2 || strings[0] !== '' || strings[1] !== '') {
+        throw new Error('Boolean attributes can only contain a single expression');
+      }
+
+      this.element = element;
+      this.name = name;
+      this.strings = strings;
+    }
+
+    setValue(value) {
+      this._pendingValue = value;
+    }
+
+    commit() {
+      while (isDirective(this._pendingValue)) {
+        const directive$$1 = this._pendingValue;
+        this._pendingValue = noChange;
+        directive$$1(this);
+      }
+
+      if (this._pendingValue === noChange) {
+        return;
+      }
+
+      const value = !!this._pendingValue;
+
+      if (this.value !== value) {
+        if (value) {
+          this.element.setAttribute(this.name, '');
+        } else {
+          this.element.removeAttribute(this.name);
+        }
+      }
+
+      this.value = value;
+      this._pendingValue = noChange;
+    }
+
+  }
+  /**
+   * Sets attribute values for PropertyParts, so that the value is only set once
+   * even if there are multiple parts for a property.
+   *
+   * If an expression controls the whole property value, then the value is simply
+   * assigned to the property under control. If there are string literals or
+   * multiple expressions, then the strings are expressions are interpolated into
+   * a string first.
+   */
+
+  class PropertyCommitter extends AttributeCommitter {
+    constructor(element, name, strings) {
+      super(element, name, strings);
+      this.single = strings.length === 2 && strings[0] === '' && strings[1] === '';
+    }
+
+    _createPart() {
+      return new PropertyPart(this);
+    }
+
+    _getValue() {
+      if (this.single) {
+        return this.parts[0].value;
+      }
+
+      return super._getValue();
+    }
+
+    commit() {
+      if (this.dirty) {
+        this.dirty = false;
+        this.element[this.name] = this._getValue();
+      }
+    }
+
+  }
+  class PropertyPart extends AttributePart {} // Detect event listener options support. If the `capture` property is read
+  // from the options object, then options are supported. If not, then the thrid
+  // argument to add/removeEventListener is interpreted as the boolean capture
+  // value so we should only pass the `capture` property.
+
+  let eventOptionsSupported = false;
+
+  try {
+    const options = {
+      get capture() {
+        eventOptionsSupported = true;
+        return false;
+      }
+
+    };
+    window.addEventListener('test', options, options);
+    window.removeEventListener('test', options, options);
+  } catch (_e) {}
+
+  class EventPart {
+    constructor(element, eventName, eventContext) {
+      this.value = undefined;
+      this._pendingValue = undefined;
+      this.element = element;
+      this.eventName = eventName;
+      this.eventContext = eventContext;
+
+      this._boundHandleEvent = e => this.handleEvent(e);
+    }
+
+    setValue(value) {
+      this._pendingValue = value;
+    }
+
+    commit() {
+      while (isDirective(this._pendingValue)) {
+        const directive$$1 = this._pendingValue;
+        this._pendingValue = noChange;
+        directive$$1(this);
+      }
+
+      if (this._pendingValue === noChange) {
+        return;
+      }
+
+      const newListener = this._pendingValue;
+      const oldListener = this.value;
+      const shouldRemoveListener = newListener == null || oldListener != null && (newListener.capture !== oldListener.capture || newListener.once !== oldListener.once || newListener.passive !== oldListener.passive);
+      const shouldAddListener = newListener != null && (oldListener == null || shouldRemoveListener);
+
+      if (shouldRemoveListener) {
+        this.element.removeEventListener(this.eventName, this._boundHandleEvent, this._options);
+      }
+
+      this._options = getOptions(newListener);
+
+      if (shouldAddListener) {
+        this.element.addEventListener(this.eventName, this._boundHandleEvent, this._options);
+      }
+
+      this.value = newListener;
+      this._pendingValue = noChange;
+    }
+
+    handleEvent(event) {
+      if (typeof this.value === 'function') {
+        this.value.call(this.eventContext || this.element, event);
+      } else {
+        this.value.handleEvent(event);
+      }
+    }
+
+  } // We copy options because of the inconsistent behavior of browsers when reading
+  // the third argument of add/removeEventListener. IE11 doesn't support options
+  // at all. Chrome 41 only reads `capture` if the argument is an object.
+
+  const getOptions = o => o && (eventOptionsSupported ? {
+    capture: o.capture,
+    passive: o.passive,
+    once: o.once
+  } : o.capture);
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  /**
+   * Creates Parts when a template is instantiated.
+   */
+
+  class DefaultTemplateProcessor {
+    /**
+     * Create parts for an attribute-position binding, given the event, attribute
+     * name, and string literals.
+     *
+     * @param element The element containing the binding
+     * @param name  The attribute name
+     * @param strings The string literals. There are always at least two strings,
+     *   event for fully-controlled bindings with a single expression.
+     */
+    handleAttributeExpressions(element, name, strings, options) {
+      const prefix = name[0];
+
+      if (prefix === '.') {
+        const comitter = new PropertyCommitter(element, name.slice(1), strings);
+        return comitter.parts;
+      }
+
+      if (prefix === '@') {
+        return [new EventPart(element, name.slice(1), options.eventContext)];
+      }
+
+      if (prefix === '?') {
+        return [new BooleanAttributePart(element, name.slice(1), strings)];
+      }
+
+      const comitter = new AttributeCommitter(element, name, strings);
+      return comitter.parts;
+    }
+    /**
+     * Create parts for a text-position binding.
+     * @param templateFactory
+     */
+
+
+    handleTextExpression(options) {
+      return new NodePart(options);
+    }
+
+  }
+  const defaultTemplateProcessor = new DefaultTemplateProcessor();
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  /**
+   * The default TemplateFactory which caches Templates keyed on
+   * result.type and result.strings.
+   */
+
+  function templateFactory(result) {
+    let templateCache = templateCaches.get(result.type);
+
+    if (templateCache === undefined) {
+      templateCache = new Map();
+      templateCaches.set(result.type, templateCache);
+    }
+
+    let template = templateCache.get(result.strings);
+
+    if (template === undefined) {
+      template = new Template(result, result.getTemplateElement());
+      templateCache.set(result.strings, template);
+    }
+
+    return template;
+  } // The first argument to JS template tags retain identity across multiple
+  // calls to a tag for the same literal, so we can cache work done per literal
+  // in a Map.
+
+  const templateCaches = new Map();
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  const parts = new WeakMap();
+  /**
+   * Renders a template to a container.
+   *
+   * To update a container with new values, reevaluate the template literal and
+   * call `render` with the new result.
+   *
+   * @param result a TemplateResult created by evaluating a template tag like
+   *     `html` or `svg`.
+   * @param container A DOM parent to render to. The entire contents are either
+   *     replaced, or efficiently updated if the same result type was previous
+   *     rendered there.
+   * @param options RenderOptions for the entire render tree rendered to this
+   *     container. Render options must *not* change between renders to the same
+   *     container, as those changes will not effect previously rendered DOM.
+   */
+
+  const render = (result, container, options) => {
+    let part = parts.get(container);
+
+    if (part === undefined) {
+      removeNodes(container, container.firstChild);
+      parts.set(container, part = new NodePart(Object.assign({
+        templateFactory
+      }, options)));
+      part.appendInto(container);
+    }
+
+    part.setValue(result);
+    part.commit();
+  };
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  /**
+   * Interprets a template literal as an HTML template that can efficiently
+   * render to and update a container.
+   */
+
+  const html = (strings, ...values) => new TemplateResult(strings, values, 'html', defaultTemplateProcessor);
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  const walkerNodeFilter = NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT;
+  /**
+   * Removes the list of nodes from a Template safely. In addition to removing
+   * nodes from the Template, the Template part indices are updated to match
+   * the mutated Template DOM.
+   *
+   * As the template is walked the removal state is tracked and
+   * part indices are adjusted as needed.
+   *
+   * div
+   *   div#1 (remove) <-- start removing (removing node is div#1)
+   *     div
+   *       div#2 (remove)  <-- continue removing (removing node is still div#1)
+   *         div
+   * div <-- stop removing since previous sibling is the removing node (div#1,
+   * removed 4 nodes)
+   */
+
+  function removeNodesFromTemplate(template, nodesToRemove) {
+    const {
+      element: {
+        content
+      },
+      parts
+    } = template;
+    const walker = document.createTreeWalker(content, walkerNodeFilter, null, false);
+    let partIndex = nextActiveIndexInTemplateParts(parts);
+    let part = parts[partIndex];
+    let nodeIndex = -1;
+    let removeCount = 0;
+    const nodesToRemoveInTemplate = [];
+    let currentRemovingNode = null;
+
+    while (walker.nextNode()) {
+      nodeIndex++;
+      const node = walker.currentNode; // End removal if stepped past the removing node
+
+      if (node.previousSibling === currentRemovingNode) {
+        currentRemovingNode = null;
+      } // A node to remove was found in the template
+
+
+      if (nodesToRemove.has(node)) {
+        nodesToRemoveInTemplate.push(node); // Track node we're removing
+
+        if (currentRemovingNode === null) {
+          currentRemovingNode = node;
+        }
+      } // When removing, increment count by which to adjust subsequent part indices
+
+
+      if (currentRemovingNode !== null) {
+        removeCount++;
+      }
+
+      while (part !== undefined && part.index === nodeIndex) {
+        // If part is in a removed node deactivate it by setting index to -1 or
+        // adjust the index as needed.
+        part.index = currentRemovingNode !== null ? -1 : part.index - removeCount; // go to the next active part.
+
+        partIndex = nextActiveIndexInTemplateParts(parts, partIndex);
+        part = parts[partIndex];
+      }
+    }
+
+    nodesToRemoveInTemplate.forEach(n => n.parentNode.removeChild(n));
+  }
+
+  const countNodes = node => {
+    let count = node.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? 0 : 1;
+    const walker = document.createTreeWalker(node, walkerNodeFilter, null, false);
+
+    while (walker.nextNode()) {
+      count++;
+    }
+
+    return count;
+  };
+
+  const nextActiveIndexInTemplateParts = (parts, startIndex = -1) => {
+    for (let i = startIndex + 1; i < parts.length; i++) {
+      const part = parts[i];
+
+      if (isTemplatePartActive(part)) {
+        return i;
+      }
+    }
+
+    return -1;
+  };
+  /**
+   * Inserts the given node into the Template, optionally before the given
+   * refNode. In addition to inserting the node into the Template, the Template
+   * part indices are updated to match the mutated Template DOM.
+   */
+
+
+  function insertNodeIntoTemplate(template, node, refNode = null) {
+    const {
+      element: {
+        content
+      },
+      parts
+    } = template; // If there's no refNode, then put node at end of template.
+    // No part indices need to be shifted in this case.
+
+    if (refNode === null || refNode === undefined) {
+      content.appendChild(node);
+      return;
+    }
+
+    const walker = document.createTreeWalker(content, walkerNodeFilter, null, false);
+    let partIndex = nextActiveIndexInTemplateParts(parts);
+    let insertCount = 0;
+    let walkerIndex = -1;
+
+    while (walker.nextNode()) {
+      walkerIndex++;
+      const walkerNode = walker.currentNode;
+
+      if (walkerNode === refNode) {
+        insertCount = countNodes(node);
+        refNode.parentNode.insertBefore(node, refNode);
+      }
+
+      while (partIndex !== -1 && parts[partIndex].index === walkerIndex) {
+        // If we've inserted the node, simply adjust all subsequent parts
+        if (insertCount > 0) {
+          while (partIndex !== -1) {
+            parts[partIndex].index += insertCount;
+            partIndex = nextActiveIndexInTemplateParts(parts, partIndex);
+          }
+
+          return;
+        }
+
+        partIndex = nextActiveIndexInTemplateParts(parts, partIndex);
+      }
+    }
+  }
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+
+  const getTemplateCacheKey = (type, scopeName) => `${type}--${scopeName}`;
+
+  let compatibleShadyCSSVersion = true;
+
+  if (typeof window.ShadyCSS === 'undefined') {
+    compatibleShadyCSSVersion = false;
+  } else if (typeof window.ShadyCSS.prepareTemplateDom === 'undefined') {
+    console.warn(`Incompatible ShadyCSS version detected.` + `Please update to at least @webcomponents/webcomponentsjs@2.0.2 and` + `@webcomponents/shadycss@1.3.1.`);
+    compatibleShadyCSSVersion = false;
+  }
+  /**
+   * Template factory which scopes template DOM using ShadyCSS.
+   * @param scopeName {string}
+   */
+
+
+  const shadyTemplateFactory = scopeName => result => {
+    const cacheKey = getTemplateCacheKey(result.type, scopeName);
+    let templateCache = templateCaches.get(cacheKey);
+
+    if (templateCache === undefined) {
+      templateCache = new Map();
+      templateCaches.set(cacheKey, templateCache);
+    }
+
+    let template = templateCache.get(result.strings);
+
+    if (template === undefined) {
+      const element = result.getTemplateElement();
+
+      if (compatibleShadyCSSVersion) {
+        window.ShadyCSS.prepareTemplateDom(element, scopeName);
+      }
+
+      template = new Template(result, element);
+      templateCache.set(result.strings, template);
+    }
+
+    return template;
+  };
+
+  const TEMPLATE_TYPES = ['html', 'svg'];
+  /**
+   * Removes all style elements from Templates for the given scopeName.
+   */
+
+  const removeStylesFromLitTemplates = scopeName => {
+    TEMPLATE_TYPES.forEach(type => {
+      const templates = templateCaches.get(getTemplateCacheKey(type, scopeName));
+
+      if (templates !== undefined) {
+        templates.forEach(template => {
+          const {
+            element: {
+              content
+            }
+          } = template; // IE 11 doesn't support the iterable param Set constructor
+
+          const styles = new Set();
+          Array.from(content.querySelectorAll('style')).forEach(s => {
+            styles.add(s);
+          });
+          removeNodesFromTemplate(template, styles);
+        });
+      }
+    });
+  };
+
+  const shadyRenderSet = new Set();
+  /**
+   * For the given scope name, ensures that ShadyCSS style scoping is performed.
+   * This is done just once per scope name so the fragment and template cannot
+   * be modified.
+   * (1) extracts styles from the rendered fragment and hands them to ShadyCSS
+   * to be scoped and appended to the document
+   * (2) removes style elements from all lit-html Templates for this scope name.
+   *
+   * Note, <style> elements can only be placed into templates for the
+   * initial rendering of the scope. If <style> elements are included in templates
+   * dynamically rendered to the scope (after the first scope render), they will
+   * not be scoped and the <style> will be left in the template and rendered
+   * output.
+   */
+
+  const prepareTemplateStyles = (renderedDOM, template, scopeName) => {
+    shadyRenderSet.add(scopeName); // Move styles out of rendered DOM and store.
+
+    const styles = renderedDOM.querySelectorAll('style'); // If there are no styles, there's no work to do.
+
+    if (styles.length === 0) {
+      return;
+    }
+
+    const condensedStyle = document.createElement('style'); // Collect styles into a single style. This helps us make sure ShadyCSS
+    // manipulations will not prevent us from being able to fix up template
+    // part indices.
+    // NOTE: collecting styles is inefficient for browsers but ShadyCSS
+    // currently does this anyway. When it does not, this should be changed.
+
+    for (let i = 0; i < styles.length; i++) {
+      const style = styles[i];
+      style.parentNode.removeChild(style);
+      condensedStyle.textContent += style.textContent;
+    } // Remove styles from nested templates in this scope.
+
+
+    removeStylesFromLitTemplates(scopeName); // And then put the condensed style into the "root" template passed in as
+    // `template`.
+
+    insertNodeIntoTemplate(template, condensedStyle, template.element.content.firstChild); // Note, it's important that ShadyCSS gets the template that `lit-html`
+    // will actually render so that it can update the style inside when
+    // needed (e.g. @apply native Shadow DOM case).
+
+    window.ShadyCSS.prepareTemplateStyles(template.element, scopeName);
+
+    if (window.ShadyCSS.nativeShadow) {
+      // When in native Shadow DOM, re-add styling to rendered content using
+      // the style ShadyCSS produced.
+      const style = template.element.content.querySelector('style');
+      renderedDOM.insertBefore(style.cloneNode(true), renderedDOM.firstChild);
+    } else {
+      // When not in native Shadow DOM, at this point ShadyCSS will have
+      // removed the style from the lit template and parts will be broken as a
+      // result. To fix this, we put back the style node ShadyCSS removed
+      // and then tell lit to remove that node from the template.
+      // NOTE, ShadyCSS creates its own style so we can safely add/remove
+      // `condensedStyle` here.
+      template.element.content.insertBefore(condensedStyle, template.element.content.firstChild);
+      const removes = new Set();
+      removes.add(condensedStyle);
+      removeNodesFromTemplate(template, removes);
+    }
+  };
+
+  const render$1 = (result, container, options) => {
+    const scopeName = options.scopeName;
+    const hasRendered = parts.has(container);
+    render(result, container, Object.assign({
+      templateFactory: shadyTemplateFactory(scopeName)
+    }, options)); // When rendering a TemplateResult, scope the template with ShadyCSS
+
+    if (container instanceof ShadowRoot && compatibleShadyCSSVersion && result instanceof TemplateResult) {
+      // Scope the element template one time only for this scope.
+      if (!shadyRenderSet.has(scopeName)) {
+        const part = parts.get(container);
+        const instance = part.value;
+        prepareTemplateStyles(container, instance.template, scopeName);
+      } // Update styling if this is the initial render to this container.
+
+
+      if (!hasRendered) {
+        window.ShadyCSS.styleElement(container.host);
+      }
+    }
+  };
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  // serializer/deserializers for boolean attribute
+  const fromBooleanAttribute = value => value !== null;
+
+  const toBooleanAttribute = value => value ? '' : null;
+  /**
+   * Change function that returns true if `value` is different from `oldValue`.
+   * This method is used as the default for a property's `hasChanged` function.
+   */
+
+
+  const notEqual = (value, old) => {
+    // This ensures (old==NaN, value==NaN) always returns false
+    return old !== value && (old === old || value === value);
+  };
+  const defaultPropertyDeclaration = {
+    attribute: true,
+    type: String,
+    reflect: false,
+    hasChanged: notEqual
+  };
+  const microtaskPromise = new Promise(resolve => resolve(true));
+  const STATE_HAS_UPDATED = 1;
+  const STATE_UPDATE_REQUESTED = 1 << 2;
+  const STATE_IS_REFLECTING = 1 << 3;
+  /**
+   * Base element class which manages element properties and attributes. When
+   * properties change, the `update` method is asynchronously called. This method
+   * should be supplied by subclassers to render updates as desired.
+   */
+
+  class UpdatingElement extends HTMLElement {
+    constructor() {
+      super();
+      this._updateState = 0;
+      this._instanceProperties = undefined;
+      this._updatePromise = microtaskPromise;
+      /**
+       * Map with keys for any properties that have changed since the last
+       * update cycle with previous values.
+       */
+
+      this._changedProperties = new Map();
+      /**
+       * Map with keys of properties that should be reflected when updated.
+       */
+
+      this._reflectingProperties = undefined;
+      this.initialize();
+    }
+    /**
+     * Returns a list of attributes corresponding to the registered properties.
+     */
+
+
+    static get observedAttributes() {
+      // note: piggy backing on this to ensure we're _finalized.
+      this._finalize();
+
+      const attributes = [];
+
+      for (const [p, v] of this._classProperties) {
+        const attr = this._attributeNameForProperty(p, v);
+
+        if (attr !== undefined) {
+          this._attributeToPropertyMap.set(attr, p);
+
+          attributes.push(attr);
+        }
+      }
+
+      return attributes;
+    }
+    /**
+     * Creates a property accessor on the element prototype if one does not exist.
+     * The property setter calls the property's `hasChanged` property option
+     * or uses a strict identity check to determine whether or not to request
+     * an update.
+     */
+
+
+    static createProperty(name, options = defaultPropertyDeclaration) {
+      // ensure private storage for property declarations.
+      if (!this.hasOwnProperty('_classProperties')) {
+        this._classProperties = new Map(); // NOTE: Workaround IE11 not supporting Map constructor argument.
+
+        const superProperties = Object.getPrototypeOf(this)._classProperties;
+
+        if (superProperties !== undefined) {
+          superProperties.forEach((v, k) => this._classProperties.set(k, v));
+        }
+      }
+
+      this._classProperties.set(name, options); // Allow user defined accessors by not replacing an existing own-property
+      // accessor.
+
+
+      if (this.prototype.hasOwnProperty(name)) {
+        return;
+      }
+
+      const key = typeof name === 'symbol' ? Symbol() : `__${name}`;
+      Object.defineProperty(this.prototype, name, {
+        get() {
+          return this[key];
+        },
+
+        set(value) {
+          const oldValue = this[name];
+          this[key] = value;
+
+          this._requestPropertyUpdate(name, oldValue, options);
+        },
+
+        configurable: true,
+        enumerable: true
+      });
+    }
+    /**
+     * Creates property accessors for registered properties and ensures
+     * any superclasses are also finalized.
+     */
+
+
+    static _finalize() {
+      if (this.hasOwnProperty('_finalized') && this._finalized) {
+        return;
+      } // finalize any superclasses
+
+
+      const superCtor = Object.getPrototypeOf(this);
+
+      if (typeof superCtor._finalize === 'function') {
+        superCtor._finalize();
+      }
+
+      this._finalized = true; // initialize Map populated in observedAttributes
+
+      this._attributeToPropertyMap = new Map(); // make any properties
+
+      const props = this.properties; // support symbols in properties (IE11 does not support this)
+
+      const propKeys = [...Object.getOwnPropertyNames(props), ...(typeof Object.getOwnPropertySymbols === 'function' ? Object.getOwnPropertySymbols(props) : [])];
+
+      for (const p of propKeys) {
+        // note, use of `any` is due to TypeSript lack of support for symbol in
+        // index types
+        this.createProperty(p, props[p]);
+      }
+    }
+    /**
+     * Returns the property name for the given attribute `name`.
+     */
+
+
+    static _attributeNameForProperty(name, options) {
+      const attribute = options !== undefined && options.attribute;
+      return attribute === false ? undefined : typeof attribute === 'string' ? attribute : typeof name === 'string' ? name.toLowerCase() : undefined;
+    }
+    /**
+     * Returns true if a property should request an update.
+     * Called when a property value is set and uses the `hasChanged`
+     * option for the property if present or a strict identity check.
+     */
+
+
+    static _valueHasChanged(value, old, hasChanged = notEqual) {
+      return hasChanged(value, old);
+    }
+    /**
+     * Returns the property value for the given attribute value.
+     * Called via the `attributeChangedCallback` and uses the property's `type`
+     * or `type.fromAttribute` property option.
+     */
+
+
+    static _propertyValueFromAttribute(value, options) {
+      const type = options && options.type;
+
+      if (type === undefined) {
+        return value;
+      } // Note: special case `Boolean` so users can use it as a `type`.
+
+
+      const fromAttribute = type === Boolean ? fromBooleanAttribute : typeof type === 'function' ? type : type.fromAttribute;
+      return fromAttribute ? fromAttribute(value) : value;
+    }
+    /**
+     * Returns the attribute value for the given property value. If this
+     * returns undefined, the property will *not* be reflected to an attribute.
+     * If this returns null, the attribute will be removed, otherwise the
+     * attribute will be set to the value.
+     * This uses the property's `reflect` and `type.toAttribute` property options.
+     */
+
+
+    static _propertyValueToAttribute(value, options) {
+      if (options === undefined || options.reflect === undefined) {
+        return;
+      } // Note: special case `Boolean` so users can use it as a `type`.
+
+
+      const toAttribute = options.type === Boolean ? toBooleanAttribute : options.type && options.type.toAttribute || String;
+      return toAttribute(value);
+    }
+    /**
+     * Performs element initialization. By default this calls `createRenderRoot`
+     * to create the element `renderRoot` node and captures any pre-set values for
+     * registered properties.
+     */
+
+
+    initialize() {
+      this.renderRoot = this.createRenderRoot();
+
+      this._saveInstanceProperties();
+    }
+    /**
+     * Fixes any properties set on the instance before upgrade time.
+     * Otherwise these would shadow the accessor and break these properties.
+     * The properties are stored in a Map which is played back after the
+     * constructor runs. Note, on very old versions of Safari (<=9) or Chrome
+     * (<=41), properties created for native platform properties like (`id` or
+     * `name`) may not have default values set in the element constructor. On
+     * these browsers native properties appear on instances and therefore their
+     * default value will overwrite any element default (e.g. if the element sets
+     * this.id = 'id' in the constructor, the 'id' will become '' since this is
+     * the native platform default).
+     */
+
+
+    _saveInstanceProperties() {
+      for (const [p] of this.constructor._classProperties) {
+        if (this.hasOwnProperty(p)) {
+          const value = this[p];
+          delete this[p];
+
+          if (!this._instanceProperties) {
+            this._instanceProperties = new Map();
+          }
+
+          this._instanceProperties.set(p, value);
+        }
+      }
+    }
+    /**
+     * Applies previously saved instance properties.
+     */
+
+
+    _applyInstanceProperties() {
+      for (const [p, v] of this._instanceProperties) {
+        this[p] = v;
+      }
+
+      this._instanceProperties = undefined;
+    }
+    /**
+     * Returns the node into which the element should render and by default
+     * creates and returns an open shadowRoot. Implement to customize where the
+     * element's DOM is rendered. For example, to render into the element's
+     * childNodes, return `this`.
+     * @returns {Element|DocumentFragment} Returns a node into which to render.
+     */
+
+
+    createRenderRoot() {
+      return this.attachShadow({
+        mode: 'open'
+      });
+    }
+    /**
+     * Uses ShadyCSS to keep element DOM updated.
+     */
+
+
+    connectedCallback() {
+      if (this._updateState & STATE_HAS_UPDATED) {
+        if (window.ShadyCSS !== undefined) {
+          window.ShadyCSS.styleElement(this);
+        }
+      } else {
+        this.requestUpdate();
+      }
+    }
+    /**
+     * Allows for `super.disconnectedCallback()` in extensions while
+     * reserving the possibility of making non-breaking feature additions
+     * when disconnecting at some point in the future.
+     */
+
+
+    disconnectedCallback() {}
+    /**
+     * Synchronizes property values when attributes change.
+     */
+
+
+    attributeChangedCallback(name, old, value) {
+      if (old !== value) {
+        this._attributeToProperty(name, value);
+      }
+    }
+
+    _propertyToAttribute(name, value, options = defaultPropertyDeclaration) {
+      const ctor = this.constructor;
+
+      const attrValue = ctor._propertyValueToAttribute(value, options);
+
+      if (attrValue !== undefined) {
+        const attr = ctor._attributeNameForProperty(name, options);
+
+        if (attr !== undefined) {
+          // Track if the property is being reflected to avoid
+          // setting the property again via `attributeChangedCallback`. Note:
+          // 1. this takes advantage of the fact that the callback is synchronous.
+          // 2. will behave incorrectly if multiple attributes are in the reaction
+          // stack at time of calling. However, since we process attributes
+          // in `update` this should not be possible (or an extreme corner case
+          // that we'd like to discover).
+          // mark state reflecting
+          this._updateState = this._updateState | STATE_IS_REFLECTING;
+
+          if (attrValue === null) {
+            this.removeAttribute(attr);
+          } else {
+            this.setAttribute(attr, attrValue);
+          } // mark state not reflecting
+
+
+          this._updateState = this._updateState & ~STATE_IS_REFLECTING;
+        }
+      }
+    }
+
+    _attributeToProperty(name, value) {
+      // Use tracking info to avoid deserializing attribute value if it was
+      // just set from a property setter.
+      if (!(this._updateState & STATE_IS_REFLECTING)) {
+        const ctor = this.constructor;
+
+        const propName = ctor._attributeToPropertyMap.get(name);
+
+        if (propName !== undefined) {
+          const options = ctor._classProperties.get(propName);
+
+          this[propName] = ctor._propertyValueFromAttribute(value, options);
+        }
+      }
+    }
+    /**
+     * Requests an update which is processed asynchronously. This should
+     * be called when an element should update based on some state not triggered
+     * by setting a property. In this case, pass no arguments. It should also be
+     * called when manually implementing a property setter. In this case, pass the
+     * property `name` and `oldValue` to ensure that any configured property
+     * options are honored. Returns the `updateComplete` Promise which is resolved
+     * when the update completes.
+     *
+     * @param name {PropertyKey} (optional) name of requesting property
+     * @param oldValue {any} (optional) old value of requesting property
+     * @returns {Promise} A Promise that is resolved when the update completes.
+     */
+
+
+    requestUpdate(name, oldValue) {
+      if (name !== undefined) {
+        const options = this.constructor._classProperties.get(name) || defaultPropertyDeclaration;
+        return this._requestPropertyUpdate(name, oldValue, options);
+      }
+
+      return this._invalidate();
+    }
+    /**
+     * Requests an update for a specific property and records change information.
+     * @param name {PropertyKey} name of requesting property
+     * @param oldValue {any} old value of requesting property
+     * @param options {PropertyDeclaration}
+     */
+
+
+    _requestPropertyUpdate(name, oldValue, options) {
+      if (!this.constructor._valueHasChanged(this[name], oldValue, options.hasChanged)) {
+        return this.updateComplete;
+      } // track old value when changing.
+
+
+      if (!this._changedProperties.has(name)) {
+        this._changedProperties.set(name, oldValue);
+      } // add to reflecting properties set
+
+
+      if (options.reflect === true) {
+        if (this._reflectingProperties === undefined) {
+          this._reflectingProperties = new Map();
+        }
+
+        this._reflectingProperties.set(name, options);
+      }
+
+      return this._invalidate();
+    }
+    /**
+     * Invalidates the element causing it to asynchronously update regardless
+     * of whether or not any property changes are pending. This method is
+     * automatically called when any registered property changes.
+     */
+
+
+    async _invalidate() {
+      if (!this._hasRequestedUpdate) {
+        // mark state updating...
+        this._updateState = this._updateState | STATE_UPDATE_REQUESTED;
+        let resolver;
+        const previousValidatePromise = this._updatePromise;
+        this._updatePromise = new Promise(r => resolver = r);
+        await previousValidatePromise;
+
+        this._validate();
+
+        resolver(!this._hasRequestedUpdate);
+      }
+
+      return this.updateComplete;
+    }
+
+    get _hasRequestedUpdate() {
+      return this._updateState & STATE_UPDATE_REQUESTED;
+    }
+    /**
+     * Validates the element by updating it.
+     */
+
+
+    _validate() {
+      // Mixin instance properties once, if they exist.
+      if (this._instanceProperties) {
+        this._applyInstanceProperties();
+      }
+
+      if (this.shouldUpdate(this._changedProperties)) {
+        const changedProperties = this._changedProperties;
+        this.update(changedProperties);
+
+        this._markUpdated();
+
+        if (!(this._updateState & STATE_HAS_UPDATED)) {
+          this._updateState = this._updateState | STATE_HAS_UPDATED;
+          this.firstUpdated(changedProperties);
+        }
+
+        this.updated(changedProperties);
+      } else {
+        this._markUpdated();
+      }
+    }
+
+    _markUpdated() {
+      this._changedProperties = new Map();
+      this._updateState = this._updateState & ~STATE_UPDATE_REQUESTED;
+    }
+    /**
+     * Returns a Promise that resolves when the element has completed updating.
+     * The Promise value is a boolean that is `true` if the element completed the
+     * update without triggering another update. The Promise result is `false` if
+     * a property was set inside `updated()`. This getter can be implemented to
+     * await additional state. For example, it is sometimes useful to await a
+     * rendered element before fulfilling this Promise. To do this, first await
+     * `super.updateComplete` then any subsequent state.
+     *
+     * @returns {Promise} The Promise returns a boolean that indicates if the
+     * update resolved without triggering another update.
+     */
+
+
+    get updateComplete() {
+      return this._updatePromise;
+    }
+    /**
+     * Controls whether or not `update` should be called when the element requests
+     * an update. By default, this method always returns `true`, but this can be
+     * customized to control when to update.
+     *
+     * * @param _changedProperties Map of changed properties with old values
+     */
+
+
+    shouldUpdate(_changedProperties) {
+      return true;
+    }
+    /**
+     * Updates the element. This method reflects property values to attributes.
+     * It can be overridden to render and keep updated DOM in the element's
+     * `renderRoot`. Setting properties inside this method will *not* trigger
+     * another update.
+     *
+     * * @param _changedProperties Map of changed properties with old values
+     */
+
+
+    update(_changedProperties) {
+      if (this._reflectingProperties !== undefined && this._reflectingProperties.size > 0) {
+        for (const [k, v] of this._reflectingProperties) {
+          this._propertyToAttribute(k, this[k], v);
+        }
+
+        this._reflectingProperties = undefined;
+      }
+    }
+    /**
+     * Invoked whenever the element is updated. Implement to perform
+     * post-updating tasks via DOM APIs, for example, focusing an element.
+     *
+     * Setting properties inside this method will trigger the element to update
+     * again after this update cycle completes.
+     *
+     * * @param _changedProperties Map of changed properties with old values
+     */
+
+
+    updated(_changedProperties) {}
+    /**
+     * Invoked when the element is first updated. Implement to perform one time
+     * work on the element after update.
+     *
+     * Setting properties inside this method will trigger the element to update
+     * again after this update cycle completes.
+     *
+     * * @param _changedProperties Map of changed properties with old values
+     */
+
+
+    firstUpdated(_changedProperties) {}
+
+  }
+  /**
+   * Maps attribute names to properties; for example `foobar` attribute
+   * to `fooBar` property.
+   */
+
+  UpdatingElement._attributeToPropertyMap = new Map();
+  /**
+   * Marks class as having finished creating properties.
+   */
+
+  UpdatingElement._finalized = true;
+  /**
+   * Memoized list of all class properties, including any superclass properties.
+   */
+
+  UpdatingElement._classProperties = new Map();
+  UpdatingElement.properties = {};
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+
+  /**
+   * @license
+   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at
+   * http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at
+   * http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at
+   * http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at
+   * http://polymer.github.io/PATENTS.txt
+   */
+  class LitElement extends UpdatingElement {
+    /**
+     * Updates the element. This method reflects property values to attributes
+     * and calls `render` to render DOM via lit-html. Setting properties inside
+     * this method will *not* trigger another update.
+     * * @param _changedProperties Map of changed properties with old values
+     */
+    update(changedProperties) {
+      super.update(changedProperties);
+      const templateResult = this.render();
+
+      if (templateResult instanceof TemplateResult) {
+        this.constructor.render(templateResult, this.renderRoot, {
+          scopeName: this.localName,
+          eventContext: this
+        });
+      }
+    }
+    /**
+     * Invoked on each update to perform rendering tasks. This method must return
+     * a lit-html TemplateResult. Setting properties inside this method will *not*
+     * trigger the element to update.
+     * @returns {TemplateResult} Must return a lit-html TemplateResult.
+     */
+
+
+    render() {}
+
+  }
+  /**
+   * Render method used to render the lit-html TemplateResult to the element's
+   * DOM.
+   * @param {TemplateResult} Template to render.
+   * @param {Element|DocumentFragment} Node into which to render.
+   * @param {String} Element name.
+   */
+
+  LitElement.render = render$1;
+
+  const anchors = parent => html`
+      ${parent} a {
+        display: flex;
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+        padding: 10px 7.5px;
+        text-decoration: none;
+        color: #828282;
+      }
+      ${parent} a.active {
+        color: #61dafb;
+      }
+      ${parent} a:hover {
+        color: #CCC;
+      }
+      @media screen and (min-width: 768px) {
+        ${parent} a {
+          padding: 10px 20px;
+          text-decoration: none;
+          color: #828282;
+        }
+      }
+  `;
+
+  let styles = document.createElement('style');
+  render(anchors('wc-header'), styles);
+  document.head.appendChild(styles);
+
+  class WCHeader extends LitElement {
+    static get properties() {
+      return {
+        duration: Number,
+        name: String,
+        isOpen: {
+          type: Boolean,
+          reflect: true
+        }
+      };
+    }
+
+    render() {
+      return html`
+      <style>
+        :host {
+          background: black;
+          position: fixed;
+          width: 100%;
+        }
+
+        ul {
+          display: flex;
+          list-style: none;
+          justify-content: space-around;
+          align-content: center;
+          justify-items: inherit;
+          align-items: center;
+          flex-direction: row;
+          margin: 0;
+          max-width: 980px;
+          margin: 0 auto;
+          padding: 0;
+        }
+
+        @media screen and (min-width: 768px) {
+          ul {
+            justify-content: flex-start;
+          }
+          .navigation a {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #828282;
+          }
+        }
       </style>
 
       <header>
         <ul>
-          <li>Hello there</li>
+          <slot></slot>
         </ul>
       </header>
-    `}}window.customElements.define("wc-header",ne);window.customElements.define("wc-footer",class extends te{render(){return O`
+    `;
+    }
+
+  }
+
+  window.customElements.define('wc-header', WCHeader);
+
+  class WCFooter extends LitElement {
+    render() {
+      return html`
       <style>
         footer {
           background: #000;
           bottom: 0;
-          font-family: Arial;
           height: 40px;
           left: 0;
           position: fixed;
@@ -23,7 +3060,6 @@
 
         ul {
           display: inline-block;
-          line-height: 40px;
           list-style: none;
           margin: 0;
           padding: 0;
@@ -31,7 +3067,6 @@
 
         li {
           display: inline-block;
-          padding-right: .5rem;
           vertical-align: middle;
         }
 
@@ -40,15 +3075,7 @@
           margin: auto;
         }
 
-        a {
-          color: #fff;
-          display: inline-block;
-          text-decoration: none;
-        }
-
-        a:hover {
-          text-decoration: underline;
-        }
+        ${anchors()}
       </style>
       <footer>
         <ul>
@@ -61,11 +3088,57 @@
             </svg>
           </li>
           <li>
-            <a href="#">Terms</a>
+            <a href="/terms">Terms</a>
           </li>
           <li>
-            <a href="#">Privacy Policy</a>
+            <a href="/privacy">Privacy Policy</a>
           </li>
         </ul>
       </footer>
-    `}})})();
+    `;
+    }
+
+  }
+
+  window.customElements.define('wc-footer', WCFooter);
+
+  class WCPagination extends LitElement {
+    static get properties() {
+      return {
+        currentPage: Number,
+        pages: Number,
+        nextPage: Number,
+        prevPage: Number,
+        story: String
+      };
+    }
+
+    render() {
+      let {
+        currentPage,
+        pages,
+        nextPage,
+        prevPage,
+        story
+      } = this;
+      return html`
+      <style>
+        .pagination {
+          text-align: center;
+          display: block;
+        }
+      </style>
+
+      <div class="pagination">
+        ${currentPage !== 1 && html`<a href="/${story}/${nextPage}">&lt; prev</a>`}
+        <span>${currentPage}/${pages}</span>
+        ${currentPage !== pages && html`<a href="/${story}/${prevPage}">next &gt;</a>`}
+      </div>
+    `;
+    }
+
+  }
+
+  window.customElements.define('wc-pagination', WCPagination);
+
+}());
