@@ -1,6 +1,6 @@
 import { LitElement, html } from '@polymer/lit-element';
 
-const anchors = parent => {
+export const anchors = (parent='') => {
   return `
     ${parent} a {
       display: flex;
