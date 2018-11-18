@@ -2,6 +2,7 @@ const commonjs = require('rollup-plugin-commonjs');
 const resolve = require('rollup-plugin-node-resolve');
 const browsersync = require('rollup-plugin-browsersync');
 //const uglify = require('rollup-plugin-babel-minify');
+//Check env process.env.NODE_ENV and be sure to disable browsersync!
 
 const browsersyncOptions = {
   server: 'dist',
