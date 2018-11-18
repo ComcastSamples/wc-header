@@ -1,26 +1,15 @@
-# Introduction to Web Components via Shared Components
+# Step 1
 
-### Hello! :wave:
+`npm start` this project, your browser should open to http://localhost:3001
 
-Thanks for coming to our hands-on introduction to Web Components & Polymer! If you stumbled onto this and weren't at the event, hopefully this is still of somewhat use :-)
+Make sure you have the [React HN app](https://github.com/ComcastSamples/reacthnpwa) also up and running on http://localhost:3000
 
-This is all the materials that are required to get started:
+1. Get the wc-footer added to the React app
+2. Optimize for production
+  * Open package.json add build script `NODE_ENV=production rollup -c rollup.config.js`
+  * Add uglify and only have it run if NODE_ENV is production
 
-[Install Git](https://git-scm.com/download/)  
-[Install Node and npm](https://nodejs.org/en/download/) (Use [nvm](https://nodejs.org/en/download/) if you'd like multiple versions)  
-
-Run the following:
-```
-git clone https://github.com/ComcastSamples/wc-components.git  
-git clone https://github.com/ComcastSamples/reacthnpwa  
-cd wc-components/ && npm install  
-cd ../reacthnpwa && npm install  
-```
-
-In a separate terminal window run `cd reacthnpwa && npm start` - to start up the react hacker news application. We'll be working on getting our
-web components to run in that application.
-
-Optionally install [lit-html extension](https://marketplace.visualstudio.com/items?itemName=bierner.lit-html) for vscode to make it easier to edit markup in template literals.
+When you're done, `git checkout -f step2`
 
 ### Questions?
 

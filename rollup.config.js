@@ -1,41 +1,32 @@
 const commonjs = require('rollup-plugin-commonjs');
 const resolve = require('rollup-plugin-node-resolve');
-const uglify = require('rollup-plugin-babel-minify');
-const babel = require('rollup-plugin-babel');
-const replace = require('rollup-plugin-replace');
+const browsersync = require('rollup-plugin-browsersync');
+//const uglify = require('rollup-plugin-babel-minify');
 
-function components({ input, transpile = false, minify = true }) {
-  const outputName = input.replace('.js', '');
+const browsersyncOptions = {
+  server: 'dist',
+  notify: false,
+  host: '0.0.0.0',
+  port: '3001',
+  serveStatic: [{
+    route: '/node_modules',
+    dir: 'node_modules',
+  }],
+};
 
-  const config = {
-    input: `${input}`,
-    output: {
-      name: 'CX',
-      format: 'iife',
-      file: `dist/${outputName}.js`,
-    },
-    plugins: [
-      resolve(),
-      commonjs({
-        include: 'node_modules/**',
-        sourceMap: false,
-      }),
-      replace({
-        exclude: 'node_modules/**',
-        SAMPLE: '',
-      }),
-    ],
-  };
-
-  if (transpile) {
-    config.plugins.push(babel());
-  }
-
-  if (minify) {
-    config.plugins.push(uglify({ comments: false }));
-  }
-
-  return config;
-}
-
-module.exports = { components };
+export default {
+  input: 'components.js',
+  output: {
+    name: 'WC',
+    format: 'iife',
+    file: `dist/components.js`,
+  },
+  plugins: [
+    resolve(),
+    commonjs({
+      include: 'node_modules/**',
+      sourceMap: false,
+    }),
+    browsersync(browsersyncOptions)
+  ],
+};

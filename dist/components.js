@@ -16,7 +16,6 @@
      */
     const directives = new WeakMap();
     const isDirective = (o) => typeof o === 'function' && directives.has(o);
-    //# sourceMappingURL=directive.js.map
 
     /**
      * @license
@@ -45,14 +44,12 @@
             node = n;
         }
     };
-    //# sourceMappingURL=dom.js.map
 
     /**
      * A sentinel value that signals that a value was handled by a directive and
      * should not be written to the DOM.
      */
     const noChange = {};
-    //# sourceMappingURL=part.js.map
 
     /**
      * @license
@@ -259,7 +256,6 @@
      *    * (') then any non-(')
      */
     const lastAttributeNameRegex = /([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F \x09\x0a\x0c\x0d"'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;
-    //# sourceMappingURL=template.js.map
 
     /**
      * @license
@@ -357,7 +353,6 @@
             return fragment;
         }
     }
-    //# sourceMappingURL=template-instance.js.map
 
     /**
      * @license
@@ -419,7 +414,6 @@
             return template;
         }
     }
-    //# sourceMappingURL=template-result.js.map
 
     /**
      * @license
@@ -842,7 +836,6 @@
         (eventOptionsSupported ?
             { capture: o.capture, passive: o.passive, once: o.once } :
             o.capture);
-    //# sourceMappingURL=parts.js.map
 
     /**
      * @license
@@ -894,7 +887,6 @@
         }
     }
     const defaultTemplateProcessor = new DefaultTemplateProcessor();
-    //# sourceMappingURL=default-template-processor.js.map
 
     /**
      * @license
@@ -930,7 +922,6 @@
     // calls to a tag for the same literal, so we can cache work done per literal
     // in a Map.
     const templateCaches = new Map();
-    //# sourceMappingURL=template-factory.js.map
 
     /**
      * @license
@@ -971,7 +962,6 @@
         part.setValue(result);
         part.commit();
     };
-    //# sourceMappingURL=render.js.map
 
     /**
      * @license
@@ -991,7 +981,6 @@
      * render to and update a container.
      */
     const html = (strings, ...values) => new TemplateResult(strings, values, 'html', defaultTemplateProcessor);
-    //# sourceMappingURL=lit-html.js.map
 
     /**
      * @license
@@ -1116,7 +1105,6 @@
             }
         }
     }
-    //# sourceMappingURL=modify-template.js.map
 
     /**
      * @license
@@ -1266,7 +1254,6 @@
             }
         }
     };
-    //# sourceMappingURL=shady-render.js.map
 
     /**
      * @license
@@ -1747,7 +1734,6 @@
      */
     UpdatingElement._classProperties = new Map();
     UpdatingElement.properties = {};
-    //# sourceMappingURL=updating-element.js.map
 
     /**
      * @license
@@ -1762,7 +1748,6 @@
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
      */
-    //# sourceMappingURL=decorators.js.map
 
     /**
      * @license
@@ -1808,90 +1793,6 @@
      * @param {String} Element name.
      */
     LitElement.render = render$1;
-    //# sourceMappingURL=lit-element.js.map
-
-    const anchors = parent => html`
-      ${parent} a {
-        display: flex;
-        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-        padding: 10px 7.5px;
-        text-decoration: none;
-        color: #828282;
-      }
-      ${parent} a.active {
-        color: #61dafb;
-      }
-      ${parent} a:hover {
-        color: #CCC;
-      }
-      @media screen and (min-width: 768px) {
-        ${parent} a {
-          padding: 10px 20px;
-          text-decoration: none;
-          color: #828282;
-        }
-      }
-  `;
-
-    const styles = document.createElement('style');
-    render(anchors('wc-header'), styles);
-    document.head.appendChild(styles);
-    class WCHeader extends LitElement {
-      static get properties() {
-        return {
-          duration: Number,
-          name: String,
-          isOpen: {
-            type: Boolean,
-            reflect: true,
-          },
-        };
-      }
-
-      render() {
-        return html`
-      <style>
-        :host {
-          background: black;
-          position: fixed;
-          width: 100%;
-        }
-
-        ul {
-          display: flex;
-          list-style: none;
-          justify-content: space-around;
-          align-content: center;
-          justify-items: inherit;
-          align-items: center;
-          flex-direction: row;
-          margin: 0;
-          max-width: 980px;
-          margin: 0 auto;
-          padding: 0;
-        }
-
-        @media screen and (min-width: 768px) {
-          ul {
-            justify-content: flex-start;
-          }
-          .navigation a {
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #828282;
-          }
-        }
-      </style>
-
-      <header>
-        <ul>
-          <slot></slot>
-        </ul>
-      </header>
-    `;
-      }
-    }
-    window.customElements.define('wc-header', WCHeader);
 
     class WCFooter extends LitElement {
       render() {
@@ -1924,7 +1825,26 @@
           margin: auto;
         }
 
-        ${anchors()}
+        a {
+          display: flex;
+          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+          padding: 10px 7.5px;
+          text-decoration: none;
+          color: #828282;
+        }
+        a.active {
+          color: #61dafb;
+        }
+        a:hover {
+          color: #CCC;
+        }
+        @media screen and (min-width: 768px) {
+          a {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #828282;
+          }
+        }
       </style>
       <footer>
         <ul>
@@ -1948,39 +1868,5 @@
       }
     }
     window.customElements.define('wc-footer', WCFooter);
-
-    class WCPagination extends LitElement {
-      static get properties() {
-        return {
-          currentPage: Number,
-          pages: Number,
-          nextPage: Number,
-          prevPage: Number,
-          story: String,
-        };
-      }
-
-      render() {
-        const {
-          currentPage, pages, nextPage, prevPage, story,
-        } = this;
-
-        return html`
-      <style>
-        .pagination {
-          text-align: center;
-          display: block;
-        }
-      </style>
-
-      <div class="pagination">
-        ${currentPage !== 1 && html`<a href="/${story}/${nextPage}">&lt; prev</a>`}
-        <span>${currentPage}/${pages}</span>
-        ${currentPage !== pages && html`<a href="/${story}/${prevPage}">next &gt;</a>`}
-      </div>
-    `;
-      }
-    }
-    window.customElements.define('wc-pagination', WCPagination);
 
 }());

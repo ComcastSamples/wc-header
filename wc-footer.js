@@ -1,5 +1,4 @@
 import { LitElement, html } from '@polymer/lit-element';
-import { anchors } from './styles';
 
 class WCFooter extends LitElement {
   render() {
@@ -32,7 +31,26 @@ class WCFooter extends LitElement {
           margin: auto;
         }
 
-        ${anchors()}
+        a {
+          display: flex;
+          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+          padding: 10px 7.5px;
+          text-decoration: none;
+          color: #828282;
+        }
+        a.active {
+          color: #61dafb;
+        }
+        a:hover {
+          color: #CCC;
+        }
+        @media screen and (min-width: 768px) {
+          a {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #828282;
+          }
+        }
       </style>
       <footer>
         <ul>
