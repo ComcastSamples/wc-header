@@ -16,11 +16,11 @@ git clone https://github.com/ComcastSamples/reacthnpwa
 cd wc-components/ && npm install  
 cd ../reacthnpwa && npm install  
 ```
-
-In a separate terminal window run `cd reacthnpwa && npm start` - to start up the react hacker news application. We'll be working on getting our
-web components to run in that application.
-
 Optionally install [lit-html extension](https://marketplace.visualstudio.com/items?itemName=bierner.lit-html) for vscode to make it easier to edit markup in template literals.
+
+In a separate terminal window run `cd reacthnpwa && npm start` - to start up the react hacker news application. We'll be working on
+getting our web components to run in that application. For large companies with multiple sites, having a shared global header
+and footer creates unity between multiple sites. We do this @ Comcast with https://github.com/Comcast/polaris
 
 ### Questions?
 
