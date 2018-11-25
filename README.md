@@ -5,7 +5,7 @@
 1. Add wc-header to the components file
 2. Open Navigation.js in Reacthnpwa and replace the navigation wrappers with wc-header. (Keep the <li> tags as children of wc-header)
 3. Open wc-header.js and add global styles for `wc-header a`
-4. DRY up the anchor styles and share them with wc-footer
+4. [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) up the anchor styles and share them with wc-footer - lines 34 in wc-footer are the same!
 
 When you're done, `git checkout -f step3`
 
@@ -13,4 +13,4 @@ When you're done, `git checkout -f step3`
 
 Please reach out to us on Twitter, we're happy to help :-)
 
-—[John](https://twitter.com/JohnRiv) & [Chris](https://twitter.com/chiefcll)
+...—[John](https://twitter.com/JohnRiv) & [Chris](https://twitter.com/chiefcll)
