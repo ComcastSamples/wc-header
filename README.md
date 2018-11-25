@@ -6,8 +6,9 @@ Make sure you have the [React HN app](https://github.com/ComcastSamples/reacthnp
 
 1. Get the wc-footer added to the React app in index.html 
 
-  * Add script tag to include components.js from this project
-  * Add <wc-footer> tag
+  - Add script tag to include components.js from this project 
+  - Add <wc-footer> tag 
+
 2. Optimize for production 
 
   * Open package.json add build script `cross-env NODE_ENV=production rollup -c rollup.config.js`
