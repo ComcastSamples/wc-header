@@ -143,223 +143,131 @@
 
   (function () {
 
-    var aa = new Set("annotation-xml color-profile font-face font-face-src font-face-uri font-face-format font-face-name missing-glyph".split(" "));
+    var n = window.Document.prototype.createElement,
+        p = window.Document.prototype.createElementNS,
+        aa = window.Document.prototype.importNode,
+        ba = window.Document.prototype.prepend,
+        ca = window.Document.prototype.append,
+        da = window.DocumentFragment.prototype.prepend,
+        ea = window.DocumentFragment.prototype.append,
+        q = window.Node.prototype.cloneNode,
+        r = window.Node.prototype.appendChild,
+        t = window.Node.prototype.insertBefore,
+        u = window.Node.prototype.removeChild,
+        v = window.Node.prototype.replaceChild,
+        x = Object.getOwnPropertyDescriptor(window.Node.prototype, "textContent"),
+        y = window.Element.prototype.attachShadow,
+        z = Object.getOwnPropertyDescriptor(window.Element.prototype, "innerHTML"),
+        A = window.Element.prototype.getAttribute,
+        B = window.Element.prototype.setAttribute,
+        C = window.Element.prototype.removeAttribute,
+        D = window.Element.prototype.getAttributeNS,
+        E = window.Element.prototype.setAttributeNS,
+        F = window.Element.prototype.removeAttributeNS,
+        G = window.Element.prototype.insertAdjacentElement,
+        fa = window.Element.prototype.insertAdjacentHTML,
+        ha = window.Element.prototype.prepend,
+        ia = window.Element.prototype.append,
+        ja = window.Element.prototype.before,
+        ka = window.Element.prototype.after,
+        la = window.Element.prototype.replaceWith,
+        ma = window.Element.prototype.remove,
+        na = window.HTMLElement,
+        H = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, "innerHTML"),
+        oa = window.HTMLElement.prototype.insertAdjacentElement,
+        pa = window.HTMLElement.prototype.insertAdjacentHTML;
+    var qa = new Set();
+    "annotation-xml color-profile font-face font-face-src font-face-uri font-face-format font-face-name missing-glyph".split(" ").forEach(function (a) {
+      return qa.add(a);
+    });
 
-    function g(a) {
-      var b = aa.has(a);
+    function ra(a) {
+      var b = qa.has(a);
       a = /^[a-z][.0-9_a-z]*-[\-.0-9_a-z]*$/.test(a);
       return !b && a;
     }
 
-    function l(a) {
+    var sa = document.contains ? document.contains.bind(document) : document.documentElement.contains.bind(document.documentElement);
+
+    function I(a) {
       var b = a.isConnected;
       if (void 0 !== b) return b;
+      if (sa(a)) return !0;
 
       for (; a && !(a.__CE_isImportDocument || a instanceof Document);) a = a.parentNode || (window.ShadowRoot && a instanceof ShadowRoot ? a.host : void 0);
 
       return !(!a || !(a.__CE_isImportDocument || a instanceof Document));
     }
 
-    function n(a, b) {
+    function J(a) {
+      var b = a.children;
+      if (b) return Array.prototype.slice.call(b);
+      b = [];
+
+      for (a = a.firstChild; a; a = a.nextSibling) a.nodeType === Node.ELEMENT_NODE && b.push(a);
+
+      return b;
+    }
+
+    function K(a, b) {
       for (; b && b !== a && !b.nextSibling;) b = b.parentNode;
 
       return b && b !== a ? b.nextSibling : null;
     }
 
-    function p(a, b, d) {
-      d = void 0 === d ? new Set() : d;
+    function L(a, b, c) {
+      for (var f = a; f;) {
+        if (f.nodeType === Node.ELEMENT_NODE) {
+          var d = f;
+          b(d);
+          var e = d.localName;
 
-      for (var c = a; c;) {
-        if (c.nodeType === Node.ELEMENT_NODE) {
-          var e = c;
-          b(e);
-          var f = e.localName;
-
-          if ("link" === f && "import" === e.getAttribute("rel")) {
-            c = e.import;
-            if (c instanceof Node && !d.has(c)) for (d.add(c), c = c.firstChild; c; c = c.nextSibling) p(c, b, d);
-            c = n(a, e);
+          if ("link" === e && "import" === d.getAttribute("rel")) {
+            f = d.import;
+            void 0 === c && (c = new Set());
+            if (f instanceof Node && !c.has(f)) for (c.add(f), f = f.firstChild; f; f = f.nextSibling) L(f, b, c);
+            f = K(a, d);
             continue;
-          } else if ("template" === f) {
-            c = n(a, e);
+          } else if ("template" === e) {
+            f = K(a, d);
             continue;
           }
 
-          if (e = e.__CE_shadowRoot) for (e = e.firstChild; e; e = e.nextSibling) p(e, b, d);
+          if (d = d.__CE_shadowRoot) for (d = d.firstChild; d; d = d.nextSibling) L(d, b, c);
         }
 
-        c = c.firstChild ? c.firstChild : n(a, c);
+        f = f.firstChild ? f.firstChild : K(a, f);
       }
     }
 
-    function r(a, b, d) {
-      a[b] = d;
+    function M(a, b, c) {
+      a[b] = c;
     }
 
-    function u() {
-      this.a = new Map();
-      this.g = new Map();
-      this.c = [];
-      this.f = [];
-      this.b = !1;
-    }
-
-    function ba(a, b, d) {
-      a.a.set(b, d);
-      a.g.set(d.constructorFunction, d);
-    }
-
-    function ca(a, b) {
-      a.b = !0;
-      a.c.push(b);
-    }
-
-    function da(a, b) {
-      a.b = !0;
-      a.f.push(b);
-    }
-
-    function v(a, b) {
-      a.b && p(b, function (b) {
-        return w(a, b);
-      });
-    }
-
-    function w(a, b) {
-      if (a.b && !b.__CE_patched) {
-        b.__CE_patched = !0;
-
-        for (var d = 0; d < a.c.length; d++) a.c[d](b);
-
-        for (d = 0; d < a.f.length; d++) a.f[d](b);
-      }
-    }
-
-    function x(a, b) {
-      var d = [];
-      p(b, function (b) {
-        return d.push(b);
-      });
-
-      for (b = 0; b < d.length; b++) {
-        var c = d[b];
-        1 === c.__CE_state ? a.connectedCallback(c) : y(a, c);
-      }
-    }
-
-    function z(a, b) {
-      var d = [];
-      p(b, function (b) {
-        return d.push(b);
-      });
-
-      for (b = 0; b < d.length; b++) {
-        var c = d[b];
-        1 === c.__CE_state && a.disconnectedCallback(c);
-      }
-    }
-
-    function A(a, b, d) {
-      d = void 0 === d ? {} : d;
-
-      var c = d.u || new Set(),
-          e = d.i || function (b) {
-        return y(a, b);
-      },
-          f = [];
-
-      p(b, function (b) {
-        if ("link" === b.localName && "import" === b.getAttribute("rel")) {
-          var d = b.import;
-          d instanceof Node && (d.__CE_isImportDocument = !0, d.__CE_hasRegistry = !0);
-          d && "complete" === d.readyState ? d.__CE_documentLoadHandled = !0 : b.addEventListener("load", function () {
-            var d = b.import;
-
-            if (!d.__CE_documentLoadHandled) {
-              d.__CE_documentLoadHandled = !0;
-              var f = new Set(c);
-              f.delete(d);
-              A(a, d, {
-                u: f,
-                i: e
-              });
-            }
-          });
-        } else f.push(b);
-      }, c);
-      if (a.b) for (b = 0; b < f.length; b++) w(a, f[b]);
-
-      for (b = 0; b < f.length; b++) e(f[b]);
-    }
-
-    function y(a, b) {
-      if (void 0 === b.__CE_state) {
-        var d = b.ownerDocument;
-        if (d.defaultView || d.__CE_isImportDocument && d.__CE_hasRegistry) if (d = a.a.get(b.localName)) {
-          d.constructionStack.push(b);
-          var c = d.constructorFunction;
-
-          try {
-            try {
-              if (new c() !== b) throw Error("The custom element constructor did not produce the element being upgraded.");
-            } finally {
-              d.constructionStack.pop();
-            }
-          } catch (t) {
-            throw b.__CE_state = 2, t;
-          }
-
-          b.__CE_state = 1;
-          b.__CE_definition = d;
-          if (d.attributeChangedCallback) for (d = d.observedAttributes, c = 0; c < d.length; c++) {
-            var e = d[c],
-                f = b.getAttribute(e);
-            null !== f && a.attributeChangedCallback(b, e, null, f, null);
-          }
-          l(b) && a.connectedCallback(b);
-        }
-      }
-    }
-
-    u.prototype.connectedCallback = function (a) {
-      var b = a.__CE_definition;
-      b.connectedCallback && b.connectedCallback.call(a);
-    };
-
-    u.prototype.disconnectedCallback = function (a) {
-      var b = a.__CE_definition;
-      b.disconnectedCallback && b.disconnectedCallback.call(a);
-    };
-
-    u.prototype.attributeChangedCallback = function (a, b, d, c, e) {
-      var f = a.__CE_definition;
-      f.attributeChangedCallback && -1 < f.observedAttributes.indexOf(b) && f.attributeChangedCallback.call(a, b, d, c, e);
-    };
-
-    function B(a) {
+    function ta(a) {
       var b = document;
       this.c = a;
       this.a = b;
       this.b = void 0;
-      A(this.c, this.a);
+      N(this.c, this.a);
       "loading" === this.a.readyState && (this.b = new MutationObserver(this.f.bind(this)), this.b.observe(this.a, {
         childList: !0,
         subtree: !0
       }));
     }
 
-    function C(a) {
+    function ua(a) {
       a.b && a.b.disconnect();
     }
 
-    B.prototype.f = function (a) {
+    ta.prototype.f = function (a) {
       var b = this.a.readyState;
-      "interactive" !== b && "complete" !== b || C(this);
+      "interactive" !== b && "complete" !== b || ua(this);
 
-      for (b = 0; b < a.length; b++) for (var d = a[b].addedNodes, c = 0; c < d.length; c++) A(this.c, d[c]);
+      for (b = 0; b < a.length; b++) for (var c = a[b].addedNodes, f = 0; f < c.length; f++) N(this.c, c[f]);
     };
 
-    function ea() {
+    function va() {
       var a = this;
       this.b = this.a = void 0;
       this.c = new Promise(function (b) {
@@ -368,193 +276,420 @@
       });
     }
 
-    function D(a) {
+    function wa(a) {
       if (a.a) throw Error("Already resolved.");
       a.a = void 0;
       a.b && a.b(void 0);
     }
 
-    function E(a) {
-      this.c = !1;
-      this.a = a;
+    function O(a) {
+      this.f = new Map();
+      this.g = new Map();
+      this.l = new Map();
+      this.i = !1;
+      this.b = a;
       this.j = new Map();
 
-      this.f = function (b) {
+      this.c = function (b) {
         return b();
       };
 
-      this.b = !1;
-      this.g = [];
-      this.o = new B(a);
+      this.a = !1;
+      this.h = [];
+      this.m = a.f ? new ta(a) : void 0;
     }
 
-    E.prototype.l = function (a, b) {
-      var d = this;
-      if (!(b instanceof Function)) throw new TypeError("Custom element constructors must be functions.");
-      if (!g(a)) throw new SyntaxError("The element name '" + a + "' is not valid.");
-      if (this.a.a.get(a)) throw Error("A custom element with name '" + a + "' has already been defined.");
-      if (this.c) throw Error("A custom element is already being defined.");
-      this.c = !0;
-
-      try {
-        var c = function (b) {
-          var a = e[b];
-          if (void 0 !== a && !(a instanceof Function)) throw Error("The '" + b + "' callback must be a function.");
-          return a;
-        },
-            e = b.prototype;
-
-        if (!(e instanceof Object)) throw new TypeError("The custom element constructor's prototype is not an object.");
-        var f = c("connectedCallback");
-        var t = c("disconnectedCallback");
-        var k = c("adoptedCallback");
-        var h = c("attributeChangedCallback");
-        var m = b.observedAttributes || [];
-      } catch (q) {
-        return;
-      } finally {
-        this.c = !1;
-      }
-
-      b = {
-        localName: a,
-        constructorFunction: b,
-        connectedCallback: f,
-        disconnectedCallback: t,
-        adoptedCallback: k,
-        attributeChangedCallback: h,
-        observedAttributes: m,
-        constructionStack: []
-      };
-      ba(this.a, a, b);
-      this.g.push(b);
-      this.b || (this.b = !0, this.f(function () {
-        return fa(d);
+    O.prototype.o = function (a, b) {
+      var c = this;
+      if (!(b instanceof Function)) throw new TypeError("Custom element constructor getters must be functions.");
+      xa(this, a);
+      this.f.set(a, b);
+      this.h.push(a);
+      this.a || (this.a = !0, this.c(function () {
+        return ya(c);
       }));
     };
 
-    E.prototype.i = function (a) {
-      A(this.a, a);
+    O.prototype.define = function (a, b) {
+      var c = this;
+      if (!(b instanceof Function)) throw new TypeError("Custom element constructors must be functions.");
+      xa(this, a);
+      za(this, a, b);
+      this.h.push(a);
+      this.a || (this.a = !0, this.c(function () {
+        return ya(c);
+      }));
     };
 
-    function fa(a) {
-      if (!1 !== a.b) {
-        a.b = !1;
+    function xa(a, b) {
+      if (!ra(b)) throw new SyntaxError("The element name '" + b + "' is not valid.");
+      if (P(a, b)) throw Error("A custom element with name '" + b + "' has already been defined.");
+      if (a.i) throw Error("A custom element is already being defined.");
+    }
 
-        for (var b = a.g, d = [], c = new Map(), e = 0; e < b.length; e++) c.set(b[e].localName, []);
+    function za(a, b, c) {
+      a.i = !0;
+      var f;
 
-        A(a.a, document, {
-          i: function (b) {
-            if (void 0 === b.__CE_state) {
-              var e = b.localName,
-                  f = c.get(e);
-              f ? f.push(b) : a.a.a.get(e) && d.push(b);
+      try {
+        var d = function (m) {
+          var w = e[m];
+          if (void 0 !== w && !(w instanceof Function)) throw Error("The '" + m + "' callback must be a function.");
+          return w;
+        },
+            e = c.prototype;
+
+        if (!(e instanceof Object)) throw new TypeError("The custom element constructor's prototype is not an object.");
+        var g = d("connectedCallback");
+        var h = d("disconnectedCallback");
+        var k = d("adoptedCallback");
+        var l = (f = d("attributeChangedCallback")) && c.observedAttributes || [];
+      } catch (m) {
+        throw m;
+      } finally {
+        a.i = !1;
+      }
+
+      c = {
+        localName: b,
+        constructorFunction: c,
+        connectedCallback: g,
+        disconnectedCallback: h,
+        adoptedCallback: k,
+        attributeChangedCallback: f,
+        observedAttributes: l,
+        constructionStack: []
+      };
+      a.g.set(b, c);
+      a.l.set(c.constructorFunction, c);
+      return c;
+    }
+
+    O.prototype.upgrade = function (a) {
+      N(this.b, a);
+    };
+
+    function ya(a) {
+      if (!1 !== a.a) {
+        a.a = !1;
+
+        for (var b = [], c = a.h, f = new Map(), d = 0; d < c.length; d++) f.set(c[d], []);
+
+        N(a.b, document, {
+          upgrade: function (k) {
+            if (void 0 === k.__CE_state) {
+              var l = k.localName,
+                  m = f.get(l);
+              m ? m.push(k) : a.g.has(l) && b.push(k);
             }
           }
         });
 
-        for (e = 0; e < d.length; e++) y(a.a, d[e]);
+        for (d = 0; d < b.length; d++) Q(a.b, b[d]);
 
-        for (; 0 < b.length;) {
-          var f = b.shift();
-          e = f.localName;
-          f = c.get(f.localName);
+        for (d = 0; d < c.length; d++) {
+          for (var e = c[d], g = f.get(e), h = 0; h < g.length; h++) Q(a.b, g[h]);
 
-          for (var t = 0; t < f.length; t++) y(a.a, f[t]);
-
-          (e = a.j.get(e)) && D(e);
+          (e = a.j.get(e)) && wa(e);
         }
+
+        c.length = 0;
       }
     }
 
-    E.prototype.get = function (a) {
-      if (a = this.a.a.get(a)) return a.constructorFunction;
+    O.prototype.get = function (a) {
+      if (a = P(this, a)) return a.constructorFunction;
     };
 
-    E.prototype.m = function (a) {
-      if (!g(a)) return Promise.reject(new SyntaxError("'" + a + "' is not a valid custom element name."));
+    O.prototype.whenDefined = function (a) {
+      if (!ra(a)) return Promise.reject(new SyntaxError("'" + a + "' is not a valid custom element name."));
       var b = this.j.get(a);
       if (b) return b.c;
-      b = new ea();
+      b = new va();
       this.j.set(a, b);
-      this.a.a.get(a) && !this.g.some(function (b) {
-        return b.localName === a;
-      }) && D(b);
+      var c = this.g.has(a) || this.f.has(a);
+      a = -1 === this.h.indexOf(a);
+      c && a && wa(b);
       return b.c;
     };
 
-    E.prototype.s = function (a) {
-      C(this.o);
-      var b = this.f;
+    O.prototype.polyfillWrapFlushCallback = function (a) {
+      this.m && ua(this.m);
+      var b = this.c;
 
-      this.f = function (d) {
+      this.c = function (c) {
         return a(function () {
-          return b(d);
+          return b(c);
         });
       };
     };
 
-    window.CustomElementRegistry = E;
-    E.prototype.define = E.prototype.l;
-    E.prototype.upgrade = E.prototype.i;
-    E.prototype.get = E.prototype.get;
-    E.prototype.whenDefined = E.prototype.m;
-    E.prototype.polyfillWrapFlushCallback = E.prototype.s;
-    var F = window.Document.prototype.createElement,
-        G = window.Document.prototype.createElementNS,
-        ha = window.Document.prototype.importNode,
-        ia = window.Document.prototype.prepend,
-        ja = window.Document.prototype.append,
-        ka = window.DocumentFragment.prototype.prepend,
-        la = window.DocumentFragment.prototype.append,
-        H = window.Node.prototype.cloneNode,
-        I = window.Node.prototype.appendChild,
-        J = window.Node.prototype.insertBefore,
-        K = window.Node.prototype.removeChild,
-        L = window.Node.prototype.replaceChild,
-        M = Object.getOwnPropertyDescriptor(window.Node.prototype, "textContent"),
-        N = window.Element.prototype.attachShadow,
-        O = Object.getOwnPropertyDescriptor(window.Element.prototype, "innerHTML"),
-        P = window.Element.prototype.getAttribute,
-        Q = window.Element.prototype.setAttribute,
-        R = window.Element.prototype.removeAttribute,
-        S = window.Element.prototype.getAttributeNS,
-        T = window.Element.prototype.setAttributeNS,
-        U = window.Element.prototype.removeAttributeNS,
-        ma = window.Element.prototype.insertAdjacentElement,
-        na = window.Element.prototype.insertAdjacentHTML,
-        oa = window.Element.prototype.prepend,
-        pa = window.Element.prototype.append,
-        V = window.Element.prototype.before,
-        qa = window.Element.prototype.after,
-        ra = window.Element.prototype.replaceWith,
-        sa = window.Element.prototype.remove,
-        ta = window.HTMLElement,
-        W = Object.getOwnPropertyDescriptor(window.HTMLElement.prototype, "innerHTML"),
-        ua = window.HTMLElement.prototype.insertAdjacentElement,
-        va = window.HTMLElement.prototype.insertAdjacentHTML;
-    var wa = new function () {}();
+    function P(a, b) {
+      var c = a.g.get(b);
+      if (c) return c;
 
-    function xa() {
-      var a = X;
+      if (c = a.f.get(b)) {
+        a.f.delete(b);
 
+        try {
+          return za(a, b, c());
+        } catch (f) {
+          R(f);
+        }
+      }
+    }
+
+    window.CustomElementRegistry = O;
+    O.prototype.define = O.prototype.define;
+    O.prototype.upgrade = O.prototype.upgrade;
+    O.prototype.get = O.prototype.get;
+    O.prototype.whenDefined = O.prototype.whenDefined;
+    O.prototype.polyfillDefineLazy = O.prototype.o;
+    O.prototype.polyfillWrapFlushCallback = O.prototype.polyfillWrapFlushCallback;
+
+    function S() {
+      var a = T && T.noDocumentConstructionObserver,
+          b = T && T.shadyDomFastWalk;
+      this.b = [];
+      this.c = [];
+      this.a = !1;
+      this.shadyDomFastWalk = b;
+      this.f = !a;
+    }
+
+    function U(a, b, c, f) {
+      var d = window.ShadyDOM;
+
+      if (a.shadyDomFastWalk && d && d.inUse) {
+        if (b.nodeType === Node.ELEMENT_NODE && c(b), b.querySelectorAll) for (a = d.nativeMethods.querySelectorAll.call(b, "*"), b = 0; b < a.length; b++) c(a[b]);
+      } else L(b, c, f);
+    }
+
+    function Aa(a, b) {
+      a.a = !0;
+      a.b.push(b);
+    }
+
+    function Ba(a, b) {
+      a.a = !0;
+      a.c.push(b);
+    }
+
+    function V(a, b) {
+      a.a && U(a, b, function (c) {
+        return W(a, c);
+      });
+    }
+
+    function W(a, b) {
+      if (a.a && !b.__CE_patched) {
+        b.__CE_patched = !0;
+
+        for (var c = 0; c < a.b.length; c++) a.b[c](b);
+
+        for (c = 0; c < a.c.length; c++) a.c[c](b);
+      }
+    }
+
+    function X(a, b) {
+      var c = [];
+      U(a, b, function (d) {
+        return c.push(d);
+      });
+
+      for (b = 0; b < c.length; b++) {
+        var f = c[b];
+        1 === f.__CE_state ? a.connectedCallback(f) : Q(a, f);
+      }
+    }
+
+    function Y(a, b) {
+      var c = [];
+      U(a, b, function (d) {
+        return c.push(d);
+      });
+
+      for (b = 0; b < c.length; b++) {
+        var f = c[b];
+        1 === f.__CE_state && a.disconnectedCallback(f);
+      }
+    }
+
+    function N(a, b, c) {
+      c = void 0 === c ? {} : c;
+
+      var f = c.s,
+          d = c.upgrade || function (g) {
+        return Q(a, g);
+      },
+          e = [];
+
+      U(a, b, function (g) {
+        a.a && W(a, g);
+
+        if ("link" === g.localName && "import" === g.getAttribute("rel")) {
+          var h = g.import;
+          h instanceof Node && (h.__CE_isImportDocument = !0, h.__CE_registry = document.__CE_registry);
+          h && "complete" === h.readyState ? h.__CE_documentLoadHandled = !0 : g.addEventListener("load", function () {
+            var k = g.import;
+
+            if (!k.__CE_documentLoadHandled) {
+              k.__CE_documentLoadHandled = !0;
+              var l = new Set();
+              f && (f.forEach(function (m) {
+                return l.add(m);
+              }), l.delete(k));
+              N(a, k, {
+                s: l,
+                upgrade: d
+              });
+            }
+          });
+        } else e.push(g);
+      }, f);
+
+      for (b = 0; b < e.length; b++) d(e[b]);
+    }
+
+    function Q(a, b) {
+      try {
+        var c = b.ownerDocument,
+            f = c.__CE_registry;
+        var d = f && (c.defaultView || c.__CE_isImportDocument) ? P(f, b.localName) : void 0;
+
+        if (d && void 0 === b.__CE_state) {
+          d.constructionStack.push(b);
+
+          try {
+            try {
+              if (new d.constructorFunction() !== b) throw Error("The custom element constructor did not produce the element being upgraded.");
+            } finally {
+              d.constructionStack.pop();
+            }
+          } catch (k) {
+            throw b.__CE_state = 2, k;
+          }
+
+          b.__CE_state = 1;
+          b.__CE_definition = d;
+
+          if (d.attributeChangedCallback && b.hasAttributes()) {
+            var e = d.observedAttributes;
+
+            for (d = 0; d < e.length; d++) {
+              var g = e[d],
+                  h = b.getAttribute(g);
+              null !== h && a.attributeChangedCallback(b, g, null, h, null);
+            }
+          }
+
+          I(b) && a.connectedCallback(b);
+        }
+      } catch (k) {
+        R(k);
+      }
+    }
+
+    S.prototype.connectedCallback = function (a) {
+      var b = a.__CE_definition;
+      if (b.connectedCallback) try {
+        b.connectedCallback.call(a);
+      } catch (c) {
+        R(c);
+      }
+    };
+
+    S.prototype.disconnectedCallback = function (a) {
+      var b = a.__CE_definition;
+      if (b.disconnectedCallback) try {
+        b.disconnectedCallback.call(a);
+      } catch (c) {
+        R(c);
+      }
+    };
+
+    S.prototype.attributeChangedCallback = function (a, b, c, f, d) {
+      var e = a.__CE_definition;
+      if (e.attributeChangedCallback && -1 < e.observedAttributes.indexOf(b)) try {
+        e.attributeChangedCallback.call(a, b, c, f, d);
+      } catch (g) {
+        R(g);
+      }
+    };
+
+    function Ca(a, b, c, f) {
+      var d = b.__CE_registry;
+      if (d && (null === f || "http://www.w3.org/1999/xhtml" === f) && (d = P(d, c))) try {
+        var e = new d.constructorFunction();
+        if (void 0 === e.__CE_state || void 0 === e.__CE_definition) throw Error("Failed to construct '" + c + "': The returned value was not constructed with the HTMLElement constructor.");
+        if ("http://www.w3.org/1999/xhtml" !== e.namespaceURI) throw Error("Failed to construct '" + c + "': The constructed element's namespace must be the HTML namespace.");
+        if (e.hasAttributes()) throw Error("Failed to construct '" + c + "': The constructed element must not have any attributes.");
+        if (null !== e.firstChild) throw Error("Failed to construct '" + c + "': The constructed element must not have any children.");
+        if (null !== e.parentNode) throw Error("Failed to construct '" + c + "': The constructed element must not have a parent node.");
+        if (e.ownerDocument !== b) throw Error("Failed to construct '" + c + "': The constructed element's owner document is incorrect.");
+        if (e.localName !== c) throw Error("Failed to construct '" + c + "': The constructed element's local name is incorrect.");
+        return e;
+      } catch (g) {
+        return R(g), b = null === f ? n.call(b, c) : p.call(b, f, c), Object.setPrototypeOf(b, HTMLUnknownElement.prototype), b.__CE_state = 2, b.__CE_definition = void 0, W(a, b), b;
+      }
+      b = null === f ? n.call(b, c) : p.call(b, f, c);
+      W(a, b);
+      return b;
+    }
+
+    function R(a) {
+      var b = a.message,
+          c = a.sourceURL || a.fileName || "",
+          f = a.line || a.lineNumber || 0,
+          d = a.column || a.columnNumber || 0,
+          e = void 0;
+      void 0 === ErrorEvent.prototype.initErrorEvent ? e = new ErrorEvent("error", {
+        cancelable: !0,
+        message: b,
+        filename: c,
+        lineno: f,
+        colno: d,
+        error: a
+      }) : (e = document.createEvent("ErrorEvent"), e.initErrorEvent("error", !1, !0, b, c, f), e.preventDefault = function () {
+        Object.defineProperty(this, "defaultPrevented", {
+          configurable: !0,
+          get: function () {
+            return !0;
+          }
+        });
+      });
+      void 0 === e.error && Object.defineProperty(e, "error", {
+        configurable: !0,
+        enumerable: !0,
+        get: function () {
+          return a;
+        }
+      });
+      window.dispatchEvent(e);
+      e.defaultPrevented || console.error(a);
+    }
+    var Da = new function () {}();
+
+    function Ea(a) {
       window.HTMLElement = function () {
         function b() {
-          var b = this.constructor,
-              c = a.g.get(b);
-          if (!c) throw Error("The custom element being constructed was not registered with `customElements`.");
-          var e = c.constructionStack;
-          if (0 === e.length) return e = F.call(document, c.localName), Object.setPrototypeOf(e, b.prototype), e.__CE_state = 1, e.__CE_definition = c, w(a, e), e;
-          c = e.length - 1;
-          var f = e[c];
-          if (f === wa) throw Error("The HTMLElement constructor was either called reentrantly for this constructor or called multiple times.");
-          e[c] = wa;
-          Object.setPrototypeOf(f, b.prototype);
-          w(a, f);
-          return f;
+          var c = this.constructor;
+
+          var f = document.__CE_registry.l.get(c);
+
+          if (!f) throw Error("Failed to construct a custom element: The constructor was not registered with `customElements`.");
+          var d = f.constructionStack;
+          if (0 === d.length) return d = n.call(document, f.localName), Object.setPrototypeOf(d, c.prototype), d.__CE_state = 1, d.__CE_definition = f, W(a, d), d;
+          var e = d.length - 1,
+              g = d[e];
+          if (g === Da) throw Error("Failed to construct '" + f.localName + "': This element was already constructed.");
+          d[e] = Da;
+          Object.setPrototypeOf(g, c.prototype);
+          W(a, g);
+          return g;
         }
 
-        b.prototype = ta.prototype;
+        b.prototype = na.prototype;
         Object.defineProperty(b.prototype, "constructor", {
           writable: !0,
           configurable: !0,
@@ -565,355 +700,337 @@
       }();
     }
 
-    function Y(a, b, d) {
-      function c(b) {
-        return function (d) {
-          for (var e = [], c = 0; c < arguments.length; ++c) e[c] = arguments[c];
+    function Z(a, b, c) {
+      function f(d) {
+        return function (e) {
+          for (var g = [], h = 0; h < arguments.length; ++h) g[h] = arguments[h];
 
-          c = [];
+          h = [];
 
-          for (var f = [], m = 0; m < e.length; m++) {
-            var q = e[m];
-            q instanceof Element && l(q) && f.push(q);
-            if (q instanceof DocumentFragment) for (q = q.firstChild; q; q = q.nextSibling) c.push(q);else c.push(q);
+          for (var k = [], l = 0; l < g.length; l++) {
+            var m = g[l];
+            m instanceof Element && I(m) && k.push(m);
+            if (m instanceof DocumentFragment) for (m = m.firstChild; m; m = m.nextSibling) h.push(m);else h.push(m);
           }
 
-          b.apply(this, e);
+          d.apply(this, g);
 
-          for (e = 0; e < f.length; e++) z(a, f[e]);
+          for (g = 0; g < k.length; g++) Y(a, k[g]);
 
-          if (l(this)) for (e = 0; e < c.length; e++) f = c[e], f instanceof Element && x(a, f);
+          if (I(this)) for (g = 0; g < h.length; g++) k = h[g], k instanceof Element && X(a, k);
         };
       }
 
-      void 0 !== d.h && (b.prepend = c(d.h));
-      void 0 !== d.append && (b.append = c(d.append));
+      void 0 !== c.prepend && M(b, "prepend", f(c.prepend));
+      void 0 !== c.append && M(b, "append", f(c.append));
     }
 
-    function ya() {
-      var a = X;
-      r(Document.prototype, "createElement", function (b) {
-        if (this.__CE_hasRegistry) {
-          var d = a.a.get(b);
-          if (d) return new d.constructorFunction();
-        }
-
-        b = F.call(this, b);
-        w(a, b);
+    function Fa(a) {
+      M(Document.prototype, "createElement", function (b) {
+        return Ca(a, this, b, null);
+      });
+      M(Document.prototype, "importNode", function (b, c) {
+        b = aa.call(this, b, !!c);
+        this.__CE_registry ? N(a, b) : V(a, b);
         return b;
       });
-      r(Document.prototype, "importNode", function (b, d) {
-        b = ha.call(this, b, !!d);
-        this.__CE_hasRegistry ? A(a, b) : v(a, b);
-        return b;
+      M(Document.prototype, "createElementNS", function (b, c) {
+        return Ca(a, this, c, b);
       });
-      r(Document.prototype, "createElementNS", function (b, d) {
-        if (this.__CE_hasRegistry && (null === b || "http://www.w3.org/1999/xhtml" === b)) {
-          var c = a.a.get(d);
-          if (c) return new c.constructorFunction();
-        }
-
-        b = G.call(this, b, d);
-        w(a, b);
-        return b;
-      });
-      Y(a, Document.prototype, {
-        h: ia,
-        append: ja
+      Z(a, Document.prototype, {
+        prepend: ba,
+        append: ca
       });
     }
 
-    function za() {
-      function a(a, c) {
-        Object.defineProperty(a, "textContent", {
-          enumerable: c.enumerable,
+    function Ga(a) {
+      function b(c, f) {
+        Object.defineProperty(c, "textContent", {
+          enumerable: f.enumerable,
           configurable: !0,
-          get: c.get,
-          set: function (a) {
-            if (this.nodeType === Node.TEXT_NODE) c.set.call(this, a);else {
-              var d = void 0;
+          get: f.get,
+          set: function (d) {
+            if (this.nodeType === Node.TEXT_NODE) f.set.call(this, d);else {
+              var e = void 0;
 
               if (this.firstChild) {
-                var e = this.childNodes,
-                    k = e.length;
+                var g = this.childNodes,
+                    h = g.length;
 
-                if (0 < k && l(this)) {
-                  d = Array(k);
+                if (0 < h && I(this)) {
+                  e = Array(h);
 
-                  for (var h = 0; h < k; h++) d[h] = e[h];
+                  for (var k = 0; k < h; k++) e[k] = g[k];
                 }
               }
 
-              c.set.call(this, a);
-              if (d) for (a = 0; a < d.length; a++) z(b, d[a]);
+              f.set.call(this, d);
+              if (e) for (d = 0; d < e.length; d++) Y(a, e[d]);
             }
           }
         });
       }
 
-      var b = X;
-      r(Node.prototype, "insertBefore", function (a, c) {
-        if (a instanceof DocumentFragment) {
-          var e = Array.prototype.slice.apply(a.childNodes);
-          a = J.call(this, a, c);
-          if (l(this)) for (c = 0; c < e.length; c++) x(b, e[c]);
-          return a;
+      M(Node.prototype, "insertBefore", function (c, f) {
+        if (c instanceof DocumentFragment) {
+          var d = J(c);
+          c = t.call(this, c, f);
+          if (I(this)) for (f = 0; f < d.length; f++) X(a, d[f]);
+          return c;
         }
 
-        e = l(a);
-        c = J.call(this, a, c);
-        e && z(b, a);
-        l(this) && x(b, a);
-        return c;
-      });
-      r(Node.prototype, "appendChild", function (a) {
-        if (a instanceof DocumentFragment) {
-          var c = Array.prototype.slice.apply(a.childNodes);
-          a = I.call(this, a);
-          if (l(this)) for (var e = 0; e < c.length; e++) x(b, c[e]);
-          return a;
-        }
-
-        c = l(a);
-        e = I.call(this, a);
-        c && z(b, a);
-        l(this) && x(b, a);
-        return e;
-      });
-      r(Node.prototype, "cloneNode", function (a) {
-        a = H.call(this, !!a);
-        this.ownerDocument.__CE_hasRegistry ? A(b, a) : v(b, a);
-        return a;
-      });
-      r(Node.prototype, "removeChild", function (a) {
-        var c = l(a),
-            e = K.call(this, a);
-        c && z(b, a);
-        return e;
-      });
-      r(Node.prototype, "replaceChild", function (a, c) {
-        if (a instanceof DocumentFragment) {
-          var e = Array.prototype.slice.apply(a.childNodes);
-          a = L.call(this, a, c);
-          if (l(this)) for (z(b, c), c = 0; c < e.length; c++) x(b, e[c]);
-          return a;
-        }
-
-        e = l(a);
-        var f = L.call(this, a, c),
-            d = l(this);
-        d && z(b, c);
-        e && z(b, a);
-        d && x(b, a);
+        d = c instanceof Element && I(c);
+        f = t.call(this, c, f);
+        d && Y(a, c);
+        I(this) && X(a, c);
         return f;
       });
-      M && M.get ? a(Node.prototype, M) : ca(b, function (b) {
-        a(b, {
+      M(Node.prototype, "appendChild", function (c) {
+        if (c instanceof DocumentFragment) {
+          var f = J(c);
+          c = r.call(this, c);
+          if (I(this)) for (var d = 0; d < f.length; d++) X(a, f[d]);
+          return c;
+        }
+
+        f = c instanceof Element && I(c);
+        d = r.call(this, c);
+        f && Y(a, c);
+        I(this) && X(a, c);
+        return d;
+      });
+      M(Node.prototype, "cloneNode", function (c) {
+        c = q.call(this, !!c);
+        this.ownerDocument.__CE_registry ? N(a, c) : V(a, c);
+        return c;
+      });
+      M(Node.prototype, "removeChild", function (c) {
+        var f = c instanceof Element && I(c),
+            d = u.call(this, c);
+        f && Y(a, c);
+        return d;
+      });
+      M(Node.prototype, "replaceChild", function (c, f) {
+        if (c instanceof DocumentFragment) {
+          var d = J(c);
+          c = v.call(this, c, f);
+          if (I(this)) for (Y(a, f), f = 0; f < d.length; f++) X(a, d[f]);
+          return c;
+        }
+
+        d = c instanceof Element && I(c);
+        var e = v.call(this, c, f),
+            g = I(this);
+        g && Y(a, f);
+        d && Y(a, c);
+        g && X(a, c);
+        return e;
+      });
+      x && x.get ? b(Node.prototype, x) : Aa(a, function (c) {
+        b(c, {
           enumerable: !0,
           configurable: !0,
           get: function () {
-            for (var a = [], b = 0; b < this.childNodes.length; b++) {
-              var f = this.childNodes[b];
-              f.nodeType !== Node.COMMENT_NODE && a.push(f.textContent);
-            }
+            for (var f = [], d = this.firstChild; d; d = d.nextSibling) d.nodeType !== Node.COMMENT_NODE && f.push(d.textContent);
 
-            return a.join("");
+            return f.join("");
           },
-          set: function (a) {
-            for (; this.firstChild;) K.call(this, this.firstChild);
+          set: function (f) {
+            for (; this.firstChild;) u.call(this, this.firstChild);
 
-            null != a && "" !== a && I.call(this, document.createTextNode(a));
+            null != f && "" !== f && r.call(this, document.createTextNode(f));
           }
         });
       });
     }
 
-    function Aa(a) {
-      function b(b) {
-        return function (e) {
-          for (var c = [], d = 0; d < arguments.length; ++d) c[d] = arguments[d];
+    function Ha(a) {
+      function b(f) {
+        return function (d) {
+          for (var e = [], g = 0; g < arguments.length; ++g) e[g] = arguments[g];
 
-          d = [];
+          g = [];
 
-          for (var k = [], h = 0; h < c.length; h++) {
-            var m = c[h];
-            m instanceof Element && l(m) && k.push(m);
-            if (m instanceof DocumentFragment) for (m = m.firstChild; m; m = m.nextSibling) d.push(m);else d.push(m);
+          for (var h = [], k = 0; k < e.length; k++) {
+            var l = e[k];
+            l instanceof Element && I(l) && h.push(l);
+            if (l instanceof DocumentFragment) for (l = l.firstChild; l; l = l.nextSibling) g.push(l);else g.push(l);
           }
 
-          b.apply(this, c);
+          f.apply(this, e);
 
-          for (c = 0; c < k.length; c++) z(a, k[c]);
+          for (e = 0; e < h.length; e++) Y(a, h[e]);
 
-          if (l(this)) for (c = 0; c < d.length; c++) k = d[c], k instanceof Element && x(a, k);
+          if (I(this)) for (e = 0; e < g.length; e++) h = g[e], h instanceof Element && X(a, h);
         };
       }
 
-      var d = Element.prototype;
-      void 0 !== V && (d.before = b(V));
-      void 0 !== V && (d.after = b(qa));
-      void 0 !== ra && r(d, "replaceWith", function (b) {
-        for (var e = [], c = 0; c < arguments.length; ++c) e[c] = arguments[c];
+      var c = Element.prototype;
+      void 0 !== ja && M(c, "before", b(ja));
+      void 0 !== ka && M(c, "after", b(ka));
+      void 0 !== la && M(c, "replaceWith", function (f) {
+        for (var d = [], e = 0; e < arguments.length; ++e) d[e] = arguments[e];
 
-        c = [];
+        e = [];
 
-        for (var d = [], k = 0; k < e.length; k++) {
-          var h = e[k];
-          h instanceof Element && l(h) && d.push(h);
-          if (h instanceof DocumentFragment) for (h = h.firstChild; h; h = h.nextSibling) c.push(h);else c.push(h);
+        for (var g = [], h = 0; h < d.length; h++) {
+          var k = d[h];
+          k instanceof Element && I(k) && g.push(k);
+          if (k instanceof DocumentFragment) for (k = k.firstChild; k; k = k.nextSibling) e.push(k);else e.push(k);
         }
 
-        k = l(this);
-        ra.apply(this, e);
+        h = I(this);
+        la.apply(this, d);
 
-        for (e = 0; e < d.length; e++) z(a, d[e]);
+        for (d = 0; d < g.length; d++) Y(a, g[d]);
 
-        if (k) for (z(a, this), e = 0; e < c.length; e++) d = c[e], d instanceof Element && x(a, d);
+        if (h) for (Y(a, this), d = 0; d < e.length; d++) g = e[d], g instanceof Element && X(a, g);
       });
-      void 0 !== sa && r(d, "remove", function () {
-        var b = l(this);
-        sa.call(this);
-        b && z(a, this);
+      void 0 !== ma && M(c, "remove", function () {
+        var f = I(this);
+        ma.call(this);
+        f && Y(a, this);
       });
     }
 
-    function Ba() {
-      function a(a, b) {
-        Object.defineProperty(a, "innerHTML", {
-          enumerable: b.enumerable,
+    function Ia(a) {
+      function b(d, e) {
+        Object.defineProperty(d, "innerHTML", {
+          enumerable: e.enumerable,
           configurable: !0,
-          get: b.get,
-          set: function (a) {
-            var e = this,
-                d = void 0;
-            l(this) && (d = [], p(this, function (a) {
-              a !== e && d.push(a);
+          get: e.get,
+          set: function (g) {
+            var h = this,
+                k = void 0;
+            I(this) && (k = [], U(a, this, function (w) {
+              w !== h && k.push(w);
             }));
-            b.set.call(this, a);
-            if (d) for (var f = 0; f < d.length; f++) {
-              var t = d[f];
-              1 === t.__CE_state && c.disconnectedCallback(t);
+            e.set.call(this, g);
+            if (k) for (var l = 0; l < k.length; l++) {
+              var m = k[l];
+              1 === m.__CE_state && a.disconnectedCallback(m);
             }
-            this.ownerDocument.__CE_hasRegistry ? A(c, this) : v(c, this);
-            return a;
+            this.ownerDocument.__CE_registry ? N(a, this) : V(a, this);
+            return g;
           }
         });
       }
 
-      function b(a, b) {
-        r(a, "insertAdjacentElement", function (a, e) {
-          var d = l(e);
-          a = b.call(this, a, e);
-          d && z(c, e);
-          l(a) && x(c, e);
-          return a;
+      function c(d, e) {
+        M(d, "insertAdjacentElement", function (g, h) {
+          var k = I(h);
+          g = e.call(this, g, h);
+          k && Y(a, h);
+          I(g) && X(a, h);
+          return g;
         });
       }
 
-      function d(a, b) {
-        function e(a, b) {
-          for (var e = []; a !== b; a = a.nextSibling) e.push(a);
+      function f(d, e) {
+        function g(h, k) {
+          for (var l = []; h !== k; h = h.nextSibling) l.push(h);
 
-          for (b = 0; b < e.length; b++) A(c, e[b]);
+          for (k = 0; k < l.length; k++) N(a, l[k]);
         }
 
-        r(a, "insertAdjacentHTML", function (a, c) {
-          a = a.toLowerCase();
+        M(d, "insertAdjacentHTML", function (h, k) {
+          h = h.toLowerCase();
 
-          if ("beforebegin" === a) {
-            var d = this.previousSibling;
-            b.call(this, a, c);
-            e(d || this.parentNode.firstChild, this);
-          } else if ("afterbegin" === a) d = this.firstChild, b.call(this, a, c), e(this.firstChild, d);else if ("beforeend" === a) d = this.lastChild, b.call(this, a, c), e(d || this.firstChild, null);else if ("afterend" === a) d = this.nextSibling, b.call(this, a, c), e(this.nextSibling, d);else throw new SyntaxError("The value provided (" + String(a) + ") is not one of 'beforebegin', 'afterbegin', 'beforeend', or 'afterend'.");
+          if ("beforebegin" === h) {
+            var l = this.previousSibling;
+            e.call(this, h, k);
+            g(l || this.parentNode.firstChild, this);
+          } else if ("afterbegin" === h) l = this.firstChild, e.call(this, h, k), g(this.firstChild, l);else if ("beforeend" === h) l = this.lastChild, e.call(this, h, k), g(l || this.firstChild, null);else if ("afterend" === h) l = this.nextSibling, e.call(this, h, k), g(this.nextSibling, l);else throw new SyntaxError("The value provided (" + String(h) + ") is not one of 'beforebegin', 'afterbegin', 'beforeend', or 'afterend'.");
         });
       }
 
-      var c = X;
-      N && r(Element.prototype, "attachShadow", function (a) {
-        a = N.call(this, a);
-        var b = c;
+      y && M(Element.prototype, "attachShadow", function (d) {
+        d = y.call(this, d);
 
-        if (b.b && !a.__CE_patched) {
-          a.__CE_patched = !0;
+        if (a.a && !d.__CE_patched) {
+          d.__CE_patched = !0;
 
-          for (var e = 0; e < b.c.length; e++) b.c[e](a);
+          for (var e = 0; e < a.b.length; e++) a.b[e](d);
         }
 
-        return this.__CE_shadowRoot = a;
+        return this.__CE_shadowRoot = d;
       });
-      O && O.get ? a(Element.prototype, O) : W && W.get ? a(HTMLElement.prototype, W) : da(c, function (b) {
-        a(b, {
+      z && z.get ? b(Element.prototype, z) : H && H.get ? b(HTMLElement.prototype, H) : Ba(a, function (d) {
+        b(d, {
           enumerable: !0,
           configurable: !0,
           get: function () {
-            return H.call(this, !0).innerHTML;
+            return q.call(this, !0).innerHTML;
           },
-          set: function (a) {
-            var b = "template" === this.localName,
-                c = b ? this.content : this,
-                e = G.call(document, this.namespaceURI, this.localName);
+          set: function (e) {
+            var g = "template" === this.localName,
+                h = g ? this.content : this,
+                k = p.call(document, this.namespaceURI, this.localName);
 
-            for (e.innerHTML = a; 0 < c.childNodes.length;) K.call(c, c.childNodes[0]);
+            for (k.innerHTML = e; 0 < h.childNodes.length;) u.call(h, h.childNodes[0]);
 
-            for (a = b ? e.content : e; 0 < a.childNodes.length;) I.call(c, a.childNodes[0]);
+            for (e = g ? k.content : k; 0 < e.childNodes.length;) r.call(h, e.childNodes[0]);
           }
         });
       });
-      r(Element.prototype, "setAttribute", function (a, b) {
-        if (1 !== this.__CE_state) return Q.call(this, a, b);
-        var e = P.call(this, a);
-        Q.call(this, a, b);
-        b = P.call(this, a);
-        c.attributeChangedCallback(this, a, e, b, null);
+      M(Element.prototype, "setAttribute", function (d, e) {
+        if (1 !== this.__CE_state) return B.call(this, d, e);
+        var g = A.call(this, d);
+        B.call(this, d, e);
+        e = A.call(this, d);
+        a.attributeChangedCallback(this, d, g, e, null);
       });
-      r(Element.prototype, "setAttributeNS", function (a, b, d) {
-        if (1 !== this.__CE_state) return T.call(this, a, b, d);
-        var e = S.call(this, a, b);
-        T.call(this, a, b, d);
-        d = S.call(this, a, b);
-        c.attributeChangedCallback(this, b, e, d, a);
+      M(Element.prototype, "setAttributeNS", function (d, e, g) {
+        if (1 !== this.__CE_state) return E.call(this, d, e, g);
+        var h = D.call(this, d, e);
+        E.call(this, d, e, g);
+        g = D.call(this, d, e);
+        a.attributeChangedCallback(this, e, h, g, d);
       });
-      r(Element.prototype, "removeAttribute", function (a) {
-        if (1 !== this.__CE_state) return R.call(this, a);
-        var b = P.call(this, a);
-        R.call(this, a);
-        null !== b && c.attributeChangedCallback(this, a, b, null, null);
+      M(Element.prototype, "removeAttribute", function (d) {
+        if (1 !== this.__CE_state) return C.call(this, d);
+        var e = A.call(this, d);
+        C.call(this, d);
+        null !== e && a.attributeChangedCallback(this, d, e, null, null);
       });
-      r(Element.prototype, "removeAttributeNS", function (a, b) {
-        if (1 !== this.__CE_state) return U.call(this, a, b);
-        var d = S.call(this, a, b);
-        U.call(this, a, b);
-        var e = S.call(this, a, b);
-        d !== e && c.attributeChangedCallback(this, b, d, e, a);
+      M(Element.prototype, "removeAttributeNS", function (d, e) {
+        if (1 !== this.__CE_state) return F.call(this, d, e);
+        var g = D.call(this, d, e);
+        F.call(this, d, e);
+        var h = D.call(this, d, e);
+        g !== h && a.attributeChangedCallback(this, e, g, h, d);
       });
-      ua ? b(HTMLElement.prototype, ua) : ma ? b(Element.prototype, ma) : console.warn("Custom Elements: `Element#insertAdjacentElement` was not patched.");
-      va ? d(HTMLElement.prototype, va) : na ? d(Element.prototype, na) : console.warn("Custom Elements: `Element#insertAdjacentHTML` was not patched.");
-      Y(c, Element.prototype, {
-        h: oa,
-        append: pa
+      oa ? c(HTMLElement.prototype, oa) : G ? c(Element.prototype, G) : console.warn("Custom Elements: `Element#insertAdjacentElement` was not patched.");
+      pa ? f(HTMLElement.prototype, pa) : fa ? f(Element.prototype, fa) : console.warn("Custom Elements: `Element#insertAdjacentHTML` was not patched.");
+      Z(a, Element.prototype, {
+        prepend: ha,
+        append: ia
       });
-      Aa(c);
+      Ha(a);
     }
-    var Z = window.customElements;
+    var T = window.customElements;
 
-    if (!Z || Z.forcePolyfill || "function" != typeof Z.define || "function" != typeof Z.get) {
-      var X = new u();
-      xa();
-      ya();
-      Y(X, DocumentFragment.prototype, {
-        h: ka,
-        append: la
+    function Ja() {
+      var a = new S();
+      Ea(a);
+      Fa(a);
+      Z(a, DocumentFragment.prototype, {
+        prepend: da,
+        append: ea
       });
-      za();
-      Ba();
-      document.__CE_hasRegistry = !0;
-      var customElements = new E(X);
+      Ga(a);
+      Ia(a);
+      a = new O(a);
+      document.__CE_registry = a;
       Object.defineProperty(window, "customElements", {
         configurable: !0,
         enumerable: !0,
-        value: customElements
+        value: a
       });
     }
+
+    T && !T.forcePolyfill && "function" == typeof T.define && "function" == typeof T.get || Ja();
+    window.__CE_installPolyfill = Ja;
   }).call(self);
 
   /**
@@ -1412,6 +1529,7 @@
    * subject to an additional IP rights grant found at
    * http://polymer.github.io/PATENTS.txt
    */
+  const commentMarker = ` ${marker} `;
   /**
    * The return type of `html`, which holds a Template and the values from
    * interpolated expressions.
@@ -1469,7 +1587,7 @@
           // attribute values like <div foo="<!--${'bar'}">. Cases like
           // <!-- foo=${'bar'}--> are handled correctly in the attribute branch
           // below.
-          html += s + (isCommentBinding ? marker : nodeMarker);
+          html += s + (isCommentBinding ? commentMarker : nodeMarker);
         } else {
           // For attributes we use just a marker sentinel, and also append a
           // $lit$ suffix to the name to opt-out of attribute-specific parsing
@@ -1727,7 +1845,10 @@
 
     __commitText(value) {
       const node = this.startNode.nextSibling;
-      value = value == null ? '' : value;
+      value = value == null ? '' : value; // If `value` isn't already a string, we explicitly convert it here in case
+      // it can't be implicitly converted - i.e. it's a symbol.
+
+      const valueAsString = typeof value === 'string' ? value : String(value);
 
       if (node === this.endNode.previousSibling && node.nodeType === 3
       /* Node.TEXT_NODE */
@@ -1735,9 +1856,9 @@
           // If we only have a single text node between the markers, we can just
           // set its value, rather than replacing it.
           // TODO(justinfagnani): Can we just check if this.value is primitive?
-          node.data = value;
+          node.data = valueAsString;
         } else {
-        this.__commitNode(document.createTextNode(typeof value === 'string' ? value : String(value)));
+        this.__commitNode(document.createTextNode(valueAsString));
       }
 
       this.value = value;
@@ -2119,13 +2240,13 @@
    */
   const parts = new WeakMap();
   /**
-   * Renders a template to a container.
+   * Renders a template result or other value to a container.
    *
    * To update a container with new values, reevaluate the template literal and
    * call `render` with the new result.
    *
-   * @param result a TemplateResult created by evaluating a template tag like
-   *     `html` or `svg`.
+   * @param result Any value renderable by NodePart - typically a TemplateResult
+   *     created by evaluating a template tag like `html` or `svg`.
    * @param container A DOM parent to render to. The entire contents are either
    *     replaced, or efficiently updated if the same result type was previous
    *     rendered there.
@@ -2165,7 +2286,7 @@
   // This line will be used in regexes to search for lit-html usage.
   // TODO(justinfagnani): inject version number at build time
 
-  (window['litHtmlVersions'] || (window['litHtmlVersions'] = [])).push('1.0.0');
+  (window['litHtmlVersions'] || (window['litHtmlVersions'] = [])).push('1.1.2');
   /**
    * Interprets a template literal as an HTML template that can efficiently
    * render to and update a container.
@@ -2440,8 +2561,12 @@
    * output.
    */
 
-  const prepareTemplateStyles = (renderedDOM, template, scopeName) => {
-    shadyRenderSet.add(scopeName); // Move styles out of rendered DOM and store.
+  const prepareTemplateStyles = (scopeName, renderedDOM, template) => {
+    shadyRenderSet.add(scopeName); // If `renderedDOM` is stamped from a Template, then we need to edit that
+    // Template's underlying template element. Otherwise, we create one here
+    // to give to ShadyCSS, which still requires one while scoping.
+
+    const templateElement = !!template ? template.element : document.createElement('template'); // Move styles out of rendered DOM and store.
 
     const styles = renderedDOM.querySelectorAll('style');
     const {
@@ -2452,7 +2577,14 @@
       // Ensure prepareTemplateStyles is called to support adding
       // styles via `prepareAdoptedCssText` since that requires that
       // `prepareTemplateStyles` is called.
-      window.ShadyCSS.prepareTemplateStyles(template.element, scopeName);
+      //
+      // ShadyCSS will only update styles containing @apply in the template
+      // given to `prepareTemplateStyles`. If no lit Template was given,
+      // ShadyCSS will not be able to update uses of @apply in any relevant
+      // template. However, this is not a problem because we only create the
+      // template for the purpose of supporting `prepareAdoptedCssText`,
+      // which doesn't support @apply at all.
+      window.ShadyCSS.prepareTemplateStyles(templateElement, scopeName);
       return;
     }
 
@@ -2472,19 +2604,25 @@
     removeStylesFromLitTemplates(scopeName); // And then put the condensed style into the "root" template passed in as
     // `template`.
 
-    const content = template.element.content;
-    insertNodeIntoTemplate(template, condensedStyle, content.firstChild); // Note, it's important that ShadyCSS gets the template that `lit-html`
+    const content = templateElement.content;
+
+    if (!!template) {
+      insertNodeIntoTemplate(template, condensedStyle, content.firstChild);
+    } else {
+      content.insertBefore(condensedStyle, content.firstChild);
+    } // Note, it's important that ShadyCSS gets the template that `lit-html`
     // will actually render so that it can update the style inside when
     // needed (e.g. @apply native Shadow DOM case).
 
-    window.ShadyCSS.prepareTemplateStyles(template.element, scopeName);
+
+    window.ShadyCSS.prepareTemplateStyles(templateElement, scopeName);
     const style = content.querySelector('style');
 
     if (window.ShadyCSS.nativeShadow && style !== null) {
       // When in native Shadow DOM, ensure the style created by ShadyCSS is
       // included in initially rendered output (`renderedDOM`).
       renderedDOM.insertBefore(style.cloneNode(true), renderedDOM.firstChild);
-    } else {
+    } else if (!!template) {
       // When no style is left in the template, parts will be broken as a
       // result. To fix this, we put back the style node ShadyCSS removed
       // and then tell lit to remove that node from the template.
@@ -2558,11 +2696,15 @@
 
 
   const render$1 = (result, container, options) => {
+    if (!options || typeof options !== 'object' || !options.scopeName) {
+      throw new Error('The `scopeName` option is required.');
+    }
+
     const scopeName = options.scopeName;
     const hasRendered = parts.has(container);
     const needsScoping = compatibleShadyCSSVersion && container.nodeType === 11
     /* Node.DOCUMENT_FRAGMENT_NODE */
-    && !!container.host && result instanceof TemplateResult; // Handle first render to a scope specially...
+    && !!container.host; // Handle first render to a scope specially...
 
     const firstScopeRender = needsScoping && !shadyRenderSet.has(scopeName); // On first scope render, render into a fragment; this cannot be a single
     // fragment that is reused since nested renders can occur synchronously.
@@ -2582,12 +2724,14 @@
 
     if (firstScopeRender) {
       const part = parts.get(renderContainer);
-      parts.delete(renderContainer);
+      parts.delete(renderContainer); // ShadyCSS might have style sheets (e.g. from `prepareAdoptedCssText`)
+      // that should apply to `renderContainer` even if the rendered value is
+      // not a TemplateInstance. However, it will only insert scoped styles
+      // into the document if `prepareTemplateStyles` has already been called
+      // for the given scope name.
 
-      if (part.value instanceof TemplateInstance) {
-        prepareTemplateStyles(renderContainer, part.value.template, scopeName);
-      }
-
+      const template = part.value instanceof TemplateInstance ? part.value.template : undefined;
+      prepareTemplateStyles(scopeName, renderContainer, template);
       removeNodes(container, container.firstChild);
       container.appendChild(renderContainer);
       parts.set(container, part);
@@ -2595,7 +2739,7 @@
     // initial render to this container.
     // This is needed whenever dynamic changes are made so it would be
     // safest to do every render; however, this would regress performance
-    // so we leave it up to the user to call `ShadyCSSS.styleElement`
+    // so we leave it up to the user to call `ShadyCSS.styleElement`
     // for dynamic changes.
 
 
@@ -2617,35 +2761,16 @@
    * subject to an additional IP rights grant found at
    * http://polymer.github.io/PATENTS.txt
    */
-
+  var _a;
   /**
    * When using Closure Compiler, JSCompiler_renameProperty(property, object) is
    * replaced at compile time by the munged name for object[property]. We cannot
    * alias this function, so we have to use a small shim that has the same
    * behavior when not compiling.
    */
-  const JSCompiler_renameProperty = (prop, _obj) => prop;
-  /**
-   * Returns the property descriptor for a property on this prototype by walking
-   * up the prototype chain. Note that we stop just before Object.prototype, which
-   * also avoids issues with Symbol polyfills (core-js, get-own-property-symbols),
-   * which create accessors for the symbols on Object.prototype.
-   */
 
 
-  const descriptorFromPrototype = (name, proto) => {
-    if (name in proto) {
-      while (proto !== Object.prototype) {
-        if (proto.hasOwnProperty(name)) {
-          return Object.getOwnPropertyDescriptor(proto, name);
-        }
-
-        proto = Object.getPrototypeOf(proto);
-      }
-    }
-
-    return undefined;
-  };
+  window.JSCompiler_renameProperty = (prop, _obj) => prop;
 
   const defaultConverter = {
     toAttribute(value, type) {
@@ -2703,6 +2828,14 @@
   const STATE_IS_REFLECTING_TO_PROPERTY = 1 << 4;
   const STATE_HAS_CONNECTED = 1 << 5;
   /**
+   * The Closure JS Compiler doesn't currently have good support for static
+   * property semantics where "this" is dynamic (e.g.
+   * https://github.com/google/closure-compiler/issues/3177 and others) so we use
+   * this hack to bypass any rewriting by the compiler.
+   */
+
+  const finalized = 'finalized';
+  /**
    * Base element class which manages element properties and attributes. When
    * properties change, the `update` method is asynchronously called. This method
    * should be supplied by subclassers to render updates as desired.
@@ -2735,12 +2868,12 @@
 
 
     static get observedAttributes() {
-      // note: piggy backing on this to ensure we're _finalized.
-      this._finalize();
+      // note: piggy backing on this to ensure we're finalized.
+      this.finalize();
+      const attributes = []; // Use forEach so this works even if for/of loops are compiled to for loops
+      // expecting arrays
 
-      const attributes = [];
-
-      for (const [p, v] of this._classProperties) {
+      this._classProperties.forEach((v, p) => {
         const attr = this._attributeNameForProperty(p, v);
 
         if (attr !== undefined) {
@@ -2748,13 +2881,13 @@
 
           attributes.push(attr);
         }
-      }
+      });
 
       return attributes;
     }
     /**
      * Ensures the private `_classProperties` property metadata is created.
-     * In addition to `_finalize` this is also called in `createProperty` to
+     * In addition to `finalize` this is also called in `createProperty` to
      * ensure the `@property` decorator can add property metadata.
      */
 
@@ -2784,55 +2917,38 @@
 
     static createProperty(name, options = defaultPropertyDeclaration) {
       // Note, since this can be called by the `@property` decorator which
-      // is called before `_finalize`, we ensure storage exists for property
+      // is called before `finalize`, we ensure storage exists for property
       // metadata.
       this._ensureClassProperties();
 
-      this._classProperties.set(name, options);
+      this._classProperties.set(name, options); // Do not generate an accessor if the prototype already has one, since
+      // it would be lost otherwise and that would never be the user's intention;
+      // Instead, we expect users to call `requestUpdate` themselves from
+      // user-defined accessors. Note that if the super has an accessor we will
+      // still overwrite it
 
-      if (!options.noAccessor) {
-        const superDesc = descriptorFromPrototype(name, this.prototype);
-        let desc; // If there is a super accessor, capture it and "super" to it
 
-        if (superDesc !== undefined && superDesc.set && superDesc.get) {
-          const {
-            set,
-            get
-          } = superDesc;
-          desc = {
-            get() {
-              return get.call(this);
-            },
-
-            set(value) {
-              const oldValue = this[name];
-              set.call(this, value);
-              this.requestUpdate(name, oldValue);
-            },
-
-            configurable: true,
-            enumerable: true
-          };
-        } else {
-          const key = typeof name === 'symbol' ? Symbol() : `__${name}`;
-          desc = {
-            get() {
-              return this[key];
-            },
-
-            set(value) {
-              const oldValue = this[name];
-              this[key] = value;
-              this.requestUpdate(name, oldValue);
-            },
-
-            configurable: true,
-            enumerable: true
-          };
-        }
-
-        Object.defineProperty(this.prototype, name, desc);
+      if (options.noAccessor || this.prototype.hasOwnProperty(name)) {
+        return;
       }
+
+      const key = typeof name === 'symbol' ? Symbol() : `__${name}`;
+      Object.defineProperty(this.prototype, name, {
+        // tslint:disable-next-line:no-any no symbol in index
+        get() {
+          return this[key];
+        },
+
+        set(value) {
+          const oldValue = this[name];
+          this[key] = value;
+
+          this._requestUpdate(name, oldValue);
+        },
+
+        configurable: true,
+        enumerable: true
+      });
     }
     /**
      * Creates property accessors for registered properties and ensures
@@ -2841,19 +2957,15 @@
      */
 
 
-    static _finalize() {
-      if (this.hasOwnProperty(JSCompiler_renameProperty('finalized', this)) && this.finalized) {
-        return;
-      } // finalize any superclasses
-
-
+    static finalize() {
+      // finalize any superclasses
       const superCtor = Object.getPrototypeOf(this);
 
-      if (typeof superCtor._finalize === 'function') {
-        superCtor._finalize();
+      if (!superCtor.hasOwnProperty(finalized)) {
+        superCtor.finalize();
       }
 
-      this.finalized = true;
+      this[finalized] = true;
 
       this._ensureClassProperties(); // initialize Map populated in observedAttributes
 
@@ -2866,11 +2978,12 @@
       if (this.hasOwnProperty(JSCompiler_renameProperty('properties', this))) {
         const props = this.properties; // support symbols in properties (IE11 does not support this)
 
-        const propKeys = [...Object.getOwnPropertyNames(props), ...(typeof Object.getOwnPropertySymbols === 'function' ? Object.getOwnPropertySymbols(props) : [])];
+        const propKeys = [...Object.getOwnPropertyNames(props), ...(typeof Object.getOwnPropertySymbols === 'function' ? Object.getOwnPropertySymbols(props) : [])]; // This for/of is ok because propKeys is an array
 
         for (const p of propKeys) {
           // note, use of `any` is due to TypeSript lack of support for symbol in
           // index types
+          // tslint:disable-next-line:no-any no symbol in index
           this.createProperty(p, props[p]);
         }
       }
@@ -2937,7 +3050,11 @@
 
 
     initialize() {
-      this._saveInstanceProperties();
+      this._saveInstanceProperties(); // ensures first update will be caught by an early access of
+      // `updateComplete`
+
+
+      this._requestUpdate();
     }
     /**
      * Fixes any properties set on the instance before upgrade time.
@@ -2954,7 +3071,9 @@
 
 
     _saveInstanceProperties() {
-      for (const [p] of this.constructor._classProperties) {
+      // Use forEach so this works even if for/of loops are compiled to for loops
+      // expecting arrays
+      this.constructor._classProperties.forEach((_v, p) => {
         if (this.hasOwnProperty(p)) {
           const value = this[p];
           delete this[p];
@@ -2965,7 +3084,7 @@
 
           this._instanceProperties.set(p, value);
         }
-      }
+      });
     }
     /**
      * Applies previously saved instance properties.
@@ -2973,25 +3092,24 @@
 
 
     _applyInstanceProperties() {
-      for (const [p, v] of this._instanceProperties) {
-        this[p] = v;
-      }
+      // Use forEach so this works even if for/of loops are compiled to for loops
+      // expecting arrays
+      // tslint:disable-next-line:no-any
+      this._instanceProperties.forEach((v, p) => this[p] = v);
 
       this._instanceProperties = undefined;
     }
 
     connectedCallback() {
-      this._updateState = this._updateState | STATE_HAS_CONNECTED; // Ensure connection triggers an update. Updates cannot complete before
-      // connection and if one is pending connection the `_hasConnectionResolver`
-      // will exist. If so, resolve it to complete the update, otherwise
-      // requestUpdate.
+      this._updateState = this._updateState | STATE_HAS_CONNECTED; // Ensure first connection completes an update. Updates cannot complete
+      // before connection and if one is pending connection the
+      // `_hasConnectionResolver` will exist. If so, resolve it to complete the
+      // update, otherwise requestUpdate.
 
       if (this._hasConnectedResolver) {
         this._hasConnectedResolver();
 
         this._hasConnectedResolver = undefined;
-      } else {
-        this.requestUpdate();
       }
     }
     /**
@@ -3062,9 +3180,50 @@
         const options = ctor._classProperties.get(propName) || defaultPropertyDeclaration; // mark state reflecting
 
         this._updateState = this._updateState | STATE_IS_REFLECTING_TO_PROPERTY;
-        this[propName] = ctor._propertyValueFromAttribute(value, options); // mark state not reflecting
+        this[propName] = // tslint:disable-next-line:no-any
+        ctor._propertyValueFromAttribute(value, options); // mark state not reflecting
 
         this._updateState = this._updateState & ~STATE_IS_REFLECTING_TO_PROPERTY;
+      }
+    }
+    /**
+     * This private version of `requestUpdate` does not access or return the
+     * `updateComplete` promise. This promise can be overridden and is therefore
+     * not free to access.
+     */
+
+
+    _requestUpdate(name, oldValue) {
+      let shouldRequestUpdate = true; // If we have a property key, perform property update steps.
+
+      if (name !== undefined) {
+        const ctor = this.constructor;
+        const options = ctor._classProperties.get(name) || defaultPropertyDeclaration;
+
+        if (ctor._valueHasChanged(this[name], oldValue, options.hasChanged)) {
+          if (!this._changedProperties.has(name)) {
+            this._changedProperties.set(name, oldValue);
+          } // Add to reflecting properties set.
+          // Note, it's important that every change has a chance to add the
+          // property to `_reflectingProperties`. This ensures setting
+          // attribute + property reflects correctly.
+
+
+          if (options.reflect === true && !(this._updateState & STATE_IS_REFLECTING_TO_PROPERTY)) {
+            if (this._reflectingProperties === undefined) {
+              this._reflectingProperties = new Map();
+            }
+
+            this._reflectingProperties.set(name, options);
+          }
+        } else {
+          // Abort the request if the property should not be considered changed.
+          shouldRequestUpdate = false;
+        }
+      }
+
+      if (!this._hasRequestedUpdate && shouldRequestUpdate) {
+        this._enqueueUpdate();
       }
     }
     /**
@@ -3083,33 +3242,7 @@
 
 
     requestUpdate(name, oldValue) {
-      let shouldRequestUpdate = true; // if we have a property key, perform property update steps.
-
-      if (name !== undefined && !this._changedProperties.has(name)) {
-        const ctor = this.constructor;
-        const options = ctor._classProperties.get(name) || defaultPropertyDeclaration;
-
-        if (ctor._valueHasChanged(this[name], oldValue, options.hasChanged)) {
-          // track old value when changing.
-          this._changedProperties.set(name, oldValue); // add to reflecting properties set
-
-
-          if (options.reflect === true && !(this._updateState & STATE_IS_REFLECTING_TO_PROPERTY)) {
-            if (this._reflectingProperties === undefined) {
-              this._reflectingProperties = new Map();
-            }
-
-            this._reflectingProperties.set(name, options);
-          } // abort the request if the property should not be considered changed.
-
-        } else {
-          shouldRequestUpdate = false;
-        }
-      }
-
-      if (!this._hasRequestedUpdate && shouldRequestUpdate) {
-        this._enqueueUpdate();
-      }
+      this._requestUpdate(name, oldValue);
 
       return this.updateComplete;
     }
@@ -3122,22 +3255,36 @@
       // Mark state updating...
       this._updateState = this._updateState | STATE_UPDATE_REQUESTED;
       let resolve;
+      let reject;
       const previousUpdatePromise = this._updatePromise;
-      this._updatePromise = new Promise(res => resolve = res); // Ensure any previous update has resolved before updating.
-      // This `await` also ensures that property changes are batched.
+      this._updatePromise = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
 
-      await previousUpdatePromise; // Make sure the element has connected before updating.
+      try {
+        // Ensure any previous update has resolved before updating.
+        // This `await` also ensures that property changes are batched.
+        await previousUpdatePromise;
+      } catch (e) {} // Ignore any previous errors. We only care that the previous cycle is
+      // done. Any error should have been handled in the previous update.
+      // Make sure the element has connected before updating.
+
 
       if (!this._hasConnected) {
         await new Promise(res => this._hasConnectedResolver = res);
-      } // Allow `performUpdate` to be asynchronous to enable scheduling of updates.
+      }
 
+      try {
+        const result = this.performUpdate(); // If `performUpdate` returns a Promise, we await it. This is done to
+        // enable coordinating updates with a scheduler. Note, the result is
+        // checked to avoid delaying an additional microtask unless we need to.
 
-      const result = this.performUpdate(); // Note, this is to avoid delaying an additional microtask unless we need
-      // to.
-
-      if (result != null && typeof result.then === 'function') {
-        await result;
+        if (result != null) {
+          await result;
+        }
+      } catch (e) {
+        reject(e);
       }
 
       resolve(!this._hasRequestedUpdate);
@@ -3155,10 +3302,13 @@
       return this._updateState & STATE_HAS_UPDATED;
     }
     /**
-     * Performs an element update.
+     * Performs an element update. Note, if an exception is thrown during the
+     * update, `firstUpdated` and `updated` will not be called.
      *
-     * You can override this method to change the timing of updates. For instance,
-     * to schedule updates to occur just before the next frame:
+     * You can override this method to change the timing of updates. If this
+     * method is overridden, `super.performUpdate()` must be called.
+     *
+     * For instance, to schedule updates to occur just before the next frame:
      *
      * ```
      * protected async performUpdate(): Promise<unknown> {
@@ -3175,20 +3325,32 @@
         this._applyInstanceProperties();
       }
 
-      if (this.shouldUpdate(this._changedProperties)) {
-        const changedProperties = this._changedProperties;
-        this.update(changedProperties);
+      let shouldUpdate = false;
+      const changedProperties = this._changedProperties;
 
+      try {
+        shouldUpdate = this.shouldUpdate(changedProperties);
+
+        if (shouldUpdate) {
+          this.update(changedProperties);
+        }
+      } catch (e) {
+        // Prevent `firstUpdated` and `updated` from running when there's an
+        // update exception.
+        shouldUpdate = false;
+        throw e;
+      } finally {
+        // Ensure element can accept additional updates after an exception.
         this._markUpdated();
+      }
 
+      if (shouldUpdate) {
         if (!(this._updateState & STATE_HAS_UPDATED)) {
           this._updateState = this._updateState | STATE_HAS_UPDATED;
           this.firstUpdated(changedProperties);
         }
 
         this.updated(changedProperties);
-      } else {
-        this._markUpdated();
       }
     }
 
@@ -3200,10 +3362,13 @@
      * Returns a Promise that resolves when the element has completed updating.
      * The Promise value is a boolean that is `true` if the element completed the
      * update without triggering another update. The Promise result is `false` if
-     * a property was set inside `updated()`. This getter can be implemented to
-     * await additional state. For example, it is sometimes useful to await a
-     * rendered element before fulfilling this Promise. To do this, first await
-     * `super.updateComplete` then any subsequent state.
+     * a property was set inside `updated()`. If the Promise is rejected, an
+     * exception was thrown during the update.
+     *
+     * To await additional asynchronous work, override the `_getUpdateComplete`
+     * method. For example, it is sometimes useful to await a rendered element
+     * before fulfilling this Promise. To do this, first await
+     * `super._getUpdateComplete()`, then any subsequent state.
      *
      * @returns {Promise} The Promise returns a boolean that indicates if the
      * update resolved without triggering another update.
@@ -3211,6 +3376,27 @@
 
 
     get updateComplete() {
+      return this._getUpdateComplete();
+    }
+    /**
+     * Override point for the `updateComplete` promise.
+     *
+     * It is not safe to override the `updateComplete` getter directly due to a
+     * limitation in TypeScript which means it is not possible to call a
+     * superclass getter (e.g. `super.updateComplete.then(...)`) when the target
+     * language is ES5 (https://github.com/microsoft/TypeScript/issues/338).
+     * This method should be overridden instead. For example:
+     *
+     *   class MyElement extends LitElement {
+     *     async _getUpdateComplete() {
+     *       await super._getUpdateComplete();
+     *       await this._myChild.updateComplete;
+     *     }
+     *   }
+     */
+
+
+    _getUpdateComplete() {
       return this._updatePromise;
     }
     /**
@@ -3237,9 +3423,9 @@
 
     update(_changedProperties) {
       if (this._reflectingProperties !== undefined && this._reflectingProperties.size > 0) {
-        for (const [k, v] of this._reflectingProperties) {
-          this._propertyToAttribute(k, this[k], v);
-        }
+        // Use forEach so this works even if for/of loops are compiled to for
+        // loops expecting arrays
+        this._reflectingProperties.forEach((v, k) => this._propertyToAttribute(k, this[k], v));
 
         this._reflectingProperties = undefined;
       }
@@ -3270,25 +3456,12 @@
     firstUpdated(_changedProperties) {}
 
   }
+  _a = finalized;
   /**
    * Marks class as having finished creating properties.
    */
 
-  UpdatingElement.finalized = true;
-
-  /**
-   * @license
-   * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-   * This code may only be used under the BSD style license found at
-   * http://polymer.github.io/LICENSE.txt
-   * The complete set of authors may be found at
-   * http://polymer.github.io/AUTHORS.txt
-   * The complete set of contributors may be found at
-   * http://polymer.github.io/CONTRIBUTORS.txt
-   * Code distributed by Google as part of the polymer project is also
-   * subject to an additional IP rights grant found at
-   * http://polymer.github.io/PATENTS.txt
-   */
+  UpdatingElement[_a] = true;
 
   /**
   @license
@@ -3300,7 +3473,7 @@
   part of the polymer project is also subject to an additional IP rights grant
   found at http://polymer.github.io/PATENTS.txt
   */
-  const supportsAdoptingStyleSheets = 'adoptedStyleSheets' in Document.prototype;
+  const supportsAdoptingStyleSheets = 'adoptedStyleSheets' in Document.prototype && 'replace' in CSSStyleSheet.prototype;
 
   /**
    * @license
@@ -3315,34 +3488,76 @@
    * subject to an additional IP rights grant found at
    * http://polymer.github.io/PATENTS.txt
    */
-  class LitElement extends UpdatingElement {
-    /**
-     * Array of styles to apply to the element. The styles should be defined
-     * using the `css` tag function.
-     */
-    static get styles() {
-      return [];
+  // This line will be used in regexes to search for LitElement usage.
+  // TODO(justinfagnani): inject version number at build time
+
+  (window['litElementVersions'] || (window['litElementVersions'] = [])).push('2.2.1');
+  /**
+   * Minimal implementation of Array.prototype.flat
+   * @param arr the array to flatten
+   * @param result the accumlated result
+   */
+
+  function arrayFlat(styles, result = []) {
+    for (let i = 0, length = styles.length; i < length; i++) {
+      const value = styles[i];
+
+      if (Array.isArray(value)) {
+        arrayFlat(value, result);
+      } else {
+        result.push(value);
+      }
     }
 
-    static get _uniqueStyles() {
-      if (this._styles === undefined) {
-        const styles = this.styles; // As a performance optimization to avoid duplicated styling that can
+    return result;
+  }
+  /** Deeply flattens styles array. Uses native flat if available. */
+
+
+  const flattenStyles = styles => styles.flat ? styles.flat(Infinity) : arrayFlat(styles);
+
+  class LitElement extends UpdatingElement {
+    /** @nocollapse */
+    static finalize() {
+      // The Closure JS Compiler does not always preserve the correct "this"
+      // when calling static super methods (b/137460243), so explicitly bind.
+      super.finalize.call(this); // Prepare styling that is stamped at first render time. Styling
+      // is built from user provided `styles` or is inherited from the superclass.
+
+      this._styles = this.hasOwnProperty(JSCompiler_renameProperty('styles', this)) ? this._getUniqueStyles() : this._styles || [];
+    }
+    /** @nocollapse */
+
+
+    static _getUniqueStyles() {
+      // Take care not to call `this.styles` multiple times since this generates
+      // new CSSResults each time.
+      // TODO(sorvell): Since we do not cache CSSResults by input, any
+      // shared styles will generate new stylesheet objects, which is wasteful.
+      // This should be addressed when a browser ships constructable
+      // stylesheets.
+      const userStyles = this.styles;
+      const styles = [];
+
+      if (Array.isArray(userStyles)) {
+        const flatStyles = flattenStyles(userStyles); // As a performance optimization to avoid duplicated styling that can
         // occur especially when composing via subclassing, de-duplicate styles
         // preserving the last item in the list. The last item is kept to
         // try to preserve cascade order with the assumption that it's most
         // important that last added styles override previous styles.
 
-        const styleSet = styles.reduceRight((set, s) => {
+        const styleSet = flatStyles.reduceRight((set, s) => {
           set.add(s); // on IE set.add does not return the set.
 
           return set;
-        }, new Set()); // Array.form does not work on Set in IE
+        }, new Set()); // Array.from does not work on Set in IE
 
-        this._styles = [];
-        styleSet.forEach(v => this._styles.unshift(v));
+        styleSet.forEach(v => styles.unshift(v));
+      } else if (userStyles) {
+        styles.push(userStyles);
       }
 
-      return this._styles;
+      return styles;
     }
     /**
      * Performs element initialization. By default this calls `createRenderRoot`
@@ -3387,7 +3602,7 @@
 
 
     adoptStyles() {
-      const styles = this.constructor._uniqueStyles;
+      const styles = this.constructor._styles;
 
       if (styles.length === 0) {
         return;
@@ -3442,7 +3657,7 @@
       if (this._needsShimAdoptedStyleSheets) {
         this._needsShimAdoptedStyleSheets = false;
 
-        this.constructor._uniqueStyles.forEach(s => {
+        this.constructor._styles.forEach(s => {
           const style = document.createElement('style');
           style.textContent = s.cssText;
           this.renderRoot.appendChild(style);
@@ -3462,9 +3677,12 @@
   /**
    * Ensure this class is marked as `finalized` as an optimization ensuring
    * it will not needlessly try to `finalize`.
+   *
+   * Note this property name is a string to prevent breaking Closure JS Compiler
+   * optimizations. See updating-element.ts for more information.
    */
 
-  LitElement.finalized = true;
+  LitElement['finalized'] = true;
   /**
    * Render method used to render the lit-html TemplateResult to the element's
    * DOM.

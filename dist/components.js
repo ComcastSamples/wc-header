@@ -431,6 +431,7 @@
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
      */
+    const commentMarker = ` ${marker} `;
     /**
      * The return type of `html`, which holds a Template and the values from
      * interpolated expressions.
@@ -484,7 +485,7 @@
                     // attribute values like <div foo="<!--${'bar'}">. Cases like
                     // <!-- foo=${'bar'}--> are handled correctly in the attribute branch
                     // below.
-                    html += s + (isCommentBinding ? marker : nodeMarker);
+                    html += s + (isCommentBinding ? commentMarker : nodeMarker);
                 }
                 else {
                     // For attributes we use just a marker sentinel, and also append a
@@ -712,15 +713,18 @@
         __commitText(value) {
             const node = this.startNode.nextSibling;
             value = value == null ? '' : value;
+            // If `value` isn't already a string, we explicitly convert it here in case
+            // it can't be implicitly converted - i.e. it's a symbol.
+            const valueAsString = typeof value === 'string' ? value : String(value);
             if (node === this.endNode.previousSibling &&
                 node.nodeType === 3 /* Node.TEXT_NODE */) {
                 // If we only have a single text node between the markers, we can just
                 // set its value, rather than replacing it.
                 // TODO(justinfagnani): Can we just check if this.value is primitive?
-                node.data = value;
+                node.data = valueAsString;
             }
             else {
-                this.__commitNode(document.createTextNode(typeof value === 'string' ? value : String(value)));
+                this.__commitNode(document.createTextNode(valueAsString));
             }
             this.value = value;
         }
@@ -1054,13 +1058,13 @@
      */
     const parts = new WeakMap();
     /**
-     * Renders a template to a container.
+     * Renders a template result or other value to a container.
      *
      * To update a container with new values, reevaluate the template literal and
      * call `render` with the new result.
      *
-     * @param result a TemplateResult created by evaluating a template tag like
-     *     `html` or `svg`.
+     * @param result Any value renderable by NodePart - typically a TemplateResult
+     *     created by evaluating a template tag like `html` or `svg`.
      * @param container A DOM parent to render to. The entire contents are either
      *     replaced, or efficiently updated if the same result type was previous
      *     rendered there.
@@ -1095,7 +1099,7 @@
     // IMPORTANT: do not change the property name or the assignment expression.
     // This line will be used in regexes to search for lit-html usage.
     // TODO(justinfagnani): inject version number at build time
-    (window['litHtmlVersions'] || (window['litHtmlVersions'] = [])).push('1.0.0');
+    (window['litHtmlVersions'] || (window['litHtmlVersions'] = [])).push('1.1.2');
     /**
      * Interprets a template literal as an HTML template that can efficiently
      * render to and update a container.
@@ -1317,8 +1321,12 @@
      * not be scoped and the <style> will be left in the template and rendered
      * output.
      */
-    const prepareTemplateStyles = (renderedDOM, template, scopeName) => {
+    const prepareTemplateStyles = (scopeName, renderedDOM, template) => {
         shadyRenderSet.add(scopeName);
+        // If `renderedDOM` is stamped from a Template, then we need to edit that
+        // Template's underlying template element. Otherwise, we create one here
+        // to give to ShadyCSS, which still requires one while scoping.
+        const templateElement = !!template ? template.element : document.createElement('template');
         // Move styles out of rendered DOM and store.
         const styles = renderedDOM.querySelectorAll('style');
         const { length } = styles;
@@ -1327,7 +1335,14 @@
             // Ensure prepareTemplateStyles is called to support adding
             // styles via `prepareAdoptedCssText` since that requires that
             // `prepareTemplateStyles` is called.
-            window.ShadyCSS.prepareTemplateStyles(template.element, scopeName);
+            //
+            // ShadyCSS will only update styles containing @apply in the template
+            // given to `prepareTemplateStyles`. If no lit Template was given,
+            // ShadyCSS will not be able to update uses of @apply in any relevant
+            // template. However, this is not a problem because we only create the
+            // template for the purpose of supporting `prepareAdoptedCssText`,
+            // which doesn't support @apply at all.
+            window.ShadyCSS.prepareTemplateStyles(templateElement, scopeName);
             return;
         }
         const condensedStyle = document.createElement('style');
@@ -1345,19 +1360,24 @@
         removeStylesFromLitTemplates(scopeName);
         // And then put the condensed style into the "root" template passed in as
         // `template`.
-        const content = template.element.content;
-        insertNodeIntoTemplate(template, condensedStyle, content.firstChild);
+        const content = templateElement.content;
+        if (!!template) {
+            insertNodeIntoTemplate(template, condensedStyle, content.firstChild);
+        }
+        else {
+            content.insertBefore(condensedStyle, content.firstChild);
+        }
         // Note, it's important that ShadyCSS gets the template that `lit-html`
         // will actually render so that it can update the style inside when
         // needed (e.g. @apply native Shadow DOM case).
-        window.ShadyCSS.prepareTemplateStyles(template.element, scopeName);
+        window.ShadyCSS.prepareTemplateStyles(templateElement, scopeName);
         const style = content.querySelector('style');
         if (window.ShadyCSS.nativeShadow && style !== null) {
             // When in native Shadow DOM, ensure the style created by ShadyCSS is
             // included in initially rendered output (`renderedDOM`).
             renderedDOM.insertBefore(style.cloneNode(true), renderedDOM.firstChild);
         }
-        else {
+        else if (!!template) {
             // When no style is left in the template, parts will be broken as a
             // result. To fix this, we put back the style node ShadyCSS removed
             // and then tell lit to remove that node from the template.
@@ -1429,11 +1449,14 @@
      * supported.
      */
     const render$1 = (result, container, options) => {
+        if (!options || typeof options !== 'object' || !options.scopeName) {
+            throw new Error('The `scopeName` option is required.');
+        }
         const scopeName = options.scopeName;
         const hasRendered = parts.has(container);
         const needsScoping = compatibleShadyCSSVersion &&
             container.nodeType === 11 /* Node.DOCUMENT_FRAGMENT_NODE */ &&
-            !!container.host && result instanceof TemplateResult;
+            !!container.host;
         // Handle first render to a scope specially...
         const firstScopeRender = needsScoping && !shadyRenderSet.has(scopeName);
         // On first scope render, render into a fragment; this cannot be a single
@@ -1452,9 +1475,15 @@
         if (firstScopeRender) {
             const part = parts.get(renderContainer);
             parts.delete(renderContainer);
-            if (part.value instanceof TemplateInstance) {
-                prepareTemplateStyles(renderContainer, part.value.template, scopeName);
-            }
+            // ShadyCSS might have style sheets (e.g. from `prepareAdoptedCssText`)
+            // that should apply to `renderContainer` even if the rendered value is
+            // not a TemplateInstance. However, it will only insert scoped styles
+            // into the document if `prepareTemplateStyles` has already been called
+            // for the given scope name.
+            const template = part.value instanceof TemplateInstance ?
+                part.value.template :
+                undefined;
+            prepareTemplateStyles(scopeName, renderContainer, template);
             removeNodes(container, container.firstChild);
             container.appendChild(renderContainer);
             parts.set(container, part);
@@ -1463,7 +1492,7 @@
         // initial render to this container.
         // This is needed whenever dynamic changes are made so it would be
         // safest to do every render; however, this would regress performance
-        // so we leave it up to the user to call `ShadyCSSS.styleElement`
+        // so we leave it up to the user to call `ShadyCSS.styleElement`
         // for dynamic changes.
         if (!hasRendered && needsScoping) {
             window.ShadyCSS.styleElement(container.host);
@@ -1483,30 +1512,15 @@
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
      */
+    var _a;
     /**
      * When using Closure Compiler, JSCompiler_renameProperty(property, object) is
      * replaced at compile time by the munged name for object[property]. We cannot
      * alias this function, so we have to use a small shim that has the same
      * behavior when not compiling.
      */
-    const JSCompiler_renameProperty = (prop, _obj) => prop;
-    /**
-     * Returns the property descriptor for a property on this prototype by walking
-     * up the prototype chain. Note that we stop just before Object.prototype, which
-     * also avoids issues with Symbol polyfills (core-js, get-own-property-symbols),
-     * which create accessors for the symbols on Object.prototype.
-     */
-    const descriptorFromPrototype = (name, proto) => {
-        if (name in proto) {
-            while (proto !== Object.prototype) {
-                if (proto.hasOwnProperty(name)) {
-                    return Object.getOwnPropertyDescriptor(proto, name);
-                }
-                proto = Object.getPrototypeOf(proto);
-            }
-        }
-        return undefined;
-    };
+    window.JSCompiler_renameProperty =
+        (prop, _obj) => prop;
     const defaultConverter = {
         toAttribute(value, type) {
             switch (type) {
@@ -1555,6 +1569,13 @@
     const STATE_IS_REFLECTING_TO_PROPERTY = 1 << 4;
     const STATE_HAS_CONNECTED = 1 << 5;
     /**
+     * The Closure JS Compiler doesn't currently have good support for static
+     * property semantics where "this" is dynamic (e.g.
+     * https://github.com/google/closure-compiler/issues/3177 and others) so we use
+     * this hack to bypass any rewriting by the compiler.
+     */
+    const finalized = 'finalized';
+    /**
      * Base element class which manages element properties and attributes. When
      * properties change, the `update` method is asynchronously called. This method
      * should be supplied by subclassers to render updates as desired.
@@ -1582,21 +1603,23 @@
          * @nocollapse
          */
         static get observedAttributes() {
-            // note: piggy backing on this to ensure we're _finalized.
-            this._finalize();
+            // note: piggy backing on this to ensure we're finalized.
+            this.finalize();
             const attributes = [];
-            for (const [p, v] of this._classProperties) {
+            // Use forEach so this works even if for/of loops are compiled to for loops
+            // expecting arrays
+            this._classProperties.forEach((v, p) => {
                 const attr = this._attributeNameForProperty(p, v);
                 if (attr !== undefined) {
                     this._attributeToPropertyMap.set(attr, p);
                     attributes.push(attr);
                 }
-            }
+            });
             return attributes;
         }
         /**
          * Ensures the private `_classProperties` property metadata is created.
-         * In addition to `_finalize` this is also called in `createProperty` to
+         * In addition to `finalize` this is also called in `createProperty` to
          * ensure the `@property` decorator can add property metadata.
          */
         /** @nocollapse */
@@ -1620,59 +1643,45 @@
          */
         static createProperty(name, options = defaultPropertyDeclaration) {
             // Note, since this can be called by the `@property` decorator which
-            // is called before `_finalize`, we ensure storage exists for property
+            // is called before `finalize`, we ensure storage exists for property
             // metadata.
             this._ensureClassProperties();
             this._classProperties.set(name, options);
-            if (!options.noAccessor) {
-                const superDesc = descriptorFromPrototype(name, this.prototype);
-                let desc;
-                // If there is a super accessor, capture it and "super" to it
-                if (superDesc !== undefined && (superDesc.set && superDesc.get)) {
-                    const { set, get } = superDesc;
-                    desc = {
-                        get() { return get.call(this); },
-                        set(value) {
-                            const oldValue = this[name];
-                            set.call(this, value);
-                            this.requestUpdate(name, oldValue);
-                        },
-                        configurable: true,
-                        enumerable: true
-                    };
-                }
-                else {
-                    const key = typeof name === 'symbol' ? Symbol() : `__${name}`;
-                    desc = {
-                        get() { return this[key]; },
-                        set(value) {
-                            const oldValue = this[name];
-                            this[key] = value;
-                            this.requestUpdate(name, oldValue);
-                        },
-                        configurable: true,
-                        enumerable: true
-                    };
-                }
-                Object.defineProperty(this.prototype, name, desc);
+            // Do not generate an accessor if the prototype already has one, since
+            // it would be lost otherwise and that would never be the user's intention;
+            // Instead, we expect users to call `requestUpdate` themselves from
+            // user-defined accessors. Note that if the super has an accessor we will
+            // still overwrite it
+            if (options.noAccessor || this.prototype.hasOwnProperty(name)) {
+                return;
             }
+            const key = typeof name === 'symbol' ? Symbol() : `__${name}`;
+            Object.defineProperty(this.prototype, name, {
+                // tslint:disable-next-line:no-any no symbol in index
+                get() {
+                    return this[key];
+                },
+                set(value) {
+                    const oldValue = this[name];
+                    this[key] = value;
+                    this._requestUpdate(name, oldValue);
+                },
+                configurable: true,
+                enumerable: true
+            });
         }
         /**
          * Creates property accessors for registered properties and ensures
          * any superclasses are also finalized.
          * @nocollapse
          */
-        static _finalize() {
-            if (this.hasOwnProperty(JSCompiler_renameProperty('finalized', this)) &&
-                this.finalized) {
-                return;
-            }
+        static finalize() {
             // finalize any superclasses
             const superCtor = Object.getPrototypeOf(this);
-            if (typeof superCtor._finalize === 'function') {
-                superCtor._finalize();
+            if (!superCtor.hasOwnProperty(finalized)) {
+                superCtor.finalize();
             }
-            this.finalized = true;
+            this[finalized] = true;
             this._ensureClassProperties();
             // initialize Map populated in observedAttributes
             this._attributeToPropertyMap = new Map();
@@ -1685,13 +1694,15 @@
                 // support symbols in properties (IE11 does not support this)
                 const propKeys = [
                     ...Object.getOwnPropertyNames(props),
-                    ...(typeof Object.getOwnPropertySymbols === 'function')
-                        ? Object.getOwnPropertySymbols(props)
-                        : []
+                    ...(typeof Object.getOwnPropertySymbols === 'function') ?
+                        Object.getOwnPropertySymbols(props) :
+                        []
                 ];
+                // This for/of is ok because propKeys is an array
                 for (const p of propKeys) {
                     // note, use of `any` is due to TypeSript lack of support for symbol in
                     // index types
+                    // tslint:disable-next-line:no-any no symbol in index
                     this.createProperty(p, props[p]);
                 }
             }
@@ -1702,12 +1713,11 @@
          */
         static _attributeNameForProperty(name, options) {
             const attribute = options.attribute;
-            return attribute === false
-                ? undefined
-                : (typeof attribute === 'string'
-                    ? attribute
-                    : (typeof name === 'string' ? name.toLowerCase()
-                        : undefined));
+            return attribute === false ?
+                undefined :
+                (typeof attribute === 'string' ?
+                    attribute :
+                    (typeof name === 'string' ? name.toLowerCase() : undefined));
         }
         /**
          * Returns true if a property should request an update.
@@ -1752,7 +1762,12 @@
          * Performs element initialization. By default captures any pre-set values for
          * registered properties.
          */
-        initialize() { this._saveInstanceProperties(); }
+        initialize() {
+            this._saveInstanceProperties();
+            // ensures first update will be caught by an early access of
+            // `updateComplete`
+            this._requestUpdate();
+        }
         /**
          * Fixes any properties set on the instance before upgrade time.
          * Otherwise these would shadow the accessor and break these properties.
@@ -1766,8 +1781,10 @@
          * the native platform default).
          */
         _saveInstanceProperties() {
-            for (const [p] of this.constructor
-                ._classProperties) {
+            // Use forEach so this works even if for/of loops are compiled to for loops
+            // expecting arrays
+            this.constructor
+                ._classProperties.forEach((_v, p) => {
                 if (this.hasOwnProperty(p)) {
                     const value = this[p];
                     delete this[p];
@@ -1776,29 +1793,27 @@
                     }
                     this._instanceProperties.set(p, value);
                 }
-            }
+            });
         }
         /**
          * Applies previously saved instance properties.
          */
         _applyInstanceProperties() {
-            for (const [p, v] of this._instanceProperties) {
-                this[p] = v;
-            }
+            // Use forEach so this works even if for/of loops are compiled to for loops
+            // expecting arrays
+            // tslint:disable-next-line:no-any
+            this._instanceProperties.forEach((v, p) => this[p] = v);
             this._instanceProperties = undefined;
         }
         connectedCallback() {
             this._updateState = this._updateState | STATE_HAS_CONNECTED;
-            // Ensure connection triggers an update. Updates cannot complete before
-            // connection and if one is pending connection the `_hasConnectionResolver`
-            // will exist. If so, resolve it to complete the update, otherwise
-            // requestUpdate.
+            // Ensure first connection completes an update. Updates cannot complete
+            // before connection and if one is pending connection the
+            // `_hasConnectionResolver` will exist. If so, resolve it to complete the
+            // update, otherwise requestUpdate.
             if (this._hasConnectedResolver) {
                 this._hasConnectedResolver();
                 this._hasConnectedResolver = undefined;
-            }
-            else {
-                this.requestUpdate();
             }
         }
         /**
@@ -1806,7 +1821,8 @@
          * reserving the possibility of making non-breaking feature additions
          * when disconnecting at some point in the future.
          */
-        disconnectedCallback() { }
+        disconnectedCallback() {
+        }
         /**
          * Synchronizes property values when attributes change.
          */
@@ -1856,9 +1872,46 @@
                 // mark state reflecting
                 this._updateState = this._updateState | STATE_IS_REFLECTING_TO_PROPERTY;
                 this[propName] =
+                    // tslint:disable-next-line:no-any
                     ctor._propertyValueFromAttribute(value, options);
                 // mark state not reflecting
                 this._updateState = this._updateState & ~STATE_IS_REFLECTING_TO_PROPERTY;
+            }
+        }
+        /**
+         * This private version of `requestUpdate` does not access or return the
+         * `updateComplete` promise. This promise can be overridden and is therefore
+         * not free to access.
+         */
+        _requestUpdate(name, oldValue) {
+            let shouldRequestUpdate = true;
+            // If we have a property key, perform property update steps.
+            if (name !== undefined) {
+                const ctor = this.constructor;
+                const options = ctor._classProperties.get(name) || defaultPropertyDeclaration;
+                if (ctor._valueHasChanged(this[name], oldValue, options.hasChanged)) {
+                    if (!this._changedProperties.has(name)) {
+                        this._changedProperties.set(name, oldValue);
+                    }
+                    // Add to reflecting properties set.
+                    // Note, it's important that every change has a chance to add the
+                    // property to `_reflectingProperties`. This ensures setting
+                    // attribute + property reflects correctly.
+                    if (options.reflect === true &&
+                        !(this._updateState & STATE_IS_REFLECTING_TO_PROPERTY)) {
+                        if (this._reflectingProperties === undefined) {
+                            this._reflectingProperties = new Map();
+                        }
+                        this._reflectingProperties.set(name, options);
+                    }
+                }
+                else {
+                    // Abort the request if the property should not be considered changed.
+                    shouldRequestUpdate = false;
+                }
+            }
+            if (!this._hasRequestedUpdate && shouldRequestUpdate) {
+                this._enqueueUpdate();
             }
         }
         /**
@@ -1875,31 +1928,7 @@
          * @returns {Promise} A Promise that is resolved when the update completes.
          */
         requestUpdate(name, oldValue) {
-            let shouldRequestUpdate = true;
-            // if we have a property key, perform property update steps.
-            if (name !== undefined && !this._changedProperties.has(name)) {
-                const ctor = this.constructor;
-                const options = ctor._classProperties.get(name) || defaultPropertyDeclaration;
-                if (ctor._valueHasChanged(this[name], oldValue, options.hasChanged)) {
-                    // track old value when changing.
-                    this._changedProperties.set(name, oldValue);
-                    // add to reflecting properties set
-                    if (options.reflect === true &&
-                        !(this._updateState & STATE_IS_REFLECTING_TO_PROPERTY)) {
-                        if (this._reflectingProperties === undefined) {
-                            this._reflectingProperties = new Map();
-                        }
-                        this._reflectingProperties.set(name, options);
-                    }
-                    // abort the request if the property should not be considered changed.
-                }
-                else {
-                    shouldRequestUpdate = false;
-                }
-            }
-            if (!this._hasRequestedUpdate && shouldRequestUpdate) {
-                this._enqueueUpdate();
-            }
+            this._requestUpdate(name, oldValue);
             return this.updateComplete;
         }
         /**
@@ -1909,22 +1938,36 @@
             // Mark state updating...
             this._updateState = this._updateState | STATE_UPDATE_REQUESTED;
             let resolve;
+            let reject;
             const previousUpdatePromise = this._updatePromise;
-            this._updatePromise = new Promise((res) => resolve = res);
-            // Ensure any previous update has resolved before updating.
-            // This `await` also ensures that property changes are batched.
-            await previousUpdatePromise;
+            this._updatePromise = new Promise((res, rej) => {
+                resolve = res;
+                reject = rej;
+            });
+            try {
+                // Ensure any previous update has resolved before updating.
+                // This `await` also ensures that property changes are batched.
+                await previousUpdatePromise;
+            }
+            catch (e) {
+                // Ignore any previous errors. We only care that the previous cycle is
+                // done. Any error should have been handled in the previous update.
+            }
             // Make sure the element has connected before updating.
             if (!this._hasConnected) {
                 await new Promise((res) => this._hasConnectedResolver = res);
             }
-            // Allow `performUpdate` to be asynchronous to enable scheduling of updates.
-            const result = this.performUpdate();
-            // Note, this is to avoid delaying an additional microtask unless we need
-            // to.
-            if (result != null &&
-                typeof result.then === 'function') {
-                await result;
+            try {
+                const result = this.performUpdate();
+                // If `performUpdate` returns a Promise, we await it. This is done to
+                // enable coordinating updates with a scheduler. Note, the result is
+                // checked to avoid delaying an additional microtask unless we need to.
+                if (result != null) {
+                    await result;
+                }
+            }
+            catch (e) {
+                reject(e);
             }
             resolve(!this._hasRequestedUpdate);
         }
@@ -1934,12 +1977,17 @@
         get _hasRequestedUpdate() {
             return (this._updateState & STATE_UPDATE_REQUESTED);
         }
-        get hasUpdated() { return (this._updateState & STATE_HAS_UPDATED); }
+        get hasUpdated() {
+            return (this._updateState & STATE_HAS_UPDATED);
+        }
         /**
-         * Performs an element update.
+         * Performs an element update. Note, if an exception is thrown during the
+         * update, `firstUpdated` and `updated` will not be called.
          *
-         * You can override this method to change the timing of updates. For instance,
-         * to schedule updates to occur just before the next frame:
+         * You can override this method to change the timing of updates. If this
+         * method is overridden, `super.performUpdate()` must be called.
+         *
+         * For instance, to schedule updates to occur just before the next frame:
          *
          * ```
          * protected async performUpdate(): Promise<unknown> {
@@ -1953,18 +2001,30 @@
             if (this._instanceProperties) {
                 this._applyInstanceProperties();
             }
-            if (this.shouldUpdate(this._changedProperties)) {
-                const changedProperties = this._changedProperties;
-                this.update(changedProperties);
+            let shouldUpdate = false;
+            const changedProperties = this._changedProperties;
+            try {
+                shouldUpdate = this.shouldUpdate(changedProperties);
+                if (shouldUpdate) {
+                    this.update(changedProperties);
+                }
+            }
+            catch (e) {
+                // Prevent `firstUpdated` and `updated` from running when there's an
+                // update exception.
+                shouldUpdate = false;
+                throw e;
+            }
+            finally {
+                // Ensure element can accept additional updates after an exception.
                 this._markUpdated();
+            }
+            if (shouldUpdate) {
                 if (!(this._updateState & STATE_HAS_UPDATED)) {
                     this._updateState = this._updateState | STATE_HAS_UPDATED;
                     this.firstUpdated(changedProperties);
                 }
                 this.updated(changedProperties);
-            }
-            else {
-                this._markUpdated();
             }
         }
         _markUpdated() {
@@ -1975,15 +2035,39 @@
          * Returns a Promise that resolves when the element has completed updating.
          * The Promise value is a boolean that is `true` if the element completed the
          * update without triggering another update. The Promise result is `false` if
-         * a property was set inside `updated()`. This getter can be implemented to
-         * await additional state. For example, it is sometimes useful to await a
-         * rendered element before fulfilling this Promise. To do this, first await
-         * `super.updateComplete` then any subsequent state.
+         * a property was set inside `updated()`. If the Promise is rejected, an
+         * exception was thrown during the update.
+         *
+         * To await additional asynchronous work, override the `_getUpdateComplete`
+         * method. For example, it is sometimes useful to await a rendered element
+         * before fulfilling this Promise. To do this, first await
+         * `super._getUpdateComplete()`, then any subsequent state.
          *
          * @returns {Promise} The Promise returns a boolean that indicates if the
          * update resolved without triggering another update.
          */
-        get updateComplete() { return this._updatePromise; }
+        get updateComplete() {
+            return this._getUpdateComplete();
+        }
+        /**
+         * Override point for the `updateComplete` promise.
+         *
+         * It is not safe to override the `updateComplete` getter directly due to a
+         * limitation in TypeScript which means it is not possible to call a
+         * superclass getter (e.g. `super.updateComplete.then(...)`) when the target
+         * language is ES5 (https://github.com/microsoft/TypeScript/issues/338).
+         * This method should be overridden instead. For example:
+         *
+         *   class MyElement extends LitElement {
+         *     async _getUpdateComplete() {
+         *       await super._getUpdateComplete();
+         *       await this._myChild.updateComplete;
+         *     }
+         *   }
+         */
+        _getUpdateComplete() {
+            return this._updatePromise;
+        }
         /**
          * Controls whether or not `update` should be called when the element requests
          * an update. By default, this method always returns `true`, but this can be
@@ -2005,9 +2089,9 @@
         update(_changedProperties) {
             if (this._reflectingProperties !== undefined &&
                 this._reflectingProperties.size > 0) {
-                for (const [k, v] of this._reflectingProperties) {
-                    this._propertyToAttribute(k, this[k], v);
-                }
+                // Use forEach so this works even if for/of loops are compiled to for
+                // loops expecting arrays
+                this._reflectingProperties.forEach((v, k) => this._propertyToAttribute(k, this[k], v));
                 this._reflectingProperties = undefined;
             }
         }
@@ -2020,7 +2104,8 @@
          *
          * * @param _changedProperties Map of changed properties with old values
          */
-        updated(_changedProperties) { }
+        updated(_changedProperties) {
+        }
         /**
          * Invoked when the element is first updated. Implement to perform one time
          * work on the element after update.
@@ -2030,26 +2115,14 @@
          *
          * * @param _changedProperties Map of changed properties with old values
          */
-        firstUpdated(_changedProperties) { }
+        firstUpdated(_changedProperties) {
+        }
     }
+    _a = finalized;
     /**
      * Marks class as having finished creating properties.
      */
-    UpdatingElement.finalized = true;
-
-    /**
-     * @license
-     * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-     * This code may only be used under the BSD style license found at
-     * http://polymer.github.io/LICENSE.txt
-     * The complete set of authors may be found at
-     * http://polymer.github.io/AUTHORS.txt
-     * The complete set of contributors may be found at
-     * http://polymer.github.io/CONTRIBUTORS.txt
-     * Code distributed by Google as part of the polymer project is also
-     * subject to an additional IP rights grant found at
-     * http://polymer.github.io/PATENTS.txt
-     */
+    UpdatingElement[_a] = true;
 
     /**
     @license
@@ -2061,7 +2134,8 @@
     part of the polymer project is also subject to an additional IP rights grant
     found at http://polymer.github.io/PATENTS.txt
     */
-    const supportsAdoptingStyleSheets = ('adoptedStyleSheets' in Document.prototype);
+    const supportsAdoptingStyleSheets = ('adoptedStyleSheets' in Document.prototype) &&
+        ('replace' in CSSStyleSheet.prototype);
 
     /**
      * @license
@@ -2076,30 +2150,72 @@
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
      */
+    // IMPORTANT: do not change the property name or the assignment expression.
+    // This line will be used in regexes to search for LitElement usage.
+    // TODO(justinfagnani): inject version number at build time
+    (window['litElementVersions'] || (window['litElementVersions'] = []))
+        .push('2.2.1');
+    /**
+     * Minimal implementation of Array.prototype.flat
+     * @param arr the array to flatten
+     * @param result the accumlated result
+     */
+    function arrayFlat(styles, result = []) {
+        for (let i = 0, length = styles.length; i < length; i++) {
+            const value = styles[i];
+            if (Array.isArray(value)) {
+                arrayFlat(value, result);
+            }
+            else {
+                result.push(value);
+            }
+        }
+        return result;
+    }
+    /** Deeply flattens styles array. Uses native flat if available. */
+    const flattenStyles = (styles) => styles.flat ? styles.flat(Infinity) : arrayFlat(styles);
     class LitElement extends UpdatingElement {
-        /**
-         * Array of styles to apply to the element. The styles should be defined
-         * using the `css` tag function.
-         */
-        static get styles() { return []; }
-        static get _uniqueStyles() {
-            if (this._styles === undefined) {
-                const styles = this.styles;
+        /** @nocollapse */
+        static finalize() {
+            // The Closure JS Compiler does not always preserve the correct "this"
+            // when calling static super methods (b/137460243), so explicitly bind.
+            super.finalize.call(this);
+            // Prepare styling that is stamped at first render time. Styling
+            // is built from user provided `styles` or is inherited from the superclass.
+            this._styles =
+                this.hasOwnProperty(JSCompiler_renameProperty('styles', this)) ?
+                    this._getUniqueStyles() :
+                    this._styles || [];
+        }
+        /** @nocollapse */
+        static _getUniqueStyles() {
+            // Take care not to call `this.styles` multiple times since this generates
+            // new CSSResults each time.
+            // TODO(sorvell): Since we do not cache CSSResults by input, any
+            // shared styles will generate new stylesheet objects, which is wasteful.
+            // This should be addressed when a browser ships constructable
+            // stylesheets.
+            const userStyles = this.styles;
+            const styles = [];
+            if (Array.isArray(userStyles)) {
+                const flatStyles = flattenStyles(userStyles);
                 // As a performance optimization to avoid duplicated styling that can
                 // occur especially when composing via subclassing, de-duplicate styles
                 // preserving the last item in the list. The last item is kept to
                 // try to preserve cascade order with the assumption that it's most
                 // important that last added styles override previous styles.
-                const styleSet = styles.reduceRight((set, s) => {
+                const styleSet = flatStyles.reduceRight((set, s) => {
                     set.add(s);
                     // on IE set.add does not return the set.
                     return set;
                 }, new Set());
-                // Array.form does not work on Set in IE
-                this._styles = [];
-                styleSet.forEach((v) => this._styles.unshift(v));
+                // Array.from does not work on Set in IE
+                styleSet.forEach((v) => styles.unshift(v));
             }
-            return this._styles;
+            else if (userStyles) {
+                styles.push(userStyles);
+            }
+            return styles;
         }
         /**
          * Performs element initialization. By default this calls `createRenderRoot`
@@ -2108,7 +2224,8 @@
          */
         initialize() {
             super.initialize();
-            this.renderRoot = this.createRenderRoot();
+            this.renderRoot =
+                this.createRenderRoot();
             // Note, if renderRoot is not a shadowRoot, styles would/could apply to the
             // element's getRootNode(). While this could be done, we're choosing not to
             // support this now since it would require different logic around de-duping.
@@ -2136,7 +2253,7 @@
          * behavior](https://wicg.github.io/construct-stylesheets/#using-constructed-stylesheets).
          */
         adoptStyles() {
-            const styles = this.constructor._uniqueStyles;
+            const styles = this.constructor._styles;
             if (styles.length === 0) {
                 return;
             }
@@ -2184,7 +2301,7 @@
             // priority.
             if (this._needsShimAdoptedStyleSheets) {
                 this._needsShimAdoptedStyleSheets = false;
-                this.constructor._uniqueStyles.forEach((s) => {
+                this.constructor._styles.forEach((s) => {
                     const style = document.createElement('style');
                     style.textContent = s.cssText;
                     this.renderRoot.appendChild(style);
@@ -2196,13 +2313,17 @@
          * a lit-html TemplateResult. Setting properties inside this method will *not*
          * trigger the element to update.
          */
-        render() { }
+        render() {
+        }
     }
     /**
      * Ensure this class is marked as `finalized` as an optimization ensuring
      * it will not needlessly try to `finalize`.
+     *
+     * Note this property name is a string to prevent breaking Closure JS Compiler
+     * optimizations. See updating-element.ts for more information.
      */
-    LitElement.finalized = true;
+    LitElement['finalized'] = true;
     /**
      * Render method used to render the lit-html TemplateResult to the element's
      * DOM.
