@@ -54,7 +54,7 @@ class WCHeader extends LitElement {
           padding: 0;
         }
         /* You can't style nested children - Argh Shadow Dom!!! */
-        ${anchors()}
+        ${anchors()} /* Where else could we use this function 🤔 */
         @media screen and (min-width: 768px) {
           ul {
             justify-content: flex-start;
